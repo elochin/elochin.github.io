@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<head>
+    <title>Firewall et NAT</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+    <h1>Firewall et NAT</h1>
+
+    <img style="float: left; margin: 20px;" src="fw.png" alt="">Le principal problème de sécurité lorsqu'un programme sur votre machine se trouve en écoute sur un port TCP est que quelqu'un peut se connecter sur ce port et potentiellement, en utilisant une faille possible du programme, entreprendre une action malveillante sur votre machine. Les dommages peuvent varier du téléchargement de données personnelles à des compromissions logiques voire physiques de la machine. Cette dernière peut aussi se retrouver transformée en distributeur de virus ou en un point d'entrée permettant des effractions ultérieures vers d'autres machines.
+    <p>
+    Une stratégie connue sous le nom <b>débordement de tampon (buffer overflow)</b> a été à la base d'un grand nombre d'attaques sur Internet. L'idée est d'identifier un point dans un programme serveur qui remplit un tampon de mémoire avec des données provenant du réseau sans vérification minutieuse des entrées comme leur taille, type, ...; de simples appels aux bibliothèques de fonctions suffisent (ex: du gets()de la bibliothèque C). L'attaquant construit alors une chaîne d'entrée surdimensionnée qui, lorsqu'elle sera lue par le serveur et stockée en mémoire, fera déborder le tampon en écrasant les zones mémoire qui suivent et qui peuvent contenir d'autres programmes ou le système d'exploitation.
+<p>
+Un <b>pare-feu (<em>firewall</em>)</b> est un mécanisme permettant de bloquer les connexions considérées comme potentiellement dangereuses, par exemple, celles qui proviennent de l'extérieur d'un site. Généralement, les postes de travail ordinaires n'ont généralement pas nécessité d'accepter des connexions provenant de l'Internet (d'où la raison pour laquelle à l'ISAE vous vous trouvez derrière un pare-feu); en revanche, lorsque la machine cliente à l'intérieur d'un réseau se trouvant derrière un pare-feu, initie des connexions vers un serveur extérieur, il est alors possible de mieux protéger cette dernière et qui plus est, lorsque l'on utilise un <b>serveur mandataire (<em>proxy</em>)</b> qui va alors réaliser la connexion à votre place. Ainsi, bloquer les connexions entrantes fonctionne assez bien; lorsque cela est nécessaire (par exemple pour les jeux) certains ports peuvent être sélectivement débloqués (ce n'est pas le cas pour l'ISAE vous vous en doutez ;).
+<p>
+Les pare-feu ont été à l'origine intégrés dans les routeurs, mais il en existe aujourd'hui même pour votre ordinateur portable et votre mobile. Il existe des architectures réseaux spécifiques permettant de ne pas mettre tout derrière le pare-feu et notamment les serveurs externes tels un serveur web ou mail d'une société. Cependant, cela ne signifie pas que ce serveur est alors non protégé où que le réseau pourrait être compromis. Des zones spécifiques dites démilitarisées (DMZ) sont alors utilisées pour cela. Leur étude sera abordé dans le module sécurité.
+</body>
+</html>

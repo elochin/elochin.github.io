@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+<head>
+    <title>Modèle de référence</title>
+    <link rel="stylesheet" href="../mystyle.css">
+    <meta charset="utf-8">
+</head>
+<body>
+	<h1>Modèle de référence</h1>
+	Revenons sur notre modèle de référence divisé en cinq couches comme le montre la figure ci-dessous.
+<p></p>
+<div class="figure align-center"><img alt="" src="http://cnp3book.info.ucl.ac.be/2nd/html/_images/intro-figures-026-c.png" style="width: 255.2px; height: 184.8px; display: block; margin-left: auto; margin-right: auto;" /></a></span>
+</div>
+
+<h1>La couche physique </h1>
+En partant du bas, la première couche est la couche physique. Deux dispositifs de communication sont reliés par un support physique. Ce milieu physique est utilisé pour transférer un signal électrique ou optique entre deux appareils directement connectés.
+<p> Un point important à noter à propos de la couche physique est le service qu'elle fournit. Ce service est généralement un service orienté connexion non-fiable qui permet l'échange de bits.</span>  L'unité de transfert d'information dans la couche physique est donc le bit. Le service de couche physique est peu fiable en raison d'interférences pouvant altérer la valeur d'un bit transmis.</span></span></p>
+<p></p>
+<div class="figure align-center" id="index-3"><img alt="../_images/intro-figures-027-c.png" src="http://cnp3book.info.ucl.ac.be/2nd/html/_images/intro-figures-027-c.png" style="width: 400px; height: 135.2px; display: block; margin-left: auto; margin-right: auto;" />
+</div>
+
+<h2> La couche liaison (Datalink) </h2>
+
+La couche liaison s'appuie sur ​​le service fourni par la couche physique sous-jacente.</span>  La couche liaison</span> permet à deux hôtes qui sont directement reliés par la couche physique d'échanger des informations.</span>  L'unité des informations échangées entre deux entités dans la couche liaison</span> porte le nom de <strong>trame</strong>.</span>  Une trame est une séquence finie de bits.</span>  Certaines couches liaison</span> :</span></span></p>
+<ul>
+<li>utilisent des trames de longueur variable tandis que d'autres utilisent uniquement des trames de longueur fixe;</span></li>
+<li>fournissent un service orienté connexion tandis que d'autres offrent un service sans connexion;</span></span></li>
+<li>fournissent une livraison fiable tandis que d'autres ne garantissent pas la livraison correcte des informations.</span></span></span></li>
+</ul>
+<p></p>
+<div class="figure align-center"><span style="font-family: verdana,arial,helvetica,sans-serif; font-size: medium;" class="reference internal image-reference"><img alt="../_images/intro-figures-028-c.png" src="http://cnp3book.info.ucl.ac.be/2nd/html/_images/intro-figures-028-c.png" style="display: block; margin-left: auto; margin-right: auto;" width="401" height="72" /></span></div>
+</div>
+<div class="section" id="the-network-layer">
+<p id="index-5"></p>
+
+<h2>La couche réseau</h2>
+
+La <cite>couche liaison</cite> permet à des machines qui sont directement connectées au même médium physique</span></span> d'échanger des informations. Cependant, les réseaux physiques sont interconnectés entre-eux via des dispositifs intermédiaires</span></span> et il est souvent nécessaire d'échanger des informations entre les hôtes qui ne sont pas attachés au même support physique.</span> L'échange d'information à ce niveau tombe sous la responsabilité de la <cite>couche réseau.</cite></span>  La <cite>couche réseau</cite> est construite au-dessus de la <cite>couche de liaison de données.</cite></span>  Les entités de la couche réseau échangent des <cite>paquets IP. (ou datagramme IP)</cite></span>. Un <cite>paquet</cite> est une séquence finie d'octets qui est transportée par la couche de liaison de données à l'intérieur d'une ou plusieurs trames.</span>  Un paquet contient généralement des informations sur son origine et sa destination, et passe généralement par le biais de plusieurs dispositifs intermédiaires appelés routeurs qui composent le chemin qu'il parcourera de sa source jusqu'à sa destination.</span></span></p>
+<p></p>
+<div style="text-align: center;" class="figure align-center"><span class="reference internal image-reference"><img alt="../_images/intro-figures-029-c.png" src="http://cnp3book.info.ucl.ac.be/2nd/html/_images/intro-figures-029-c.png" width="543" height="74" /></span></span>
+<p class="caption"><span style="font-size: medium; font-family: verdana,arial,helvetica,sans-serif;" class="notranslate"><strong><br /></strong> </span></span></p>
+</div>
+</div>
+<div class="section" id="the-transport-layer"><span style="font-family: verdana,arial,helvetica,sans-serif; font-size: medium;" id="index-6"></span>
+
+<h2>La couche de transport</h2>
+
+La plupart des réalisations basées sur la couche réseau, y compris l'Internet, ne fournissent pas un service fiable.</span>  Cependant, de nombreuses applications ont besoin d'échanger des informations de manière fiable; or l'utilisation unique du service de la couche réseau ne le permet pas. Aussi, </span>la <cite>couche transport</cite></span></span> ajoute cette composante de fiabilité (ou pas, au choix de l'utilisateur en fonction du protocole de transport qu'il sélectionnera) pour s'assurer de la livraison fiable des données générées par les applications. Les entités qui y sont transportées portent le nom de <cite>segments.</cite></span>  Un segment est une séquence finie d'octets transportés à l'intérieur d'un ou plusieurs paquets.</span> La couche transport transmet</span></span> des segments à la couche réseau sous-jacente</span></span> via une primitive <cite>DATA.REQUEST</cite>.</span></span></p>
+<p> Il existe différents types de couches de transport. En effet, l</span>a couche de transport peut implémenter différents protocoles. Les protocoles les plus utilisés sur Internet sont :</span></span></p>
+<ul>
+<li>TCP, qui fournit un service fiable orienté connexion transport en mode flot (<em>bytestream</em>) </span></span></li>
+<li>et <span class="reference internal"><em class="xref std std-term">UDP</em></span>, qui fournit un service de transport de connexion non-fiable en mode message. </span></span></li>
+</ul>
+<p>Dans le cas d'UDP uniquement, on parle alors de datagramme UDP plutôt que de segment qui est un mot clé réservé à TCP.</span></span></p>
+<p></p>
+<div style="text-align: center;" class="figure align-center"><span class="reference internal image-reference"><img alt="../_images/intro-figures-030-c.png" src="http://cnp3book.info.ucl.ac.be/2nd/html/_images/intro-figures-030-c.png" width="664" height="122" /></span></span>
+<p class="caption"> </span></p>
+</div>
+</div>
+<div class="section" id="the-application-layer">
+
+	<h2>La couche d'application</h2>
+
+<p id="index-7"> La couche supérieure (et la dernière) de notre architecture est la <cite>couche application.</cite></span>  Cette couche comprend tous les mécanismes et structures de données qui sont nécessaires pour les applications.</span>  Nous allons utiliser l'unité Application Data Unit (ADU) ou le Service Data Unit (SDU), terme générique, pour indiquer les données échangées entre deux entités de la couche d'application.</span></span></p>
+<div class="figure align-center"><span class="reference internal image-reference"><img style="display: block; margin-left: auto; margin-right: auto;" alt="../_images/intro-figures-031-c.png" src="http://cnp3book.info.ucl.ac.be/2nd/html/_images/intro-figures-031-c.png" width="591" height="132" /></span></span>
+<p class="caption"> </span></p>
+</div>
+<p id="index-8"></p>
+<p></p>
+<p><em><strong>Tous ces termes, paquets, datagrammes, trames, segments ... pourquoi ne pas simplement parler de paquets ?</span></span></strong></em></span></p>
+<p></p>
+<p></p>
+<p>Vous l'avez certainement deviné, chacun de ces termes fait référence soit à une couche, soit à une couche et un service. Par exemple, un segment fait référence à un paquet de la couche transport en mode connecté tandis qu'un datagramme fait référence à un paquet en mode non-connecté qui peut se trouver en couche réseau (datagramme IP) ou transport (datagramme UDP). Une trame, quant à elle, référence toujours un paquet au niveau liaison.</span></span></p>
+<p></p>
+<p>Pour éviter toute confusion, nous nous en tiendrons à la terminologie définie plus haut, à savoir:</span></span></p>
+<blockquote>
+<div>
+<ul class="simple">
+<li> les entités de la couche physique échangent des <strong>bits</strong></span></li>
+<li> les entités de couche de liaison de données échangent des <strong>trames </strong>(dans le cas d'Ethernet filaire ou sans-fil, on parle bien souvent de <strong>trame Ethernet</strong>)</span></li>
+<li> des <strong>paquets</strong> ou <strong>datagrammes IP</strong> pour les entités de couche réseau</span></li>
+<li> des <strong>segments</strong> pour TCP et des <strong>datagrammes UDP</strong> pour les entités de la couche transport</span></li>
+<li>des <strong>SDU</strong> pour l'application<em><br /></em></span></li>
+</ul>
+</div>
+</blockquote>
+</div>
+
+<div class="section" id="reference-models">
+<h2>Les modèles de référence</h2>
+<p> Deux variantes de modèles de référence ont été couronnés de succès dans la communauté des réseaux : le modèle de référence OSI et le modèle de référence TCP/IP.</span> Vous les rencontrerez très certainement dans la littérature, aussi, nous en discutons  brièvement ici.</span></span></p>
+<div class="section" id="the-tcp-ip-reference-model">
+
+<h3>Le modèle de référence TCP/IP</h3>
+
+C'est un modèle simplifié qui convient parfaitement aux développeurs d'application client/serveur tels que vous. Ce modèle en quatre couches regroupe simplement la couche liaison et la couche physique entre elles. Ce regroupement permet d'expliquer le <strong>pourquoi du modèle en couche</strong> : chaque couche a été définie de façon à être complètement indépendante et offrir des services différents de ceux proposés par les couches se trouvant au-dessus ou en-dessous (si elles existent). Ainsi, la couche application est indépendante des couches sous-jacentes et vous pouvez écrire n'importe quelle application différente qui utilisera la même interface d'accès unique à la couche transport. Il est donc possible d'inter-echanger les couches entre elles sans avoir à tout réécrire. Bref, c'est une architecture modulaire. A quelques rares exceptions près, changer la couche physique implique un changement de la couche liaison. Il n'y a donc plus d'indépendance et ce modèle propose donc de les regrouper. Ce qui nous donne les quatre couches suivantes :
+<ul class="simple">
+<li> la couche d'application</li>
+<li> la couche Transport</li>
+<li> la couche Internet qui est équivalente à la couche réseau du modèle de référence,</li>
+<li> la couche de liaison qui combine les fonctionnalités des couches physiques et liaison de notre modèle de référence à cinq couches</li>
+</ul>
+<p> Outre cette différence dans les couches inférieures, le modèle de référence TCP/IP reste très proche du modèle en  cinq couches.</p>
+</div>
+<div class="section" id="the-osi-reference-model"></span>
+
+<h3>Le modèle de référence OSI</h3>
+
+Par rapport au modèle de référence de cinq couches déjà expliqué, le modèle de référence du standard OSI (Open System Interconnection) est divisé en sept couches.</span>  Les quatre couches inférieures sont semblables aux modèles ci-dessus, </span>seule la couche d'application se trouve subdivisée en trois couches comme montré sur le schéma ci-dessous. Nous ne rentrerons pas très en détail dans la raison de cette subdivision qui tend de plus en plus à être masquée aujourd'hui puisque faisant partie intégrante bien souvent de l'application. Nous pourrions brièvement résumer la fonction de ces couches comme suit :<br /></span></span></p>
+<ul class="simple">
+<li>La <strong>couche session</strong> regroupe des protocoles et mécanismes de synchronisation permettant la gestion de l'échange de données et permet de pallier à certaines défaillances possibles des connexions au niveau transport. Par exemple, elle peut implémenter un service permettant de recevoir les données de façon ordonnée si le protocole de transport UDP est utilisé;</span></span> </span></span></span></span></li>
+<li>La <strong>couche présentation</strong> s'attache à la conversion des données et de code de caractères (exemple ASCII ou EBCDIC), leur chiffrement et leur compression. Il y a quelques années, les ordinateurs n'utilisaient pas tous la même représentation des codes caractères, ce qui nécessitait des conversions. Aujourd'hui, il existe un consensus sur le format de caractère Unicode.</span></span></span></span></span></span></span></li>
+<li>Enfin, la <strong>couche application</strong> contient tous les autres mécanismes possibles non inclus dans les deux couches précédentes.</span></span></li>
+</ul>
+</div>
+<br />
+<div class="section">
+<p><span class="reference internal image-reference"><img alt="../_images/intro-figures-032-c.png" src="http://cnp3book.info.ucl.ac.be/2nd/html/_images/intro-figures-032-c.png" style="width: 615.2px; height: 210.4px; display: block; margin-left: auto; margin-right: auto;" /></span></span></p>
+</div>
+</div>
+</body>
+</html>

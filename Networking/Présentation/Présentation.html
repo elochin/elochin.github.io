@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+    <title>Quelques définitions</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+
+<h1>Quelques définitions</h1>					
+
+<img src=boxlayers.png style="margin: 0px 20px" align=left height=300px alt="">
+Les trois termes : LAN, IP et TCP que vous avez très certainement rencontrés plusieurs fois sont souvent affublés du mot <strong>couche</strong> dans la littérature car ils constituent la couche de liaison (LAN), la couche d'interconnexion (IP), et la couche de transport (TCP). Ensemble avec la couche application (le logiciel que vous utilisez), elles forment le "<strong>modèle à quatre couches</strong>" couramment usité dans les réseaux. Une couche, dans ce contexte, correspond fortement à l'idée d'une interface de programmation ou d'une bibliothèque (bien que certaines couches ne sont pas accessibles aux utilisateurs standards). La couche application remet un bloc de données à la couche transport (qui va s'occuper de <strong><em>transporter</em></strong> les données via un protocole de transport tels UDP ou TCP), qui à son tour fait appel à la couche IP (qui va s'occuper d'<strong><em>adresser</em></strong> les données, i.e. mettre l'adresse de destination sur les données), qui appelle à son tour la couche LAN pour la livraison réelle. 
+<p>
+La couche LAN est en charge de la livraison effective des paquets en utilisant des adresses LAN fournies par le matériel. Cette couche est souvent divisée conceptuellement avec la couche physique qui traite, entre autres, des signaux électriques, optiques ou radios tandis que la couche liaison qui est une couche abstraite dite "logique" décrit l'ensemble des opérations numériques (i.e. non-analogiques) effectuées sur les paquets du noyau du système d'exploitation. 
+<p>
+La couche physique est généralement étroitement liée à l'interface logicielle du noyau. Aussi, bien souvent la couche liaison et physique se retrouvent agrégées ensemble. Cependant, il existe bien une division physique/logique qui nous donne alors le modèle à <strong>cinq couches</strong> de l'Internet.
+<p>
+Chaque hôte de l'Internet implémente ce modèle en couches afin de pouvoir communiquer avec un autre hôte distant.
+</body>
+</html>

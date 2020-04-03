@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+    <title>Pourquoi des paquets ?</title>
+    <meta charset="utf-8">
+    	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+<h1>Pourquoi des paquets ?</h1>
+
+Pourquoi des paquets et non pas un flot constant ? La justification de base pour l'utilisation de ces petites unités de données, outre les préoccupations de défaillance d'un nœud, est que le même lien peut transporter à différents moments, différents paquets, du trafic vers des destinations différentes et de différentes sources. Ils sont la clé permettant aux liens de communication de fonctionner de façon partagée. Ainsi, les liens réseaux prennent en charge le multiplexage de multiples canaux de communication sur un seul et même câble. L'alternative d'une ligne physique distincte entre chaque paire communicante ne passerait pas à l'échelle au niveau de l'Internet. Cependant, des circuits virtuels entre chaque paire de machines dans un centre de stockage de données ne sont pas rares (suivant le même principe du réseau téléphonique commuté standard).
+<p>
+De ce point partagé, une caractéristique importante des paquets est leur taille maximale. Cette taille représente la durée de transmission maximale d'une source avant que d'autres puissent émettre à leur tour sur un lien. Une taille des paquets non bornée conduirait à l'indisponibilité prolongée du réseau. Imaginez que quelqu'un télécharge une image ISO en un seul paquet de 650MB ! L'autre inconvénient des grandes tailles de paquets est que si celui-ci est altéré, il devra être intégralement retransmis.
+<p>
+Quand un routeur ou un commutateur reçoit un paquet, il stocke en mémoire intégralement celui-ci avant de regarder l'en-tête et décider de son devenir. Ce paradigme se nomme <em>store and forward</em>. Ceci introduit un retard de transfert égal au temps nécessaire pour stocker la totalité du paquet. Ce délai de transmission est difficile à éviter pour un paquet unique, même si certains commutateurs mettent en œuvre le principe du <em>cut through</em> pour commencer à transmettre un paquet avant qu'il ne soit pleinement arrivé. Cependant, si l'on envoie un long train de paquets de façon contigüe, l'importance du délai de transmission est alors moins significative.
+<p>
+Le valeur totale du délai entre une source et un destinataire est la somme de ce qui suit :
+<ul>
+	<li>délai de transmission (relatif à la capacité d'émission), à savoir : l'envoi de 1000 octets à 20 octets/ms prendra 50 ms
+	<li>délai de propagation (relatif à la vitesse de la lumière) : par exemple, si vous envoyez un paquet sur un câble de 5000 km de long (liaison transatlantique par exemple) avec une vitesse de propagation de 200 m/ms (= 200 km/ms, environ 2/3 de la vitesse de la lumière dans le vide), le premier bit devrait arriver à destination 25 ms plus tard
+	<li>délai store-and-forward retard égal à la somme des retards de bande passante sur chaque routeur, le long du trajet
+		<li>délai de la file d'attente des routeurs : peut dépasser la seconde voire plus, bien que cela reste rare dans le coeur du réseau au contraire des extrémités, voir : Bufferbloat: <a href="http://queue.acm.org/detail.cfm?id=2071893">Dark Buffers in the Internet</a>. En général, il reste de l'ordre de la milliseconde. Ce délai est le seul qui peut-être combattu avec des mécanismes d'ingénierie de routage, notamment avec les AQM (Active Queue Management) dont il est question dans l'article.
+</ul>
+Ces thématiques de performance des réseaux seront abordés plus tard dans ce cours. Mais si vous voulez en savoir plus et rapidement, regardez cette courte vidéo du projet RITE très explicite, qui vous aidera à mieux comprendre les problématiques associées au délai.
+<p>
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/F1a-eMF9xdY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</center>
+</body>
+</html>

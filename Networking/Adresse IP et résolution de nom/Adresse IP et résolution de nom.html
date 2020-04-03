@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+    <title>Adresse IP et résolution de nom, mise en oeuvre avec <code>/etc/hosts</code></title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+
+    <h1>Adresse IP et résolution de nom, mise en oeuvre avec <code>/etc/hosts</code></h1>
+
+    En l'absence d'un serveur de noms sur le réseau local, il est tout de même possible de mettre en place une table de correspondance entre adresses IP et noms de machines grâce au fichier <code>/etc/hosts</code>. Ce fichier, habituellement réservé aux entrées des machines du réseau local, possède une syntaxe très simple : chaque ligne fait correspondre une adresse IP suivie de la liste de tous les noms qui y sont associés (le premier étant le FQDN si il y a lieu). Consultez la page de manuel d'utilisation de ce fichier en tapant : <code>man hosts.</code>
+<p>Ce fichier reste toujours disponible même lorsque les serveurs DNS sont injoignables puisque hébergé localement sur votre machine. C'est l'ancêtre du système DNS où au tout début de l'Internet, il existait un fichier de ce type qui était échangé entre chaque utilisateurs et qui devait être mis à jour au moindre changement ou ajout dans les correspondances. Bien évidemment, avec l'explosion du nombre de machines connectées au réseau, il a fallu trouver une solution plus efficace et le système DNS fut la solution universellement adoptée.</p>
+<p>Aujourd'hui, ce fichier reste utile pour résoudre des noms sur un petit réseau isolé tel votre réseau domestique derrière votre connexion ADSL. Il ne renferme généralement que les entrées les plus importantes (et notamment celles correspondantes à la machine). Si le nombre de machine devient plus important, l'utilisation d'un DNS peut devenir incontournable. </p>
+<p>Sur votre topologie CORE, le système de fichier se trouve partagé entre chaque machine virtuelle. Aussi, la modification du /etc/hosts sera commune à l'ensemble des machines. Bien pratique puisque nous n'avons pas à le repliquer. Ceci reste très similaire à l'utilisation d'un repertoire partagé par un <strong>système de fichiers en réseau</strong>, autrement connu sous le nom de <strong>Network File System (NFS)</strong>. Vous utilisez un tel système chaque jour lorsque vous vous connectez à une machine du réseau de l'ISAE et que vous récupérez quel que soit le lieu de connexion, vos données personnelles.</p>
+
+<p>Consultez un fichier <code>/etc/hosts</code> d'une de vos machines de votre topologie exemple (vous savez maintenant que chaque machine virtuelle accède et partage le même). Nous parlerons plus loin dans ce cours de l'entrée 127.0.0.1. Sachez qu'elle correspond à votre propre machine. Ajoutez une correspondance entre un nom et une adresse IP par exemple : client, routeur1, serveur, ... puis faites un ping sur les noms saisis pour vérifier que le tout fonctionne correctement. </p>
+<p>Vous pouvez utiliser pour éditer le fichier la commance suivante : <code>nano /etc/hosts</code></p>
+</body>
+</html>

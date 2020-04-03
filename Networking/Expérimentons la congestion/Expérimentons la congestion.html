@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+    <title>Expérimentons la congestion</title>
+    <meta charset="utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+<h1>Expérimentons la congestion</h1>
+	
+Nous allons expérimenter un phénomène de congestion en utilisant l'émulateur CORE. Pour cela, reproduisez la topologie suivante :
+<p>
+<img src="congtopo.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>
+Comme vous le constatez, les liens de n2 et n3 vers n1 sont de 10Mbps et 1ms, tandis que le lien de n1 à n4 est de 1Mbps et 10ms.</span></p>
+<p>
+Afin de pouvoir observer le phénomène, nous allons limiter la taille du <em>buffer</em> de l'interface de sortie (comme cela serait le cas sur un vrai routeur) grâce à l'API Traffic Control de Linux. En vous connectant sur le routeur (n1 sur la figure) identifiez l'interface de sortie vers n4 et limitez sa taille à 10 paquets grâce à la commande suivante (vérifier que dans votre cas celle-ci est bien eth2 sinon changé avec la bonne interface) :</p>
+<p>
+<code>tc qdisc add dev eth2 root pfifo limit 10</code></p>
+<p>
+Linux offre un très riche ensemble d'outils permettant la gestion de transmission et la manipulation de paquets. Habituellement, les utilisateurs Linux avertis sont familier avec les outils réseaux disponibles sous Linux pour le <em>firewalling</em>. Cependant, il existe pour Linux un puissant système de contrôle du trafic qui a grandi et mûri sous les noyaux 2.2 et 2.4. Pour plus d'information sur le Linux Traffic Control voir <a target="_blank" href="http://tldp.org/HOWTO/Traffic-Control-HOWTO/">Linux TC Howto</a>. Concernant <strong>pfifo</strong> que vous utilisez dans de TP voir <a target="_blank" href="http://tldp.org/HOWTO/Traffic-Control-HOWTO/classless-qdiscs.html">Classless Queuing Disciplines</a> de ce même document.</p>
+<p>
+<div class=lms-example>
+	Vous allez générer un trafic UDP depuis la machine n2 et un second depuis n3 tous les deux à destination de n4. Ces flots UDP se trouveront alors mixés sur le même lien de sortie et traverseront la même file d'attente limitée. Lancez les deux serveurs iperf sur n4 avec l'option <code>-i 1</code> pour obtenir un affichage toutes les secondes (attention au numéro de ports !). Puis, démarrez tout d'abord un flot UDP sur une longue durée (e.g. avec l'option <code>-t 1000</code>). Au bout de 10 secondes, démarrer le second flot UDP. Qu'observez du côté des statistiques iperf à la réception ?</div>
+</body>
+</html>

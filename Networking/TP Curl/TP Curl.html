@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+<head>
+    <title>TP Curl</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+	<h1>Lab with Curl</h1>
+<code>curl</code> is a a command line tool that allows to transfer data across the network. It supports lots of protocols, including HTTP, HTTPS, FTP, FTPS, SFTP, IMAP, SMTP, POP3, and many more. When it comes to debugging network requests, curl is one of the best tools you can find and is very popular among programmers. <span class="lms-code-inline">curl</span> runs on Linux, Mac, Windows and comes with a nice development API.<br>
+<p>
+In the following, we will illustrate the lecture by analyzing some curl requests. All examples involve working with HTTP. You might need to check the HTTP standard available here : <a href="https://www.ietf.org/rfc/rfc2616.txt">https://www.ietf.org/rfc/rfc2616.txt</a><br></p>
+
+<h2 id="perform-an-http-get-request">Perform an HTTP GET request</h2>
+
+<p>When you perform a request, curl will return the body of the response:</p>
+
+<code>curl http://www.isae.fr/</code>
+
+<h2 id="get-the-http-response-headers">Get the HTTP response headers</h2>
+
+<p>By default the response headers are hidden in the output of curl. To show them, use the <code>i</code> option:</p>
+
+<code>curl -i http://www.isae.fr/</code>
+
+<h2 id="only-get-the-http-response-headers">Only get the HTTP response headers</h2>
+
+<p>If you carefully read the results of the previous command, you might have solved the problem yourself by typing the right URL as below. Now using the <code>I</code> option, you can get <em>only</em> the headers, and not the response body:</p>
+
+<code>curl -I https://www.isae-supaero.fr/fr</code>
+
+<h2 id="perform-an-http-post-request">Perform an HTTP POST request</h2>
+
+<p>The <code>X</code> option lets you change the HTTP method used. By default, GET is used, and it’s the same as writing</p>
+
+<code>curl -X GET https://www.isae-supaero.fr/fr</code>
+
+<p>Using <code>-X POST</code> will perform a POST request.</p>
+
+<p>You can perform a POST request passing data URL encoded:</p>
+
+<pre><code>curl -d "option=value&amp;something=anothervalue" -X POST https://www.isae-supaero.fr/fr
+</code></pre>
+
+<p>In this case, the <code>application/x-www-form-urlencoded</code> Content-Type is sent. You can interact with several website, check <a href="https://developers.google.com/gdata/articles/using_cURL">https://developers.google.com/gdata/articles/using_cURL</a> for instance<br></p>
+
+<h2 id="perform-an-http-post-request-sending-json">Perform an HTTP POST request sending JavaScript Object Notation (JSON)</h2>
+
+<p>Instead of posting data URL-encoded, like in the example above, you might want to send JSON.</p>
+
+<p>In this case you need to explicitly set the Content-Type header, by using the <code>H</code> option:</p>
+
+<code>curl -d '{"option": "value", "something": "anothervalue"}' -H "Content-Type: application/json" -X POST https://www.google.com/
+</code>
+
+<p>You can also send a JSON file from your disk:</p>
+
+<code>curl -d "@my-file.json" -X POST https://www.google.com/
+</code>
+
+<h2 id="perform-an-http-put-request">Perform an HTTP PUT request</h2>
+
+<p>The concept is the same as for POST requests, just change the HTTP method using <code>-X PUT</code></p>
+
+<h2 id="follow-a-redirect">Follow a redirect</h2>
+
+<p>A redirect response like 301, which specifies the <code>Location</code> response header, can be automatically followed by specifying the <code>L</code> option:</p>
+
+<code>curl http://www.isae.fr/ </code>
+
+<p>will not follow automatically to the HTTPS version which I set up to redirect to, but this will:</p>
+
+<code>curl -L http://www.isae.fr/</code>
+
+<h2 id="store-the-response-to-a-file">Store the response to a file</h2>
+
+<p>Using the <code>o</code> option you can tell curl to save the response to a file:</p>
+
+<code>curl -o file.html https://www.isae.fr/ </code>
+
+<p>You can also just save a file by its name on the server, using the <code>O</code> option:</p>
+
+<code>curl -O https://www.isae.fr/index.html </code>
+
+<h2 id="using-http-authentication">Using HTTP authentication</h2>
+
+<p>If a resource requires Basic HTTP Authentication, you can use the <code>u</code> option to pass the user:password values:</p>
+
+<code>curl -u user:pass https://icampus.isae.fr/ </code>
+
+<h2 id="set-a-different-user-agent">Set a different User Agent</h2>
+
+<p>The user agent tells the server which client is performing the request. By default curl sends the <code>curl/&lt;version&gt;</code> user agent, like: <code>curl/7.54.0</code> or <code>Mozilla/4.0</code><br></p>
+
+<p>You can specify a different user agent using the <code>--user-agent</code> option:</p>
+
+<code>curl --user-agent "my-user-agent" https://www.isae.fr/</code>
+
+<h2 id="inspecting-all-the-details-of-the-request-and-the-response">Inspecting all the details of the request and the response</h2>
+
+<p>Use the <code>--verbose</code> option to make curl output all the details of the request, and the response:</p>
+
+<code>curl --verbose -I https://www.isae-supaero.fr/fr </code>
+
+<pre><code>*   Trying 192.93.254.122...<br>* TCP_NODELAY set<br>* Connected to www.isae-supaero.fr (192.93.254.122) port 443 (#0)<br>* ALPN, offering h2<br>* ALPN, offering http/1.1<br>* successfully set certificate verify locations:<br>*   CAfile: /etc/ssl/certs/ca-certificates.crt<br>  CApath: /etc/ssl/certs<br>* TLSv1.3 (OUT), TLS handshake, Client hello (1):<br>* TLSv1.3 (IN), TLS handshake, Server hello (2):<br>* TLSv1.2 (IN), TLS handshake, Certificate (11):<br>* TLSv1.2 (IN), TLS handshake, Server key exchange (12):<br>* TLSv1.2 (IN), TLS handshake, Server finished (14):<br>* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):<br>* TLSv1.2 (OUT), TLS change cipher, Client hello (1):<br>* TLSv1.2 (OUT), TLS handshake, Finished (20):<br>* TLSv1.2 (IN), TLS handshake, Finished (20):<br>* SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384<br>* ALPN, server did not agree to a protocol<br>* Server certificate:<br><br>...</code></pre>
+
+</body>
+</html>

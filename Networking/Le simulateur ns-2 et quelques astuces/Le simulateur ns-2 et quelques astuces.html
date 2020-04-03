@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <link rel="stylesheet" href="../mystyle.css">
+  <title>Le simulateur ns-2 et quelques astuces</title>
+</head>
+<body>
+  <h1>Le simulateur ns-2 et quelques astuces</h1>
+L'interface de script pour ns-2 utilise le langage Tcl, prononcé «tickle»; plus précisément c'est de l'object-Tcl, ou OTcl. Pour une utilisation simple, apprendre la syntaxe générale de Tcl n’est pas nécessaire; on peut procéder simplement en modifiant des exemples standard.</p>
+<p>La simulation de réseau est définie dans un fichier Tcl, par exemple <code>sim.tcl</code>; pour exécuter la simulation on lance alors la commande</p>
+<p><code>ns sim.tcl</code></p>
+<p>Le résultat de la simulation ns-2 consistera en la création de fichiers. Les fichiers les plus courants créés sont le fichier de trace ns-2 - par exemple noté <code>out.tr</code> - qui contient un enregistrement pour chaque arrivée, départ et événement de file d'attente de paquet, ainsi qu'un fichier <code>out.nam</code> pour le visualiseur de réseau <code>nam</code>, permettant d'afficher les paquets en mouvement.</p>
+<p>Dans Tcl, les variables peuvent être affectées à l'aide de la commande <code>set</code>. Les expressions entre <code>[...]</code> sont évaluées. Les expressions numériques doivent également utiliser la commande <code>expr</code>:</p>
+<p><code>set foo [expr $foo + 1]</code></p>
+<p>Comme dans les scripts shell de style Unix, la valeur d'une variable <code>X</code> est <code>$X</code>; le nom <code>X</code> (sans le <code>$</code>) est utilisé lors de la définition de la valeur. Les commentaires se trouvent sur les lignes commençant par le caractère <code>#</code>. Les commentaires ne peuvent pas être ajoutés à une ligne contenant une instruction.</p>
+<p>Les objets de la simulation sont généralement créés à l'aide de constructeurs intégrés. le constructeur dans la ligne ci-dessous est la partie entre crochets (rappelons que les crochets doivent entourer une expression à évaluer):</p>
+<p><code>set tcp0 [nouvel agent/TCP/Newreno]</code></p>
+<p>Les attributs d'objet peuvent ensuite recevoir des valeurs. Par exemple, ce qui suit définit la taille des paquets d'une connexion TCP identifiée par <code>tcp0</code> à <code>960</code> octets:</p>
+<p><code>$tcp0 set packetSize_ 960</code></p>
+<p>Les attributs d'objet sont extraits en utilisant <code>set</code> sans valeur; le code suivant affecte à la variable <code>ack0</code> la valeur actuelle du champ <code>ack_</code> de <code>tcp0</code>:</p>
+<p><code>set ack0 [$tcp0 set ack_]</code></p>
+<p>Le débit utile d’une connexion TCP (<em>goodput</em>) correspond au nombre d’octets correctement reçus par l'application. Il diffère du débit effectif (<em>throughput</em>) qui est le nombre total d'octets envoyés sur le réseau. Cette dernière mesure incluant à la fois les en-têtes de paquet et les paquets retransmis. La valeur <code>ack0</code> ci-dessus ne comprend aucune retransmission; nous parlerons donc de <em>goodput</em> dans ce cas.</p>
+
+<h2>Passage d'arguments à un script TCL</h2>
+<p>Il est parfois intéressant de passer des commandes en arguments à votre script ns-2. C'est possible de la façon suivante et cela vous permettra de lancer à la volée plusieurs expérimentations :</p>
+<code>
+	set ns [new Simulator]
+	<br>
+	<br>set C [lindex $argv 0]
+	<br>set delay [lindex $argv 1]
+	<br>set B [lindex $argv 2]
+	<br>set typetcp [lindex $argv 3]
+	<br>
+	<br>puts &quot;Args : $C $delay $B $typetcp&quot;
+	<br>
+	<br>if {$argc &lt;= 4} {
+	<br># gestion de l&#39;erreur
+	<br>}
+</code>
+<h2>Commentaires</h2>
+<p>Attention en TCL les commentaires en début de ligne débutent avec un <code>#</code> tandis qu'en fin de ligne ils débutent avec <code>;#</code>. Exemple :</p>
+<code>
+	<br>set ns [new Simulator]
+	<br>
+	<br># C correspond à la capacité du lien
+	<br>set C [lindex $argv 0]
+	<br>set delay [lindex $argv 1] ;# délai du lien
+</code>
+</body>
+</html>

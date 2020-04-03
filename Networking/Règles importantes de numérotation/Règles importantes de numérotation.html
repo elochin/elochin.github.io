@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+    <title>Règles importantes de numérotation</title>
+    <meta charset="utf-8">
+    	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+<h1>Règles importantes de numérotation</h1>
+Il existe des contraintes empêchant l'utilisation de certaines adresses :</span><br></span></span></p>
+<ul>
+<li>une adresse IP ne peut pas débuter ni terminer par 0 (bien qu'aujourd'hui le standard autorise une adresse se terminant par zéro). En effet, dans ce dernier cas nous obtenons une adresse de réseau (et non pas d'hôte). Cependant, rien n'empêche d'utiliser un zéro en seconde et/ou troisième position d'une adresse (e.g 10.0.0.1, 10.2.0.3, 10.0.3.2, ...)</li>
+<li>une adresse IP terminant par 255 est une adresse de <strong>diffusion</strong> (<strong><em>broadcast</em></strong>). Par exemple, l'adresse 192.168.1.255/24 correspond à tous les hôtes du réseau 192.168.1.0, soit toutes les machines possédant une adresse IP allant de 1 à 254</li>
+<li>le réseau 127.0.0.0/8 est un réseau réservé pour <strong>l'interface locale </strong>(<strong><em>loopback interface</em></strong>). Elle permet de vérifier que la pile TCP/IP est bien chargée en mémoire. Cette interface locale est également très utile pour tester des applications client/serveur en local sur sa machine. Elle est <span style="text-decoration: underline;">indépendante</span> de la présence ou non d'une interface réseau physique, il n'est donc pas nécessaire d'avoir une carte réseau sur sa machine pour avoir cette interface</li>
+<li>les plages de réseaux suivantes : 10.0.0.0/8; de 172.16.0.0/16 à 172.31.0.0/16; de 192.168.1.0 à 192.168.254.0 sont privées et non routables. Vous ne les trouverez jamais sur Internet mais uniquement sur des réseaux locaux. Elles permettent d'adresser de très larges réseaux locaux qui se trouvent alors cachés derrière un élément de translation d'adresses (NAT : qui sera abordé dans la partie Firewall) qui lui possède une adresse routable pour connecter ce réseau privé vers le réseau public comprenant toutes les autres adresses en dehors de ces plages.</li>
+</ul>
+
+Les adresses IP, à la différence des adresses Ethernet, sont affectées administrativement. Si un jour vous souhaitez obtenir une telle classe d'adresse, vous obtiendrez alors votre préfixe de réseau de classe B de l'<a href="https://www.afnic.fr/">Association Française pour le Nommage Internet en Coopération</a> (AFNIC), tâche qui lui a été déléguée pour les adresses françaises par l'Internet Assigned Numbers Authority (IANA). A vous maintenant d'adresser correctement vos machines en complétant la partie hôte de façon appropriée pour votre site local . Ainsi, une adresse IP ne sert pas uniquement d'identifiant mais est aussi un localisateur (<em>locator</em>) contenant des informations de localisation intégrées (du moins, dans le sens de son emplacement dans la hiérarchie d'attribution des adresses IP qui n'est pas forcément géographique). En comparaison, les adresses Ethernet, sont des identifiants de terminaux mais pas des localisateurs.
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+<head>
+    <title>Comment le netmask est-il utilisé et à quoi sert-il ?</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+	<h1>Comment le netmask est-il utilisé et à quoi sert-il ?</h1>
+
+Avant de répondre à cette question, rappelons la table de vérité du ET logique :
+<p>
+<table style="width: 209px; height: 254px; border-color: #000000; border-style: solid; border-width: 2px;" cellspacing="2" cellpadding="2" border="2" align="center">
+<tbody>
+<tr>
+<td>x</td>
+<td>y</td>
+<td>x ET y</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+<p>Pour connaître le réseau sur lequel elle se trouve, une machine implémentant la couche IP va utiliser son propre masque et opérer à un ET logique avec sa propre adresse IP. Supposons que la machine possède l'adresse 132.227.1.1/16. En binaire nous obtenons :</p>
+<p></p>
+<table style="width: 415px; height: 84px;" border="2" align="center">
+<tbody>
+<tr>
+<td style="text-align: center;"></td>
+<td>10000100</td>
+<td>11100011</td>
+<td>00000001</td>
+<td>00000001</td>
+</tr>
+<tr>
+<td>ET </td>
+<td>11111111</td>
+<td>11111111</td>
+<td>00000000</td>
+<td>00000000</td>
+</tr>
+<tr>
+<td>=</td>
+<td>10000100</td>
+<td>11100011</td>
+<td>00000000</td>
+<td>00000000</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>Maintenant supposons que depuis cette machine, vous effectuez une connexion ou lancez simplement un ping vers une autre machine du réseau ayant pour adresse IP : 132.227.1.14. Avant d'inscrire l'adresse destination dans le paquet IP, la couche IP de votre machine va tout d'abord vérifier si la machine distante se trouve sur le même réseau. Pour cela, elle (132.227.1.1/16) va réaliser la même opération sur l'adresse distante avec son masque de sous-réseau. Ainsi, elle effectue un ET logique entre  132.227.1.1 et 255.255.0.0 et obtient donc 132.227.0.0, puis entre 132.227.1.14 et 255.255.0.0 et obtient le même résultat. Dans ce cas, puisque les deux résultats obtenus sont égaux, la couche IP forgera un paquet avec pour adresse source 132.227.1.1 et pour adresse destination 132.227.1.14.</p>
+</body>
+</html>

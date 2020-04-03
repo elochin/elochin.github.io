@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+<head>
+    <title>Mise en oeuvre d'un NAT</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+    <h1>Mise en oeuvre d'un NAT</h1>
+
+    Nous allons utiliser l'émulateur CORE afin de mettre en oeuvre et tester un NAT. Pour cela, on utilise la commande <strong>iptables</strong> qui permet de configurer les chaînes et règles dans le pare-feu en espace noyau (i.e. c'est une commande utilisateur qui permet de modifier certains paramètres du noyau Linux). Nous allons mettre en oeuvre un routeur NAT sur le premier routeur à gauche de votre topologie. Pour cela, vous allez adresser la brin du réseau à gauche de votre <em>running example</em> avec l'adresse réseau : 192.168.1.0/24. Laissez le reste de votre réseau avec l'adressage automatique de CORE en 10.0.0.0/8.
+    <p>
+    Lancez l'émulation, vérifiez à bien activer RIP et effectuez un <strong>ping</strong> entre la station de gauche et celle de droite sur votre topologie. Le ping est possible puisque le routeur annonce la route vers ce nouveau réseau 192.168.1.0/24. Faites un <strong>tcpdump</strong> à la destination. Quelles sont les adresses incluses dans l'en-tête IP du datagramme reçu ?
+<p>
+Maintenant, stoppez et relancez l'émulation, puis tapez la commande suivante qui permet de mettre en oeuvre le service NAT sur le routeur de gauche. Attention à bien vérifier que <strong>eth1</strong> correspond bien à votre <strong>interface de</strong> <strong>sortie</strong> en 10.x.x.x :
+<p><code>iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE</code></p>
+<p>Refaites le ping et le tcpdump. Que constatez-vous ?</p>
+</body>
+</html>

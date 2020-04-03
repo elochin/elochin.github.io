@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <link rel="stylesheet" href="../mystyle.css">
+  <title>Evaluation de la performance de RED et RED/ECN</title>
+</head>
+<body>
+<h1>Evaluation de la performance de RED et RED/ECN</h1>
+<h2>Quelques rappels du cours</h2>
+<p>Les files d'attente RED ont été introduites pour résoudre certains problèmes de TCP en présence de files d'attente DropTail (i.e. FIFO buffer), par exemple :</p>
+<ul>
+<li>Réduire les oscillations de la file d'attente;</li>
+<li>Réduire la longueur moyenne de la file d'attente;</li>
+<li>Empêcher la synchronisation, qui apparaı̂t dans les files de type Drop Tail, car lorsque la file est pleine, plusieurs connexions perdent des paquets en même temps. La synchronisation créée des oscillations;</li>
+<li>Permettre aux rafales courtes de passer sans que la taille de la file d'attente augmente beaucoup;</li>
+<li>Contrôler la taille moyenne de la file afin de diminuer le délai moyen.</li>
+</ul>
+<div align="center">
+<img alt="" src="data/red.png"/>
+</div>
+<p>Le principe algorithmique est le suivant :</p>
+<ul>
+<li>RED calcule une valeur moyenne <em>avg</em> de la taille de la file d'attente et vérifie que cette moyenne se trouve entre un seuil <em>th_min</em> et un seuil maximal <em>th_max</em> comme illustré ci-dessus;</li>
+<li>Si c'est le cas alors un paquet qui arrive est rejeté (ou marqué) avec une proba <em>P = P(avg)</em>. <em>P</em> est croissante;</li>
+<li>Tous les paquets arrivant quand <em>avg &gt;= th_max</em> sont rejetés;</li>
+<li>Quand la file moyennée varie entre <em>th_min</em> et <em>th_max</em> , <em>P_b</em> varie linéairement entre 0 et une valeur <em>P_max</em> :
+<div align="center">
+<p><img alt="" src="data/redeq1.png"/></p>
+</div></li>
+<li><em>P_b</em> est utilisée pour <em>P(avg)</em> si à l'arrivée du paquet précédent, <em>avg &gt; th_min</em>. Sinon :
+<div align="center">
+<p><img alt="" src="data/redeq2.png"/></p>
+</div></li>
+<li>Pour calculer l’évolution de la file moyennée, on initialise le paramètre <em>avg</em> à zéro;</li>
+<li>A chaque paquet qui arrive, <em>avg</em> est modifié selon <em>(1 − Wq ).avg + q.Wq</em> où <em>q</em> est la valeur instantanée de la file d'attente et <em>Wq</em> est une constante petite;</li>
+<li>Si la file se vide, on utilise une autre formule pour mettre à jour la valeur moyenne. Elle prend en compte : (1) Le temps écoulé depuis que la file s'est vidée; (2) une estimation sur le nombre des paquets qui auraient pu être transmis durant ce temps;</li>
+<li>Enfin pour calculer ce dernier, le simulateur a besoin d’une estimation de la taille moyenne d’un paquet.</li>
+</ul>
+<p>Lorsque le flag ECN est activité, la file ne jette pas le paquet aléatoirement sélectionné mais le marque afin d'indiquer à la source TCP (après report de cette marque lors de son arrivée à destination dans les acquittements émis). Sous ns-2, cette fonctionnalité est activée avec<code>Agent/TCP/Linux set ecn_ 1</code> ou avec <code>Agent/TCP set ecn_ 1</code> en fonction de la version de TCP. Puis au niveau du routeur RED <code>Queue/RED set setbit_ true</code> afin d'activer le marquage.</p>
+<h2>Questions</h2>
+<p>Téléchargez le script suivant : <a href="data/aqm.zip">aqm.zip</a> qui contient une séquence permettant de tracer la courbe du taux d'occupation d'une file d'attente instantané et moyen en fonction du temps. Décompressez les trois fichiers de cet archive dans le même répertoire puis lancez le script TCL en tapant, par exemple : <code>ns aqm.tcl red</code>. Tapez <code>ns aqm.tcl</code> pour afficher les options possibles.</p>
+<p>Avant de commencer : prenez bien le temps de <strong>lire et comprendre</strong> ce que fait ce script. Vous pouvez lancer les différentes version de RED proposées dans ce script afin d'avoir un aperçu de leurs performances. Changer les valeurs des seuils min et max et la valeur de la probabilité pour en comprendre l'impact.</p>
+<ol style="list-style-type: decimal">
+<li>Modifiez le script afin de n'avoir plus qu'un nombre constant de 50 flots TCP/Newreno durant une la simulation de 100sec. Utilisez les valeurs de configuration de RED données dans le script original. Calculez et tracez le nombre de paquets jetés de la file d'attente en fonction du temps pour RED et ARED uniquement;</li>
+<li>Prenez un flot au hasard parmi les 50 et tracez sa fenêtre de congestion. Proposez un calcul statistique (moyenne et écart type, min, max, fréquence des variations, ...) de l'évolution de la fenêtre;</li>
+<li>Effectuez la même expérimentation en y ajoutant le flag ECN;</li>
+<li>Concluez quant aux résultats obtenus.</li>
+</ol>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+    <title>Protocole ARP - fragmentation</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+    <h1>Protocole ARP - fragmentation</h1>
+    
+    <h2>Pourquoi inscrire une adresse source et pas uniquement l'adresse destination dans l'en-tête du paquet ?</h2>
+    
+    La couche IP et la couche liaison travaillent en mode non connecté : il n'y a pas donc de chemin virtuel entre la source et la destination et chaque paquet du flot <strong>peut</strong> <strong>prendre un chemin différent</strong>. Ceci est aussi valable pour la réponse si elle a lieu. Il lui faut donc impérativement l'adresse de retour afin que la destination puisse répondre (si il y a lieu) à l'émetteur.
+    
+    <h2>Que se passe-t-il si depuis la machine 132.227.1.1/16, nous cherchons à atteindre la machine <a href="http://www.isae.fr" class="_blanktarget">www.isae.fr</a> ayant pour adresse 192.93.254.85/24 ?</h2>
+
+Lorsque la machine 132.227.1.1/16 appliquera son masque de sous-réseau à cette adresse, elle obtiendra 192.93.0.0. Le résultat étant différent de 132.227.0.0, elle saura alors que <a href="http://www.isae.fr" class="_blanktarget">www.isae.fr</a> n'est pas une machine appartenant au réseau de l'université de Paris 6. C'est là qu'un autre protocole rentre en jeu : <strong>ARP (Address Resolution Protocol)</strong>. Puisque cette <a href="http://www.isae.fr" class="_blanktarget">www.isae.fr</a> est une machine distante pour la machine 132.227.1.1/16, elle va consulter sa propre table de routage afin de trouver <strong>une passerelle</strong> ou <strong>route par défaut</strong>.
+
+<p>Vous pouvez connaitre votre passerelle par défaut en tapant l'une des deux commandes suivantes :<code>route -n</code> ou <code>netstat -nr</code> (l'option -n dans les deux cas évite de faire la résolution DNS). Par exemple sur ma machine :</p>
+<pre>
+<code>e.lochin@pc-lochin:~$ netstat -nr
+Table de routage IP du noyau
+Destination     Passerelle      Genmask         Indic   MSS Fenêtre irtt Iface
+0.0.0.0         10.161.0.1      0.0.0.0         UG        0 0          0 eth2
+10.161.0.0      0.0.0.0         255.255.0.0     U         0 0          0 eth2</code>
+</pre>
+<p>
+La route par défaut est représentée par le réseau 0.0.0.0 tandis que le réseau 10.161.0.0 correspond à mon sous réseau local (i.e. c'est mon adresse réseau). Ma passerelle est donc la machine distante ayant pour adresse IP 10.161.0.1.
+<p>
+Effectuez cette opération sur votre machine de cours.
+
+<p>Cette route par défaut va permettre l'acheminement du paquet vers un autre noeud du réseau qui possède une interconnection vers un autre réseau. Supposons que la passerelle pour cette machine soit l'adresse 132.227.1.254/16. Cette machine se trouve effectivement sur le même lien local 132.227.0.0. La couche IP va donc solliciter l'adresse matérielle de cette passerelle en émettant un paquet ARP qui retournera alors son adresse matériel. Celle-ci connue, il construira alors un paquet IP avec pour adresse IP source 132.227.1.1, adresse IP destination 192.93.254.85, adresse Ethernet source : sa propre adresse matérielle et adresse Ethernet destination, l'adresse matérielle de la passerelle. Ainsi, puisque le paquet IP ne peut que contenir l'adresse IP finale, c'est l'en-tête Ethernet qui se charge de l'<strong>adressage sur le lien local</strong> tandis que IP se charge de l'<strong>adressage du chemin</strong>. C'est ce que vous aviez observé lors de votre lab de capture de trafic. Ce principe pour plus de clarté vous est également schématisé ci-dessous.</p>
+
+
+<h2>Fragmentation et réassemblage</h2>
+
+<p>La couche réseau est également responsable de fragmenter et réassembler les paquets lorsque cela est nécessaire pour traverser différents réseaux.</p>
+<p>Chaque technologie LAN possède une taille de paquet maximale de transfert notée <strong>MTU</strong> (Maximum Transfert Unit). Ethernet a une taille de paquet maximale de 1500 octets (vous pouvez consulter cette valeur en utilisant la commande <strong>ifconfig</strong>). Aujourd'hui, le monde est largement normalisé autour d'Ethernet, mais cela n'a pas été le cas lorsque IP a été introduit. En particulier, il était possible que deux hôtes soient séparés par plusieurs réseaux à MTU différents. Dans ce cas, une <strong>fragmentation</strong> suivie respectivement d'un <strong>réassemblage</strong> des paquets est opérée par la couche IP en entrée et respectivement en sortie du réseau supportant un MTU plus petit.</p>
+<p>IP est un système de transfert dit <em><strong>best-effort</strong></em>. Il n'y a pas accusé de réception de la couche IP ou de retransmission. Le paquet est envoyé et ce sont d'autres couches qui peuvent se charger de la retranmission du paquet perdu.</p>
+<p>Architecturalement, ce modèle <em>best-effort</em> est synonyme de mode non connecté : la couche IP ne conserve pas les informations sur les connexions de bout-en-bout et transmet simplement des paquets comme un LAN géant. La responsabilité de créer et de maintenir des connexions est laissée à la couche supérieure et notamment TCP. Une autre méthode dont nous avons déjà parlé est d'utiliser un circuit virtuel : dans ce cas, c'est le réseau lui-même qui va se charger de l'assurance de livraison du paquet. Il existe aussi des architectures particulière dites à Qualité de Service qui feront l'objet  d'un cours en parcours TR</p>
+<p>Un paquet IP peut donc être perdu, les données qu'il contient seront alors potentiellement retransmises et se retrouveront alors de nouveau dans un autre paquet IP (rappel, nous sommes en mode non connecté). La forme la plus fréquente de perte de paquets IP est lorsque la file d'attente d'un routeur déborde. Ce débordement représente la congestion du réseau. Les pertes de paquets, jetés car corrompus par la transmission sont plus rares (par exemple, moins d'un sur 10<sup>5</sup>, parfois beaucoup moins sur un lien satellite). Cependant, ces pertes restent importantes dans le cas de la mobilité. Des mécanismes de résilience sont alors utilisés comme les codes à effacement (<em>FEC : Forward Erasure Codes</em>). Dans un monde sans connexion, un grand nombre d'hôtes peut simultanément décider d'envoyer du trafic, qui traversera un routeur commun (on parle alors de <strong>goulot d'étranglement</strong>), dans lequel un débordement de file d'attente est difficile à éviter. Nous verrons cet aspect dans la section sur la congestion.</p>
+</body>
+</html>

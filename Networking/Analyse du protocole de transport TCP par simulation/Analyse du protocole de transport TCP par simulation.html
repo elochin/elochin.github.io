@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <link rel="stylesheet" href="../mystyle.css">
+  <meta name="generator" content="pandoc" />
+  <title>Analyse du protocole de transport TCP par simulation</title>
+</head>
+<body>
+  <h1>Analyse du protocole de transport TCP par simulation</h1>
+<strong>Pour tous les exercices de ce BE, vous pouvez travailler par groupe de deux; notez vos réponses, courbes et résultats dans un fichier Libreoffice que vous exporterez au format PDF. Réalisez un travail professionnel, c'est exactement le genre d'étude qui pourrait vous être demandée lors d'un stage au CNES ou Thales (cf. mon dernier email envoyé de proposition de stage). Servez-vous de ce document comme une &quot;fiche de révision&quot;, vous aurez le droit de l'utiliser le jour de l'examen.</strong>
+<p>Le but de ce BE est d'étudier le comportement du protocole TCP en utilisant le simulateur ns-2, qui comme nous l'avons vu en cours, utilise un langage simple pour la description physique et comportementale des réseaux.</p>
+
+<h2>Premier pas avec ns2</h2>
+
+L'exécution d'un script ns-2 consiste en la lecture de commandes et d'événements interprétés. Pour lancer un script, taper <code>ns window.tcl</code> dans un terminal ou <code>ns</code> est le simulateur qui prend en argument le fichier <a href="data/window.tcl">window.tcl</a> afin de simuler le réseau décrit par le script. Ce script consiste en une simple topologie de deux nœuds (machines) reliés en point-à-point. Un flot TCP est simulé avec l'ouverture de la connexion le transfert de données par le protocole FTP pour une durée de 10 secondes. Trois fichiers ont générés par ce script : <code>fout.tr</code> qui trace l'évolution de la <code>cwnd</code> en fonction du temps, <code>out.tr</code> qui est le fichier trace de ns-2 et <code>out.nam</code> le fichier d'animation. Ce fichier d'animation <code>out.nam</code> généré par ce même script peut-être lu via du logiciel nam en tapant <code>nam out.nam</code>.</p>
+<p>Vous pouvez très rapidement tracer l'évolution de la <code>cwnd</code> en tapant : <code>cat fout.tr | gnuplot -p -e &quot;plot '-'&quot;</code>.</p>
+
+<h2>Analyse de la fenêtre et des performances de TCP</h2>
+
+Nous avons vu en cours que la fenêtre de congestion (notée <em>cwnd</em>) est une variable d'état qui limite la quantité de données que TCP peut envoyer avant de recevoir un ACK. La fenêtre du récepteur, notée <em>rwnd</em> pour <em>receiver window</em> ou parfois <em>awnd</em> pour <em>advertised window</em> (fenêtre &quot;annoncée&quot; par le destinataire), est une variable qui annonce la quantité de données que le destinataire peut recevoir. Ensemble, les deux variables sont utilisées pour réguler le flux de données dans les connexions TCP, minimiser la congestion et améliorer les performances du réseau.</p>
+<p>Sous ns-2 <code>window_</code> correspond à <em>rwnd</em>, tandis que <code>maxcwnd_</code> correspond à la taille maximum de la fenêtre de congestion.</p>
+<p>TCP peut utilise ces deux fenêtres pour contrôler son flot d'émission et éviter l'encombrement du réseau. La quantité de données pouvant être transmise via une connexion TCP dépend forcément de la fenêtre de congestion gérée par la source. La fenêtre du récepteur étant maintenue par la destination.</p>
+<p>En phase de <em>slowstart</em>, TCP augmente rapidement la taille de sa fenêtre pour atteindre le taux de transfert maximal aussi rapidement que possible. Cette taille de fenêtre augmentant à mesure que les acquittements TCP confirment la capacité du réseau à transmettre les données sans erreur. Toutefois, ce processus ne dépassera pas la fenêtre annoncée maximale <em>rwnd</em>. Pour résumer, l'émetteur utilise donc deux variables:</p>
+<ol style="list-style-type: decimal">
+<li>une taille maximum de fenêtre de congestion avec une valeur initiale de <em>n.MSS (Maximum Segment Size)</em>. Sous ns-2 cette valeur initiale est donnée par<code>windowInit_</code>;</li>
+<li>la valeur du seuil de <em>slowstart</em> (notée <em>ssthresh</em>) est alors initialisée avec la valeur initiale <em>rwnd</em>.</li>
+</ol>
+<p>La progression de la fenêtre suit alors le principe énoncé dans le cours sur le &quot;contrôle de congestion&quot; slide #7 suivant l'algorithme ci-dessous :</p>
+<pre><code>if cwnd &lt;= ssthresh then 
+        Each time an Ack is received: 
+        cwnd = cwnd + 1 
+else   /*  cwnd &gt;  ssthresh  */ 
+        Each time an Ack is received: 
+        cwnd = cwnd + 1 / cwnd
+endif</code></pre>
+
+<h2>Questions</h2>
+<ol style="list-style-type: decimal">
+<li>Instrumentalisez <code>window.tcl</code> afin de prendre en argument les valeurs de <code>window_</code>, <code>maxcwnd_</code> et <code>windowInit_</code> (noté par la suite W, M, I)</li>
+<li>Tracez l'évolution de la fenêtre TCP pour (W, M, I) = (30, 30, 2) et (1000, 1000, 2) qu'observez-vous ? Dans quel cas constatez-vous des pertes de paquets et pourquoi ?</li>
+<li>La version du protocole TCP utilisée dans ce script est la première version de TCP et porte le nom de Tahoe. Une version améliorée, encore déployée aujourd'hui, porte le nom de Newreno. Modifier cette ligne <code>set tcp0 [new Agent/TCP/Newreno]</code> afin d'utiliser cette version. En prenant (W, M, I) = (1000, 1000, 2), quelle évolution majeure de la <code>cwnd</code> voyez-vous ? Quel est l'impact de cette évolution sur le débit moyen de TCP ?</li>
+<li>Changez la valeur du délai du lien à 100ms, puis 200ms. Quel est l'impact sur l'évolution de la fenêtre TCP ?</li>
+</ol>
+<p>Nous allons ajouter une fonctionnalité supplémentaire à votre script <code>window.tcl</code> permettant de calculer le débit d'un flot TCP sans avoir à recourir au script <code>throughput.pl</code>. Pour cela, ns-2 offre la possibilité de monitorer certaines variables dont celle du nombre d'acquittements reçus à destination. Cette valeur est cumulative. Pour se faire, intégrez la fonction suivante à votre script :</p>
+<pre><code>proc acktrace {} {
+  global tcp0 ptrace
+  set ns [Simulator instance]
+  set time 0.1
+  set now [$ns now]
+  puts $ptrace &quot;$now [$tcp0 set ack_]&quot;
+  $ns at [expr $now+$time] &quot;acktrace&quot;
+}</code></pre>
+<p>Cette fonction monitore l'agent <code>tcp0</code>. N'oubliez de créer le fichier pour sauvegarder vos traces au début de votre script avec : <code>set ptrace [open pout.tr w]</code> et de le fermer dans la procédure <code>finish</code> avec un <code>close(ptrace)</code>. Enfin n'oubliez pas de lancer la procédure avec <code>$ns at 0.0 &quot;acktrace&quot;</code>.</p>
+<ol start="4" style="list-style-type: decimal">
+<li>Modifiez le calcul réalisé afin de retourner la valeur du débit en réception exprimée en Mb/s. Avant de poursuivre, contrôlez la cohérence de cette valeur avec le script <code>throughput.pl</code> et ajouter une seconde colonne, comme pour le script perl, retournant le débit moyen cumulé;</li>
+<li>Grâce à cette nouvelle fonction, calculez le débit obtenu par votre flot lors du passage de la valeur du délai du lien de 10ms à 500ms. Que concluriez-vous quant à la performance de TCP sur lien long-délai ?</li>
+<li>Proposez une expérimentation qui illustre l'impact de la valeur initiale du <em>slowstart</em> (<code>windowInit_</code>) sur la performance de TCP. Expliquez vos résultats et vos courbes dans votre rapport. Que pensez-vous l'argumentation de Google de passer cette valeur initiale à 10 comme explicité dans cet article <a href="https://ai.google/research/pubs/pub36640">An Argument for Increasing TCP's Initial Congestion Window</a> ?</li>
+<li>Faite de même avec avec <code>window_</code> et <code>maxcwnd_</code> en produisant des courbes illustrant l'impact des valeurs prises par <code>window_</code> et <code>maxcwnd_</code> lorsque <code>window_ &lt; maxcwnd_</code> et <code>window_ &gt; maxcwnd_</code></li>
+</ol>
+</body>
+</html>
+</body>
+</html>

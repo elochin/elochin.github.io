@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+    <title>Datagram Forwarding</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+    <h1>Datagram Forwarding</h1>
+
+    L'en-tête d'un datagramme IP contient toujours une adresse de destination et une adresse source. Les routeurs intermédiaires s'intéressent à l'adresse destination qui leur permet de faire le paquet vers la bonne interface de sortie. Lorsqu'un paquet arrive, le routeur cherche l'adresse de destination (présumée unique) dans la table de routage et trouve les informations du prochain saut (<em>next hop</em>). Ce prochain saut correspond à l'adresse immédiate du routeur voisin et de l'interface par laquelle le paquet doit être transmis afin de faire un pas de plus vers sa destination finale. Dans le réseau ci-dessus, une table de routage complete pour S1 (à l'aide des numéros d'interface dans la colonne de <em>next hop</em>) serait :
+<p></p>
+<div>
+<table style="margin-left: auto; margin-right: auto;" class="docutils" border="1"><colgroup> <col width="55%" /> <col width="45%" /> </colgroup>
+<thead valign="bottom">
+<tr><th>S1</th><th> </th></tr>
+<tr><th>destination</th><th>next hop</th></tr>
+</thead>
+<tbody valign="top">
+<tr>
+<td>A</td>
+<td>0</td>
+</tr>
+<tr>
+<td>C</td>
+<td>1</td>
+</tr>
+<tr>
+<td>B</td>
+<td>2</td>
+</tr>
+<tr>
+<td>D</td>
+<td>2</td>
+</tr>
+<tr>
+<td>E</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: left;">La table pour S2 serait alors :</p>
+<table style="margin-left: auto; margin-right: auto; width: 166px; height: 160px;" class="docutils" border="1"><colgroup> <col width="55%" /> <col width="45%" /> </colgroup>
+<thead valign="bottom">
+<tr><th>S2</th><th style="text-align: center;"> </th></tr>
+<tr><th>destination</th><th>next hop</th></tr>
+</thead>
+<tbody valign="top">
+<tr>
+<td>A,C</td>
+<td>0</td>
+</tr>
+<tr>
+<td>D</td>
+<td>1</td>
+</tr>
+<tr>
+<td>E</td>
+<td>2</td>
+</tr>
+<tr>
+<td>B</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+
+<p>Toujours considérant le réseau schématisé ci-dessus, tous les liens sont point à point. Ainsi, chaque interface possède un voisin immédiat unique lié par une interface. On peut donc remplacer les entrées dans la colonne <em>next hop</em> par le nom du voisin correspondant, ce qui rend une table beaucoup plus lisible pour un ingénieur réseaux. La table S1 peut maintenant être écrite comme suit (avec la consolidation des entrées pour B, D et E):</p>
+<p></p>
+<table style="margin-left: auto; margin-right: auto;" class="docutils" border="1"><colgroup> <col width="55%" /> <col width="45%" /> </colgroup>
+<thead valign="bottom">
+<tr><th>S1</th><th> </th></tr>
+<tr><th>destination</th><th>next hop</th></tr>
+</thead>
+<tbody valign="top">
+<tr>
+<td>A</td>
+<td>A</td>
+</tr>
+<tr>
+<td>C</td>
+<td>C</td>
+</tr>
+<tr>
+<td>B,D,E</td>
+<td>S2</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>Et même mieux encore, par l'ajout d'une <strong>destination par défaut</strong> (i.e. <strong>route par défaut</strong>) qui est, par analogie, l'équivalent du panneau routier "toutes directions" :Ce principe est communément appelé transfert <strong>sans-état</strong>. En effet, les tables de routage n'ont pas d'état par connexion comme édicté par la <a href="http://tools.ietf.org/html/rfc1122.html">RFC 1122 </a><a href="http://tools.ietf.org/html/rfc1122.html">Requirements for Internet Hosts -- Communication Layers</a> :<em> "To improve robustness of the communication system, gateways are designed to be stateless, forwarding each IP datagram independently of other datagrams. As a result, redundant paths can be exploited to provide robust service in spite of failures of intervening gateways and networks."</em></p>
+<p>L'alternative pour le transfert de datagramme est le circuit virtuel. Dans ces réseaux, chaque routeur maintient alors un état sur chaque connexion qui le traverse. Nous ne rentrerons pas dans les détails de ce système de routage qui est basé sur des labels. Cependant, pour en savoir plus un bon départ est la <a href="https://tools.ietf.org/html/rfc3031">RFC3031</a> qui explicite le principe de l'architecture <span style="font-size: medium;">MPLS (<span style="font-size: medium;"><em>Multiprotocol Label Switching Architecture)</em> permettant ce type de routage.</p>
+</body>
+</html>

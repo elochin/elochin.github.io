@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+    <title>Notions de routage IP</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+
+<h1>Notions de routage IP</h1>
+
+<h2>Pourquoi inscrire une adresse source et pas uniquement l'adresse destination ?</h2>
+
+Parce que cette couche travaille en mode non connecté : il n'y a pas donc de chemin virtuel entre la source et la destination et chaque paquet du flot peut prendre un chemin différent (comme vu dans les slides au tout début de ce cours). Ceci est aussi valable pour la réponse si elle a lieu. Il lui faut donc impérativement l'adresse de retour afin que la destination puisse répondre (si il y a lieu) à l'émetteur. Le paquet sera ensuite transmis à la couche liaison/physique.
+
+<h2>Que se passe-t-il si depuis cette machine au LIP6, nous cherchons à atteindre la machine www.isae.fr ayant pour adresse 192.93.254.85 ?</h2>
+
+Lorsque la machine 132.227.1.1/16 appliquera son masque de sous-réseau à cette adresse, elle obtiendra 192.93.0.0. Le résultat étant différent de 132.227.0.0, elle saura alors que www.isae.fr n'est pas une machine appartenant au réseau de l'université de Paris 6. C'est là qu'un autre protocole rentre en jeu : ARP (Address Resolution Protocol). Puisque cette www.isae.fr est une machine distante pour la machine 132.227.1.1/16, elle va consulter sa propre table de routage afin de trouver une passerelle ou route par défaut.
+<div class=lms-info>
+	Vous pouvez connaitre votre passerelle par défaut en tapant l'une des deux commandes suivantes : <code>route -n</code> ou <code>netstat -nr</code> (l'option <code>-n</code> dans les deux cas évite de faire la résolution DNS). Par exemple sur ma machine :
+<pre><code>
+e.lochin@pc-lochin:~$ netstat -nr
+Table de routage IP du noyau
+Destination     Passerelle      Genmask         Indic   MSS Fenêtre irtt Iface
+0.0.0.0         10.161.0.1      0.0.0.0         UG        0 0          0 eth2
+10.161.0.0      0.0.0.0         255.255.0.0     U         0 0          0 eth2
+</code></pre>
+La route par défaut est représentée par le réseau 0.0.0.0 tandis que le réseau 10.161.0.0 correspond à mon sous réseau local (i.e. c'est mon adresse réseau). Ma passerelle est donc la machine distante ayant pour adresse IP 10.161.0.1.
+</div>
+
+<div class=lms-example>
+Effectuez cette opération sur votre machine de cours.
+
+Effectuez cette opération sur une machine et un routeur de votre topologie CORE. La table de routage (dynamiquement calculée par RIP) du routeur contient-elle une adresse par défaut ? Quel type d'adresses y trouvez-vous ? Comparez avec une machine d'extrémité CORE. Qu'en déduisez-vous ?
+</div>
+
+Cette route par défaut va permettre l'acheminement du paquet vers un autre noeud du réseau qui possède une interconnection vers un autre réseau. Supposons que la passerelle pour cette machine soit l'adresse 132.227.1.254/16. Cette machine se trouve effectivement sur le même lien local 132.227.0.0. La couche IP va donc solliciter l'adresse matérielle de cette passerelle en émettant un paquet ARP qui retournera alors son adresse matériel. Celle-ci connue, il construira alors un paquet IP avec pour adresse IP source  132.227.1.1, adresse IP destination 192.93.254.85, adresse Ethernet source : sa propre adresse matérielle et adresse Ethernet destination, l'adresse matérielle de la passerelle. Ainsi, puisque le paquet IP ne peut que contenir l'adresse IP finale, c'est l'en-tête Ethernet qui se charge de l'adressage sur le lien local tandis que IP se charge de l'adressage du chemin. C'est ce que vous aviez observé lors de votre lab de capture de trafic. Ce principe pour plus de clarté vous est également illustré dans le lab ci-dessous.
+
+<div class=lms-example>
+A la lumière de cette nouvelle information, relancer votre lab de capture de trafic et observez les modifications qui s'opèrent sur l'en-tête Ethernet au fur et à mesure que le datagramme progresse sur votre topologie. 
+</div>
+
+Lorsque un hôte communique avec une autre machine du réseau, il mémorise son adresse matériel dans un cache (le cache ARP) qui est accessible via la commande <code>arp -a</code>. Consultez les valeurs de ce cache sur chacune des machines avant et après avoir effectué un ping. Pour être certains que chaque cache soit vierge, n'hésitez pas à stopper et relancer l'émulation.
+
+<div class=lms-example>
+	Consultez sur votre machine de cours votre passerelle par défaut. Toujour sur cette machine, tapez <code>arp -a</code>, que remarquez-vous ?
+</div>
+
+Les adresses IP, à la différence des adresses Ethernet, sont affectées administrativement. Si un jour vous souhaitez obtenir une telle classe d'adresse, vous obtiendrez alors votre préfixe de réseau de classe B de l'<a href="https://www.afnic.fr/">Association Française pour le Nommage Internet en Coopération</a> (AFNIC), tâche qui lui a été déléguée pour les adresses françaises par l'Internet Assigned Numbers Authority (IANA). A vous maintenant d'adresser correctement vos machines en complétant la partie hôte de façon appropriée pour votre site local . Ainsi, une adresse IP ne sert pas uniquement d'identifiant mais est aussi un localisateur (locator) contenant des informations de localisation intégrées (du moins, dans le sens de son emplacement dans la hiérarchie d'attribution des adresses IP qui n'est pas forcément géographique). En comparaison, les adresses Ethernet, sont des identifiants de terminaux mais pas des localisateurs.
+
+</body>
+</html>

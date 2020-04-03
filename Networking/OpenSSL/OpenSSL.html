@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="stylesheet" href="../mystyle.css">
+  <title>OpenSSL</title>
+</head>
+<body>
+
+	<h1>OpenSSL</h1>
+
+Vous serez très certainement confronté à l'utilisation d'une solution de chiffrement lors de votre carrière professionnelle. Par exemple, le personnel ISAE qui travaille sur des projets sensibles utilise lors de ses échanges avec la DGA un outil de chiffrement spécifique : <a href="https://fr.wikipedia.org/wiki/Acid_Cryptofiler">Acid Cryptofiler</a> qui implémente le même principe de chiffrement décrit ci-dessous. Le BE suivant vous propose de vous initier à quelques fonctionnalités essentielles d'une librairie de chiffrement libre.
+
+<h2>Le protocole TLS/SSL</h2>
+<p>Le protocole SSL (Secure Socket Layer) a été développé par la société Netscape Communications Corporation pour permettre aux applications client/serveur de communiquer de façon sécurisée. TLS (Transport Layer Security) est une évolution de SSL réalisée par l'IETF. Basé sur le SSL 3.0, le TLS est introduit en 1999 comme la nouvelle version du SSL. Le protocole TLS s'intercale entre la couche transport et les applications qui s'appuient sur TCP. Une session TLS/SSL se déroule en deux temps :</p>
+
+<ol>
+<li><p>une phase de poignée de mains (<em>handshake</em>) durant laquelle le client et le serveur s'identifient, conviennent du système de chiffrement et d'une clé qu'ils utiliseront par la suite;</p></li>
+<li><p>une phase de communication durant laquelle les données échangées sont compressées, chiffrées et signées.</p></li>
+</ol>
+<p>L'identification durant la poignée de mains est assurée à l'aide de certificats X509.</p>
+
+<h2>L'outil OpenSSL</h2>
+
+<p>OpenSSL est une boîte à outils cryptographiques implémentant les protocoles SSL et TLS qui offre à la fois une bibliothèque de programmation en C permettant de réaliser des applications client/serveur sécurisées s'appuyant sur SSL/TLS et une commande en ligne (<code>openssl</code>) permettant :</p>
+<ul>
+<li>la création de clés RSA, DSA (signature)</li>
+<li>la création de certificats X509</li>
+<li>le calcul d'empreintes (MD5, SHA, RIPEMD160, ...)</li>
+<li>le chiffrement et déchiffrement (DES, IDEA, RC2, RC4, Blowfish, ...)</li>
+<li>la réalisation de tests de clients et serveurs SSL/TLS</li>
+<li>la signature et le chiffrement de courriers (S/MIME)</li>
+</ul>
+<p>Consultez la page de manuel du programme pour connaître toutes ses fonctionnalités : <code>man openssl</code>.</p>
+<p>La syntaxe générale de la commande <code>openssl</code> est :</p>
+<pre><code>$ openssl &lt;commande&gt; &lt;options&gt;</code></pre>
+<p>(le $ est le prompt du shell). Dans le texte qui suit, les commandes invoquant <code>openssl</code> supposent que cette commande est dans votre PATH.</p>
+
+<h2>RSA avec OpenSSL</h2>
+
+<h3>Génération d'une paire de clés</h3>
+<p>On peut générer une paire de clés RSA avec la commande <code>genrsa</code> de OpenSSL.</p>
+<pre><code>$ openssl genrsa -out &lt;fichier&gt; &lt;taille&gt;</code></pre>
+<p>où fichier est un nom de fichier de sauvegarde de la clé, et taille et la taille souhaitée (exprimée en bits) du modulus de la clé. Par exemple, pour générer une paire de clés de 1024 bits, stockée dans le fichier maCle.pem , on utilise la commande suivante :</p>
+<pre><code>$ openssl genrsa -out maCle.pem 1024</code></pre>
+<p>Le fichier obtenu est un fichier au format PEM (<a href="https://en.wikipedia.org/wiki/Privacy-Enhanced_Mail">Privacy Enhanced Mail</a>, format standard de stockage de clés et certificats), que vous pouvez consulter en tapant : <code>cat maCle.pem</code>.</p>
+
+<h3>Visualisation des clés RSA</h3>
+<p>La commande <code>rsa</code> permet de visualiser le contenu d'un fichier au format PEM contenant une paire de clés RSA.</p>
+<pre><code>$ openssl rsa -in maCle.pem -text -noout</code></pre>
+<p>L'option <code>-text</code> demande l'affichage décodé de la paire de clés. L'option <code>-noout</code> supprime la sortie normalement produite par la commande rsa .</p>
+<p>Les différents éléments de la clé sont affichés en hexadécimal (hormis l'exposant public). On peut distinguer le modulus, l'exposant public (qui par défaut est toujours 65537), l'exposant privé, les nombres premiers facteurs du modulus, plus trois autres nombres qui servent à optimiser l'algorithme de déchiffrement. OpenSSL n'autorise que deux exposants publics : 65537 (valeur par défaut) ou 3 obtenu avec l'option <code>-3</code></p>
+<div class="lms-exercise" markdown="1">
+<p> <span class="lms-computer"></span> Suite au cours de cryptographie, donnez une explication du choix de la valeur 65537 pour exposant public par défaut.</p>
+</div>
+<h3>Chiffrement d'un fichier de clés RSA</h3>
+<p>Il n'est pas prudent de laisser une paire de clés en clair (surtout la partie privée). Avec la commande <code>rsa</code>, il est possible de chiffrer une paire de clés. Pour cela trois options sont possibles qui précisent l'algorithme de chiffrement symétrique à utiliser : <code>-des</code> , <code>-des3</code> et <code>-idea</code>. Par exemple :</p>
+<pre><code>openssl rsa −in maCle.pem −des3 −out maCle.pem</code></pre>
+<p>Une phrase de passe est demandée deux fois pour générer une clé symétrique protégeant l'accès à la clé.</p>
+<p>Sachez qu'il est possible de chiffrer le fichier lors de sa génération. Il suffit de mettre l'une des trois options <code>-des</code>, <code>-des3</code>, <code>-idea</code> dans la ligne de commande <code>genrsa</code>. La liste des algorithmes disponibles peut-être obtenue par <code>openssl help</code>, ils sont nombreux :</p>
+<pre><code>Cipher commands (see the `enc&#39; command for more details)
+aes-128-cbc       aes-128-ecb       aes-192-cbc       aes-192-ecb       
+aes-256-cbc       aes-256-ecb       base64            bf                
+bf-cbc            bf-cfb            bf-ecb            bf-ofb            
+camellia-128-cbc  camellia-128-ecb  camellia-192-cbc  camellia-192-ecb  
+camellia-256-cbc  camellia-256-ecb  cast              cast-cbc          
+cast5-cbc         cast5-cfb         cast5-ecb         cast5-ofb         
+des               des-cbc           des-cfb           des-ecb           
+des-ede           des-ede-cbc       des-ede-cfb       des-ede-ofb       
+des-ede3          des-ede3-cbc      des-ede3-cfb      des-ede3-ofb      
+des-ofb           des3              desx              rc2               
+rc2-40-cbc        rc2-64-cbc        rc2-cbc           rc2-cfb           
+rc2-ecb           rc2-ofb           rc4               rc4-40            
+seed              seed-cbc          seed-cfb          seed-ecb          
+seed-ofb </code></pre>
+<div class="lms-exercise" markdown="1">
+<p> <span class="lms-computer"></span> Avec la commande Unix <code>cat</code> observez le contenu du fichier <code>maCle.pem</code>. Utilisez à nouveau la commande <code>rsa</code> pour visualiser le contenu de la clé.</p>
+</div>
+<h3>Exportation de la partie publique</h3>
+<p>La partie publique d'une paire de clés RSA est publique, et à ce titre peut être communiquée à n'importe qui. Le fichier <code>maCle.pem</code> contient la partie privée de la clé, et ne peut donc pas être communiqué tel quel (même s'il est chiffré). Avec l'option -pubout on peut exporter la partie publique d'une clé.</p>
+<pre><code>$ openssl rsa -in maCle.pem -pubout -out maClePublique.pem</code></pre>
+<div class="lms-exercise" markdown="1">
+<p> <span class="lms-computer"></span> Notez le contenu du fichier <code>maClePublique.pem</code>. Remarquez les marqueurs de début et de fin. Avec la commande <code>rsa</code> visualisez la clé publique. Attention vous devez préciser l'option <code>-pubin</code>, puisque seule la partie publique figure dans le fichier <code>maClePublique.pem</code>.</p>
+</div>
+<h3>Chiffrement/déchiffrement de données avec RSA</h3>
+<p>On peut chiffrer des données avec une clé RSA. Pour cela on utilise la commande <code>rsautl</code> :</p>
+<pre><code>$ openssl rsautl -encrypt -in myfile_in -inkey maCle.pem -out myfile_out</code></pre>
+<p>où :</p>
+<ul>
+<li><code>myfile_in</code> est le fichier des données à chiffrer. Attention, le fichier des données à chiffrer ne doit pas dépasser 116 octets pour une clé de 1024 bits;</li>
+<li>la clé est le fichier contenant la clé RSA. Si ce fichier ne contient que la parte publique de la clé, il faut rajouter l'option -pubin;</li>
+<li><code>myfile_out</code> est le fichier de données chiffré.</li>
+</ul>
+Pour déchiffrer on remplace l'option <code>-encrypt</code> par <code>-decrypt</code>. Le fichier contenant la clé doit évidemment contenir la partie privée.
+<div class="lms-exercise" markdown="1">
+<p> <span class="lms-computer"></span> Chiffrez le fichier de votre choix avec le système symétrique de votre choix. Chiffrez la clé ou le mot de passe utilisé(e) avec la clé publique de votre destinataire (demandez-lui sa clé publique si vous ne l'avez pas). Envoyez-lui le mot de passe chiffré ainsi que le fichier chiffré.</p>
+</div>
+<h3>Signature de fichiers</h3>
+<p>Il n'est possible de signer que de petits documents. Pour signer un gros document on calcule d'abord une empreinte de ce document. La commande <code>dgst</code> permet de réaliser cette opération.</p>
+<pre><code>$ openssl dgst &lt;hachage&gt; −out &lt;empreinte&gt; &lt;fichier&gt;</code></pre>
+<p>où <code>hachage</code> est une fonction de hachage. Avec OpenSSL , plusieurs fonctions de hachage sont proposées dont :</p>
+<ul>
+<li>MD5 (option <code>-md5</code>), qui calcule des empreintes de 128 bits;</li>
+<li>SHA1 (option <code>-sha1</code>), qui calcule des empreintes de 160 bits;</li>
+<li>RIPEMD160 (option <code>-ripemd160</code>), qui calcule des empreintes de 160 bits.</li>
+</ul>
+<p>Signer un document revient à signer son empreinte. Pour cela, on utilise l'option <code>-sign</code> de la commande <code>rsautl</code></p>
+<pre><code>$ openssl rsautl -sign -in &lt;empreinte&gt; -inkey &lt;cle&gt; -out &lt;signature&gt;</code></pre>
+<p>et pour vérifier la signature :</p>
+<pre><code>$ openssl rsautl -verify -in &lt;signature&gt; -pubin -inkey &lt;cle&gt; -out &lt;empreinte&gt;</code></pre>
+<p>il reste ensuite à vérifier que l'empreinte ainsi produite est la même que celle que l'on peut calculer. L'option <code>-pubin</code> indique que la clé utilisée pour la vérification est la partie publique de la clé utilisée pour la signature.</p>
+<div class="lms-exercise" markdown="1">
+<p> <span class="lms-computer"></span> Signez le fichier de votre choix, puis vérifiez la signature. Constatez ce qui se passe lorsque vous vérifiez la signature d'un fichier non signé.</p>
+</div>
+<h2>Chiffrer/déchiffer un fichier avec une clé symétrique</h2>
+<p>Les opérations ci-dessous sont généralement utilisés pour échanger une clé de session symétrique. Nous allons voir maintenant comment chiffrer un fichier avec OpenSSL :</p>
+<pre><code>openssl enc -e -aes-256-cbc -in myfile_in -out myfile_out</code></pre>
+<ul>
+<li>enc : on précise que l'on va utiliser un algorithme de chiffrement</li>
+<li>-e : on chiffre un fichier</li>
+<li>-aes-256-cbc : l’algorithme utilisé ici est AES</li>
+<li>-in : le nom du fichier à chiffrer</li>
+<li>-out : le nom de sortie du fichier chiffré</li>
+</ul>
+<p>Il vous sera alors demander un mot de passe de protection supplémentaire.</p>
+<p>L'opération inverse s'effectue tout simplement avec <code>-d</code> à la place de <code>-e</code></p>
+<pre><code>openssl enc -d -aes-256-cbc -in fichier-chiffré -out fichier-déchiffré</code></pre>
+<div class="lms-exercise" markdown="1">
+<p> <span class="lms-computer"></span> Testez ces commandes sur le fichier de votre choix.</p>
+</div>
+<h2>Pour conclure</h2>
+<p>Il existe des logiciels basés sur OpenSSL qui facilitent la gestion et la création des clés RSA tel <a href="https://www.gnupg.org/">GnuPG</a>. Pour savoir comment utiliser vos clés dans Thunderbird, je vous conseille de vous référer au tutoriel Mozilla suivant : <a href="https://support.mozilla.org/fr/kb/signature-numerique-et-chiffrement-des-messages">signature numérique et chiffrement des messages</a>. Sachez également que vous pouvez développer vos propres codes en C en utilisant la <a href="https://github.com/openssl/openssl">librairie C openssl</a>.</p>
+</div>
+</body>
+</html>

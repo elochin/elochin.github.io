@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+    <title>Connaitre sa configuration réseau, la commande ifconfig</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+
+    <h1>Connaitre sa configuration réseau, la commande <code>ifconfig</code></h1>
+
+    Pour connaitre votre(vos) propre(s) adresse(s) IPv4 ou v6 et adresse(s) matériel (resp. pour Linux <code>inet adr - adr inet6 - HWaddr</code>) associées à votre(vos) interface(s) réseau, vous pouvez utiliser <code>ipconfig</code> sous Windows, <code>ifconfig</code> sur Linux et les systèmes MAC, ou une commande alternative plus récente <code>ip addr show</code> sous Linux.
+	<p>
+Chaque interface est identifiée par le mot clé eth suivi d'un numéro (exemple <code>eth0</code> pour la première interface). Certaines versions de Linux nomment les interfaces par leur type. Par exemple, comme ci-dessous vous pouvez trouver em1 à la place d'<code>eth1</code>, préfixe identifiant les cartes de type Intel. La sortie répertorie généralement toutes les interfaces actives mais peut être limitée aux interfaces sélectionnées si désiré. La commande <code>ip</code> en particulier est à usage multiple et très puissante.
+
+<pre><code>
+[e.lochin@pcb07-062-06 ~]$ ifconfig 
+em1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 10.162.62.6  netmask 255.255.0.0  broadcast 10.162.255.255
+        inet6 fe80::9a90:96ff:fea1:b312  prefixlen 64  scopeid 0x20<link>
+        ether 98:90:96:a1:b3:12  txqueuelen 1000  (Ethernet)
+        RX packets 40868652  bytes 3380768246 (3.1 GiB)
+        RX errors 0  dropped 4  overruns 0  frame 0
+        TX packets 290266  bytes 41899079 (39.9 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+        device interrupt 20  memory 0xf7100000-f7120000  
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1  (Local Loopback)
+        RX packets 242  bytes 17490 (17.0 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 242  bytes 17490 (17.0 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+virbr0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+        inet 192.168.122.1  netmask 255.255.255.0  broadcast 192.168.122.255
+        ether 52:54:00:40:16:47  txqueuelen 1000  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+	</code></pre>
+
+</body>
+</html>

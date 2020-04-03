@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+	<title>Les commandes traceroute, route, netstat</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+
+	<h1>Les commandes <code>traceroute</code>, <code>route</code>, <code>netstat</code></h1>
+	
+	<h2><code>traceroute</code></h2>
+
+La commande traceroute permet de lister l'ensemble des routeurs entre la source et la destination comme montré sur l'exemple ci-dessous depuis ma box ADSL personnelle vers l'ISAE :
+<p>
+<pre><code>
+host:~$ traceroute www.isae.fr
+traceroute to www.isae.fr (192.93.254.85), 30 hops max, 60 byte packets
+ 1  192.168.0.254 (192.168.0.254)  1.162 ms  1.720 ms  2.293 ms
+ 2  bon31-1-81-56-87-254.fbx.proxad.net (81.56.87.254)  33.124 ms  33.446 ms  34.149 ms
+ 3  213.228.9.254 (213.228.9.254)  35.343 ms  35.462 ms  36.387 ms
+ 4  toulouse-crs8-2-be1006.intf.routers.proxad.net (194.149.160.69)  39.408 ms  39.759 ms  40.010 ms
+ 5  bzn-crs16-2-be1119.intf.routers.proxad.net (194.149.163.25)  54.216 ms  55.004 ms  55.329 ms
+ 6  p11-9k-3-be2001.intf.routers.proxad.net (194.149.163.66)  51.336 ms  43.309 ms  41.614 ms
+ 7  aub-6k-1-po21.intf.routers.proxad.net (212.27.50.138)  43.302 ms *  44.693 ms
+ 8  * * *
+ 9  te0-0-0-3-paris1-rtr-001.noc.renater.fr (193.51.177.24)  64.842 ms  65.997 ms  66.888 ms
+10  te0-0-0-3-lyon1-rtr-001.noc.renater.fr (193.51.177.39)  68.453 ms  68.344 ms  60.677 ms
+11  te1-1-clermont-rtr-021.noc.renater.fr (193.51.177.227)  59.969 ms  60.239 ms  59.647 ms
+12  193.51.177.230 (193.51.177.230)  54.779 ms  56.495 ms  56.555 ms
+13  * * *
+14  remip-2000-te1-3-toulouse-rtr-021.noc.renater.fr (193.51.181.177)  62.466 ms  64.247 ms  64.293 ms
+15  193.52.8.118 (193.52.8.118)  64.936 ms  65.595 ms  65.426 ms
+16  193.55.105.124 (193.55.105.124)  59.700 ms  58.955 ms  59.298 ms
+17  * * *
+18  * * *
+19  * * *
+</code></pre>
+<p>
+Comme vous le remarquez, le dernier routeur ne répond pas au traceroute. Cet outil étant, tout comme ping, basé sur le protocole ICMP et l'ISAE filtrant les requêtes ICMP, des * s'affichent lorsqu'une réponse n'est pas renvoyée. Vous voyez également que le saut #13 ne renvoie pas de réponse, ce qui n'empêche pas le déroulement complet du traceroute. Nous reviendrons sur cette commande plus loin dans le cours.
+<p>
+Attention ! Pour l'utiliser dans CORE il vous faudra changer une variable du noyau en tapant dans n'importe quel terminal d'une machine virtuelle :
+<p>
+<code>sysctl -w net.ipv4.icmp_ratelimit=0</code>
+<p>
+Pensez également à lancer le traceroute avec l'option <code>-n</code> pour éviter la résolution des noms si vous n'avez pas renseigné le fichier <code>/etc/hosts</code>
+
+<h2><code>route</code> et <code>netstat</code></h2>
+
+Les commandes <code>route</code>, <code>route print</code> (Windows), <code>ip route show</code> (linux), et <code>netstat -r</code> (pour tous) affichent la table de routage locale. Pour les machines qui ne sont pas des routeurs, cette table retourne la <b>route par défaut</b> de la machine (nous verrons dans la section sur la couche IP à quoi correspond cette route) et généralement rien de plus. La route par défaut est habituellement listée avec une destination 0.0.0.0 ayant pour masque de sous-réseau (netmask) 0.0.0.0 (equivalent à 0.0.0.0/0). Cette commande vous sera utile lorsque nous aborderons la couche IP.
+<p>
+La commande and <code>netstat -a</code> retourne les connexions UDP et TCP existantes sur votre machine. Très utile pour un futur programmeur d'application réseau tel que vous.
+</body>
+</html>

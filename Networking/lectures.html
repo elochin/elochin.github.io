@@ -1,0 +1,156 @@
+<html>
+	<head>
+		<title>Computer Networking</title>
+		<meta charset="utf-8">
+    		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" href="mystyle.css">
+		<!--link rel="stylesheet" type="text/css" href="https://lms.isae.fr/theme/yui_combo.php?rollup/3.17.2/yui-moodlesimple-min.css" /><script id="firstthemesheet" type="text/css">/** Required in order to fix style inclusion problems in IE with YUI **/</script><link rel="stylesheet" type="text/css" href="https://lms.isae.fr/theme/styles.php/fordson/1585134667_1/all" /-->
+	</head>
+<body>
+<h1>Architecture réseaux avancée</h1>
+<img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/CC-BY-SA_icon.svg"></img>
+<font size=2px><a href="https://creativecommons.org/licenses/by-sa/4.0/">Available under Creative Commons-ShareAlike 4.0 International License.</a></font>
+<p>
+<em>Note these pages contains some material, extracted, adapted, translated from :
+<ul>
+	<li><a href="https://www.inf.usi.ch/carzaniga/edu/material/index.html#ntw">Antonio Carzaniga</a> lectures from Lugano university, use and modification of this material granted by the author</li>
+	<li><a href="http://intronetworks.cs.luc.edu/">Peter L Dordal</a> testbook from Loyola University Chicago, use, translation and modification of this material granted by the author</li>
+	<li><a href="https://github.com/obonaventure/cnp3/tree/master/book-2nd">Olivier Bonaventure</a> testbook from UCL Louvain, use, translation and modification of this material granted by the author</li>
+</ul>
+When non-specified, the material (in particular all ns-2, CORE labs and several notebooks) is proposed by the author of this webpage (Emmanuel Lochin) and can be freely used without explicit author consent while also remaining under the <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC licence</a>.
+</em>
+
+<h2>Avant propos</h2>
+
+Il existe de nombreuses disciplines dans lesquelles l'ordre de présentation est largement convenu. Malheureusement, les réseaux informatiques ne tombent pas dans cette catégorie.
+Le domaine des réseaux informatiques se caractérise par de nombreuses interconnexions pour lesquelles, comme dans la plupart des domaines techniques, il est difficile de trouver un ordre de présentation qui ne comporte pas des retours en arrière ou des sauts dans les futurs chapitres. Cela reste vrai, même si dans plusieurs ouvrages et un peu comme on le fait ici, un parcours des couches hautes vers les couches basses est globalement suivi. L'approche développée dans ce cours repose sur un exemple compagnon (traduction approximative de <em>running example</em>) avec lequel des blocs d'études sont proposés pour comprendre chacune des parties composant l'exemple.
+On se focalisera dans ce cours sur trois composantes essentielles que sont : LAN, IP et TCP/UDP. Les réseaux locaux, notés LAN  pour Local Area Networks, sont des réseaux «physiques» qui fournissent la connexion entre les machines à l'intérieur, par exemple : d'une maison, d'un institut tel l'ISAE ou d'une société. Comme leur nom l'indique, les LAN sont "locaux", c'est alors le rôle d'une autre couche : IP, ou Internet Protocol, de fournir une abstraction supplémentaire afin de relier plusieurs réseaux locaux entre eux et fournir à plus grande échelle le réseau Internet que vous connaissez. Enfin, les protocoles TCP et UDP, acronymes que vous avez certainement maintes fois rencontré, s'attachent au transport et à l'envoi effectif des données à l'utilisateur.
+<p>
+Ce cours contient également une autre matière importante telle la section sur le transfert de datagramme, au centre de commutation et de routage par paquets. Ce cours traitera également des paquets en général, de la congestion à un haut niveau. Ne vous inquiétez pas, vous aurez la base nécessaire et suffisante et ces sujets seront revisités et approfondis en fonction des choix que vous effectuerez durant votre scolarité. Aussi, lorsque cela sera le cas, une référence vers un cours vous sera donnée. Enfin, nous aborderons aussi la notion de pare-feu (firewall) et la translation d'adresses réseau.
+
+<h2>Slides</h2>
+
+<h3>Network basics</h3>
+
+<a href="Slides/basic_concepts-printer.pdf">Concepts de base</a>
+<br><a href="Slides/metrics-printer.pdf">Les métriques importantes</a>
+<br><a href="Slides/web-printer.pdf">Les applications réseaux et le web</a>
+<br><a href="Slides/web2-printer.pdf">Hyper-Text Transfer Protocol (HTTP)</a>
+<br><a href="Slides/dns-printer.pdf">DNS</a>
+<br><a href="Slides/transport-printer.pdf">Couche Transport</a>
+<br><a href="Slides/tcp-printer.pdf">TCP</a>
+<br><a href="Slides/congestion-printer.pdf">Congestion control</a>
+<br><a href="Slides/network-printer.pdf">Network layer</a>
+<br><a href="Slides/network-ipaddressing-printer.pdf">IP addressing</a>
+<br><a href="Slides/routing-printer.pdf">Basics of Routing and Link-State Routing</a>
+<br><a href="Slides/CoucheLiaison-printer.pdf">Couche Liaison (1ere partie)</a>
+<br><a href="Slides/CoucheLiaison2-printer.pdf">Couche Liaison (2eme partie)</a>
+
+<h3>Advanced computer networking</h3>
+
+<a href="Slides/itr3A-aqm.pdf">Gestion des files d’attente automatique avec des techniques d'AQM</a>
+<br><a href="Slides/QoSFairQueuing-printer.pdf">QoS and FairQueuing</a>
+<br><a href="Slides/DiffServQoS-printer.pdf">DiffServ QoS</a>
+<br><a href="Slides/streaming-printer.pdf">Multimedia Streaming and Erasure Coding</a>
+<br><a href="Slides/satellite_tcp-printer.pdf">Le transport sur liens satellites, des PEPs aux DTNs</a>
+<br><a href="Slides/ns-2-printer.pdf">La simulation avec ns-2</a>
+
+<h2>Notebook et labs</h2>
+
+Cours qui fait suite aux slides présentés lors de la première séance et rentre dans le détails des concepts abordés.
+
+<h3>Présentation</h3>
+
+<a href="Présentation/Présentation.html">Quelques définitions avant de démarrer</a>
+<br><a href="Comment utiliser CORE/Comment utiliser CORE.html">Comment utiliser CORE ?</a>
+<br><a href="Running example/Running example.html">Running example</a>
+
+<h3>Quelques outils réseaux utiles</h3>
+
+<a href="La commande ping/La commande ping.html">La commande ping</a>
+<br><a href="nslookup dig host/nslookup dig host.html"><code>nslookup</code>, <code>dig</code> et <code>host</code></a>
+<br><a href="TP Curl/TP Curl.html">La commande Curl</a>
+<br><a href="Ifconfig/Ifconfig.html">Connaitre sa configuration réseau, la commande <code>ifconfig</code></a>
+<br><a href="Traceroute/Traceroute.html">Les commandes <code>traceroute</code>, <code>route</code> et <code>netstat</code></a>
+<br><a href="Sniffers/Sniffers.html">Les "sniffers" de paquets <code>tcpdump</code>, <code>tshark</code> et <code>wireshark</code></a>
+
+<h3>Premiers pas avec HTTP</h3>
+
+<a href="La résolution des noms/La résolution des noms.html">La résolution des noms</a>
+<br><a href="Adresse IP et résolution de nom/Adresse IP et résolution de nom.html">Adresse IP et résolution de nom, mise en oeuvre avec <code>/etc/hosts</code></a>
+<br><a href="https://www.youtube.com/watch?v=vd3dH90tdhk&feature=youtu.be">Vint Cerf explains...Who runs the Internet's address book?</a>
+<br><a href="Jouons avec le protocole HTTP/Jouons avec le protocole HTTP.html">Jouons avec le protocole HTTP</a>
+<br><a href="Using libcurl API/Using libcurl API.html">Using libcurl API</a>
+
+<h3>Protocole, service et modèle de référence</h3>
+
+<a href="IntroductionPS/Introduction.html">Introduction</a>
+<br><a href="Protocole et service/Protocole et service.html">Protocole et service</a>
+<br><a href="Réaliser une communication protocolaire/Réaliser une communication protocolaire.html">Réaliser une communication protocolaire</a>
+<br><a href="Service (mode) connecté et non connecté/Service (mode) connecté et non connecté.html">Service (mode) connecté et non connecté</a>
+
+<h3>Couches protocolaires</h3>
+
+<a href="Modèle de référence/Modèle de référence.html">Modèle de référence</a>
+<br><a href="Encapsulation/Encapsulation.html">Encapsulation</a>
+<br><a href="Capture de trafic/Capture de trafic.html">Capture de trafic</a>
+
+<h3>Paquets de données</h3>
+
+<a href="IntroductionPKT/Introduction.html">Introduction</a>
+<br><a href="Des en-têtes de paquets/Des en-têtes de paquets.html">Des en-têtes de paquets</a>
+<br><a href="Pourquoi des paquets/Pourquoi des paquets.html">Pourquoi des paquets ?</a>
+<!-- Afin d'illustrer la différence entre délai de propagation et délai de transmission, je vous propose de jouer avec l'applet Java suivante.  -->
+<br><a href="http://www.ccs-labs.org/teaching/rn/animations/propagation/">Délai de transmission vs délai de propagation</a>
+<!--Cette applet Java vous permettra de visualiser, lorsque le débit d'arrivée est supérieur au débit de sortie d'un routeur, la mise en file d'attente et le débordement potentiel d'une file d'attente.-->
+<br><a href="http://www.ccs-labs.org/teaching/rn/animations/queue/">Queuing and Loss</a>
+<br><a href="Analysons une capture de paquets/Analysons une capture de paquets.html">Analysons une capture de paquets</a>
+
+<h3>La couche réseau</h3>
+
+<a href="Fonctionnalités de la couche réseau/Fonctionnalités de la couche réseau.html">Fonctionnalités de la couche réseau</a>
+<br><a href="Netmask/Netmask.html">Comment le netmask est-il utilisé et à quoi sert-il ?</a>
+<br><a href="Règles importantes de numérotation/Règles importantes de numérotation.html">Règles importantes de numérotation</a>
+<br><a href="Datagram Forwarding/Datagram Forwarding.html">Datagram Forwarding</a>
+<br><a href="Quelques mots sur la topologie des réseaux/Quelques mots sur la topologie des réseaux.html">Quelques mots sur la topologie des réseaux</a>
+<br><a href="Boucle de routage et champs TTL/Boucle de routage et champs TTL.html">Boucle de routage et champs TTL</a>
+<br><a href="Adressage/Adressage.html">Adressez votre réseau et construisez ses règles de routage</a>
+<br><a href="Virtuel/Virtuel.html">Création d'un réseau IP virtuel</a>
+<br><a href="Protocole ARP - fragmentation/Protocole ARP - fragmentation.html">Protocole ARP - fragmentation</a>
+<br><a href="ARP - Hub versus Switch/ARP - Hub versus Switch.html">ARP - Hub versus Switch</a>
+<br><a href="Notions de routage IP/Notions de routage IP.html">Notions de routage IP</a>
+<br>
+<br><a href="Firewall et NAT/Firewall et NAT.html">Firewall et NAT</a>
+<br><a href="Network Address Translation/Network Address Translation.html">Network Address Translation</a>
+<br><span class=tab></span><a href="NAT wireshark traces analysis/NAT wireshark traces analysis.html">NAT wireshark traces analysis</a>
+<br><span class=tab></span><a href="NAT wireshark traces/NAT_traces.zip">NAT wireshark traces</a>
+<br><a href="Mise en oeuvre NAT/Mise en oeuvre NAT.html">Mise en oeuvre d'un NAT</a>
+<br><a href="Le futur dIPv4/Le futur dIPv4.html">Le futur d'IPv4</a>
+<br>
+<br><a href="Expérimentons la congestion/Expérimentons la congestion.html">Expérimentons la congestion</a>
+
+<h3>Sockets</h3>
+<a href="Introduction sockets/Introduction sockets.html">Introduction sockets, ports et adresses IP</a>
+<br><a href="Using sockets for inter-process communication/Using sockets for inter-process communication.html">Using sockets for inter-process communication</a>
+<br><a href="Test de la librairie ISAESOCKET/Test de la librairie ISAESOCKET.html">Test de la librairie ISAESOCKET</a>
+<br><span class=tab></span><a href="ISAESOCKET library/libisocket.tgz">ISAESOCKET library</a>
+<br><a href="Ecriture d un serveur web/Ecriture d un serveur web.html">Ecriture d'un serveur web</a>
+<br><a href="OpenSSL/OpenSSL.html">OpenSSL</a>
+
+<h3>La couche transport : simulation de concepts transport avancés avec ns-2</h3>
+
+<a href="Slides/ns-2-printer.pdf">La simulation avec ns-2</a>
+<br><a href="Lancement et installation de ns-2/Lancement et installation de ns-2.html">Lancement et installation de ns-2</a>
+<br><span class=tab></span><a href="Source de la distribution ns-2/ns-allinone-2.36.rc1.tgz">Source de la distribution ns-2</a>
+<br><span class=tab></span><a href="Scripts de simulation ns-2/script_exemple.tgz">Scripts de simulation ns-2</a>
+<br><a href="Le simulateur ns-2 et quelques astuces/Le simulateur ns-2 et quelques astuces.html">Le simulateur ns-2 et quelques astuces</a>
+<br><a href="Note sur GNUPLOT/Note sur GNUPLOT.html">Note sur l'utilisation de GNUPLOT</a>
+<br><a href="Note sur les traces ns-2 et sur les outils pour les analyser/Traces et outils.html">Note sur les traces ns-2 et sur les outils pour les analyser</a>
+<br><a href="Analyse du protocole de transport TCP par simulation/Analyse du protocole de transport TCP par simulation.html">Analyse du protocole de transport TCP par simulation</a>
+<br><a href="Option DelAck de TCP/Option DelAck de TCP.html">Découverte de l'option DelAck de TCP</a>
+<br><a href="TCP with random losses/TCP with random losses.html">TCP en présence de pertes aléatoires</a>
+<br><a href="The Chaotic Nature of TCP Congestion Control/The Chaotic Nature of TCP Congestion Control.html">The Chaotic Nature of TCP Congestion Control</a>
+<br><a href="Slides/itr3A-aqm.pdf">Gestion des files d'attente automatique avec des techniques d'AQM</a>
+<br><a href="Evaluation de la performance de RED et REDECN/ECN.html">Evaluation de la performance de RED et RED/ECN</a>
+</body>
+</html>

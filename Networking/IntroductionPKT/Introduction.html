@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+<head>
+    <title>Introduction</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+    <h1>Introduction</h1>
+<img src=pkt.png style="margin: 0px 20px" align=left height=200px alt="">
+<p>Suite à cette première capture de paquets, nous allons plonger un peu plus profondément dans leur analyse. Les paquets sont des tampons (<em>buffer</em>) de petite taille de données, transmis comme une unité à travers un ensemble partagé de liens. Par nécessité, les paquets doivent être préfixés avec une information de livraison au niveau de leur en-tête. Dans le cas courant, connu comme le <strong>transfert</strong> de <strong>datagramme</strong>, l'en-tête contient une adresse de destination. Dans le cas de réseau à circuit virtuel, les en-têtes de paquets contiennent à la place un identifiant pour la connexion. Presque tous les réseaux d'aujourd'hui sont basés sur la transmission de paquets, avec des options particulières pour la téléphonie qui sort du cadre de ce cours.</p>
+<p></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://intronetworks.cs.luc.edu/current/html/_images/packet.svg" width="415" height="186" /></p>
+<p></p>
+Les paquets changent de nom à chaque fois qu'ils traversent une couche. Au niveau liaison, on parlera de <strong>trame</strong> (<strong><em>frame</em></strong>) alors qu'au niveau IP, de <strong>datagramme</strong> (<strong><em>datagram</em></strong>) et enfin au niveau transport, de <strong>segment TCP</strong> (<strong><em>TCP segment</em></strong>) ou de <strong>datagramme UDP</strong>. L'inventeur du datagramme (et de la commutation par paquet) est un ingénieur informaticien français : <a href="http://lms.isae.fr/%20https:/fr.wikipedia.org/wiki/Louis_Pouzin">Louis Pouzin </a>(vous trouverez parfois à tort que ce concept fût initialement inventé par <a href="https://en.wikipedia.org/wiki/Paul_Baran">Paul Baran</a>). Rappellez-vous que l'on parle de datagramme lorsque l'on se trouve dans un <span style="background-color: #ffffff;">mode non connecté.</span></span></div>
+</body>
+</html>

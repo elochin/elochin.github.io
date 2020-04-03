@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head>
+    <title>Fonctionnalités de la couche réseau</title>
+    <meta charset="utf-8">
+    	<meta charset="utf-8">
+    	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="../mystyle.css">
+
+</head>
+<body>
+<h1>Fonctionnalités de la couche réseau</h1>
+<center>
+	<video width="640" height="480" controls=true>
+  	<source src="data/VideoCoucheIP.ogv" type="video/ogg">
+	Your browser does not support the video tag.
+</video>
+</center>
+
+<p><strong>Transcription de la vidéo</strong></p>
+<p>Au début, les réseaux IP étaient considérés comme des interconnexions entre des réseaux locaux (LAN). On parlait alors d'IP internetworks. De nos jours, nous occultons généralement cette vision fragmentaire et percevons l'Internet comme un grand réseau virtuel.<br><br>Pour soutenir une connectivité universelle, la couche IP fournit un mécanisme général permettant<strong> l'adressage et</strong> <strong>le routage</strong> des machines, de sorte que les paquets peuvent effectivement être délivrés de n'importe quel hôte vers n'importe quel autre. Cette couche met en oeuvre un système d'adressage des machines via des adresses IP (la version la plus commune est la numéro 4, notée <strong>IPv4</strong>), qui ont 4 octets (32 bits), et font partie de l'en-tête IP qui suit généralement l'en-tête Ethernet. Contrairement à l'en-tête Ethernet qui est modifié à chaque fois qu'un paquet effectue un saut (i.e. traverse un noeud du réseau), l'en-tête IP reste inchangé durant l'ensemble de son voyage au travers du réseau.<br><br>Une adresse IPv4 consiste en quatre décimaux séparés par un point (e.g. 134.55.60.33). Chacun de ces nombres correspondant à un octet, la plage d'adressage s'étend donc de 0.0.0.0 à 255.255.255.255.</p>
+<p>Une caractéristique essentielle des adresses IPv4 (et également d'IPv6) est qu'elles peuvent être divisées en une partie «réseau» (un préfixe) et une partie «hôte» (le reste). Cette désignation des parties réseau et hôte d'IPv4 est réalisée par la division des premiers bits de l'adresse IP. Le nombre de bits occupés par ces deux parties permet de classifier les réseaux en trois grandes classes qui font référence au nombre de machines pouvant y être adressées.</p>
+<p></p>
+<table cellspacing="2" border="1" align="center">
+<colgroup><col width="16%"><col width="12%"><col width="14%"><col width="11%"><col width="8%"><col width="39%"></colgroup>
+<thead valign="bottom">
+<tr><th>premiers bits</th><th>premier octet</th><th>bits réseau</th><th>bits hôte</th><th>classe</th><th>application</th></tr>
+</thead>
+<tbody valign="top">
+<tr>
+<td>0</td>
+<td>0-127</td>
+<td>8</td>
+<td>24</td>
+<td>A</td>
+<td>réseaux étendus<br></td>
+</tr>
+<tr>
+<td>10</td>
+<td>128-191</td>
+<td>16</td>
+<td>16</td>
+<td>B</td>
+<td>réseaux institutionnels<br></td>
+</tr>
+<tr>
+<td>110</td>
+<td>192-223</td>
+<td>24</td>
+<td>8</td>
+<td>C</td>
+<td>petits réseaux</td>
+</tr>
+</tbody>
+</table>
+<p>
+Par exemple, le réseau IP du LIP6 (Laboratoire d'Informatique de Paris 6) est 132.227.0.0. C'est donc une classe B puisque en binaire 132 correspond à <span style="color: #ff0000;"><strong>10</strong></span>000100. Pour être correct, on le note 132.227.0.0/16 : 16 correspondant au nombre de bits utilisés pour identifier le réseau. Cette écriture est équivalente à noter cette adresse réseau par 132.227.0.0 suivi de 255.255.0.0 (8 bits en binaire donne 255 en décimal). Cette composante est appelée le <strong>masque du réseau</strong> (<strong>netmask</strong>).</p>
+<p>Les classes A/B/C ont été proposées en 1981 dans <a href="http://tools.ietf.org/html/rfc791.html">RFC 791</a>. La classe D a été ajoutée en 1986 (<a href="http://tools.ietf.org/html/rfc988.html">RFC 988</a>). Ces adresses débutent toutes par 1110. Elles sont utilisées pour le <strong>multicast</strong>, et permettent l'envoi d'un paquet à de multiples utilisateurs, voire à un sous groupe particulier. L'intérêt réside dans le fait que le paquet est émis une seule fois par la source et qu'il sera répliqué par les routeurs implémentant un protocole de routage multicast. Ainsi, la charge de transmission s'en trouve réduite. Nous n'aborderons pas ce type de communication multipoint dans ce cours et en resterons au point à point.</p>
+<p>
+Aujourd'hui, la division entre les bits du réseau et de l'hôte est dynamique et peut être faite à des positions différentes. Par exemple, une petite entreprise peut recevoir un bloc d'adresse sur 27 bits (1/8 de la taille d'une classe C originellement sur 24 bits) par son fournisseur d'accès Internet, par exemple 197.11.12.95/27. Cette possibilité permet une souplesse quant à la distribution des adresses de réseaux et une optimisation de son utilisation (la ressource n'étant pas inépuisable puisque définie sur 4 octects). Ces aspects qui permettent un adressage plus fin qui ne seront pas abordés dans ce cours. Pour ceux qui veulent en savoir plus sur ce plan concernant l'aggrégation et la distribution des adresses IP, vous pouvez consulter la <a target="_blank" href="https://tools.ietf.org/html/rfc4632">RFC 4632</a>qui explicite ce principe dénommé <strong>CIDR</strong> (Classless Inter-domain Routing).</p>
+<p>
+La partie réseau d'une adresse IP est indifféremment appelée le <strong>numéro du réseau</strong>, l'<strong>adresse réseau</strong> ou le <strong>préfixe du réseau</strong>. Comme nous le verrons ci-dessous, la plupart des décisions de transfert sont effectuées en utilisant uniquement le préfixe de réseau. Le préfixe de réseau est communément désigné par le réglage des bits d'hôte à zéro et se termine par une barre oblique suivie par le nombre de bits de réseau dans l'adresse: par exemple 12.0.0.0/8 ou 132.227.0.0/16. Notez que 12.0.0.0/8 et 12.0.0.0/9 représentent des choses différentes; dans le second cas, le deuxième octet est utilisé pour étendre l'adresse réseau. Tous les hôtes seront donc contraints de commencer par un bit à 0.</p>
+<p>
+Tous les hôtes avec la même adresse de réseau (mêmes bits de réseau) sont censés être sur le <span style="text-decoration: underline;">même réseau</span> IP et doivent être situés sur le même réseau local; comme nous le verrons ci-dessous, si deux hôtes partagent la même adresse de réseau, ils considérent de facto qu'ils peuvent s'atteindre directement via le réseau local sous-jacent. Si ils ne le peuvent pas (par exemple : erreur d'adressage, machine destinatrice éteinte, ...) alors la connectivité échoue. Une conséquence de cette règle est que, en dehors du réseau local (lorsque l'on cherche à communiquer avec un hôte distant tel un serveur de chez Google par exemple), seuls les bits de réseau doivent être consultés pour acheminer un paquet vers un site distant</p>
+<p>
+Habituellement, tous les hôtes (ou plus précisément toutes les interfaces réseau) du même réseau local physique partagent le même préfixe de réseau et font donc partie du même réseau IP. Dans des architectures un peu plus avancées, un réseau local physique peut-être divisé en plusieurs réseaux IP.</p>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+    <title>Adressez votre réseau et construisez ses règles de routage</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+    <h1>Adressez votre réseau et construisez ses règles de routage</h1>
+	
+Nous allons repartir de la même topologie que la section précédente :	
+<p>
+<center><img src="fig1.png" alt=""></center>
+<p>
+Avant de lancer l'émulation. Veillez à décocher toutes les options de l'onglet Quagga en faisant un clic droit sur les deux routeurs, puis en cliquant sur Services comme montré ci-dessous :
+<p>
+<center><img src="fig2.png" alt=""></center>
+<p>
+	 
+<ul>
+<li>Cette fois-ci, vous réalisez le même adressage de réseau en 192.168.<span style="color: #0000ff;"><b>x</b></span>.<span style="color: #ff0000;"><b>y</b></span>/24</li>
+<li>Avant de commencer : combien vous faudra-t-il de sous réseaux, représentés par la valeur <span style="color: #0000ff;"><b>x</b></span>, pour réaliser l'adressage de votre topologie ?</li>
+<li>Vous écrasez ainsi les valeurs automatique de CORE. Vous pouvez le faire soit dans la boite de dialogue comme montré ci-dessus et avant de lancer l'émulation, soit après et en utilisant la commande <b>ifconfig</b>.</li>
+<li>Une fois votre adressage effectué, vous ne pouvez pas pinguer certaines machines de votre topologie. Lesquelles pouvez-vous pinguer et pourquoi ?</li>
+<li>Pour toutes les pinguer, il vous faut mettre en place un routage statique. Pour cela, il ne vous reste plus qu'à configurer : les routes par défaut des machines d'extrémités (la table de routage des machines d'extrémités) et les routes qui doivent être contenues dans la table de routage des deux routeurs. Pour cela référez vous à la page de manuel de la commande <b>route</b> et consultez la section <b>EXAMPLES</b> pour vous aider (pour cela : <b>man route</b> puis tapez <b>/EXAMPLES</b>).</li>
+</ul>
+</body>
+</html>

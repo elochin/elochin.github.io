@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+    <title>La résolution des noms</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+	
+    <h1>La résolution des noms</h1>
+
+	<img style="float: left; margin: 10px;" src="nameresolve.png">
+	
+	La partie du schéma avec laquelle vous devriez être le plus familier est celle illustrée ci-contre. Une URL (Uniform Resource Locator) est une simple chaîne de caractères permettant, comme son nom l'indique, d'adresser une ressource du web (une page, une photo, une vidéo, ...). Implicitement, la ressource que vous allez chercher ici en tapant <a href="http://www.isae.fr" class="_blanktarget">www.isae.fr</a> est une page portant le nom index.html que l'on omet par convention (vous demandez donc la ressource <a href="http://www.isae.fr/index.html" class="_blanktarget">www.isae.fr/index.html</a>). Si vous voulez accéder à une autre ressource du site (sans passer par les liens contenus sur les pages), il vous faudra alors expliciter la ressource autre que index.html que vous recherchez. Par exemple, pour accéder aux coupures de presse ISAE, il vous faudra saisir : <a href="http://www.isae.fr/fr/acces_directs/presse.html" class="_blanktarget">http://www.isae.fr/fr/acces_directs/presse.html</a>
+<p>
+Derrière <a href="http://www.isae.fr" class="_blanktarget">www.isae.fr</a> se cache une adresse logique de machine. Au même titre que <a href="http://www.isae.fr" class="_blanktarget">www.isae.fr</a> se réfère à ISAE-SUPAERO. L'adresse IP (nous verrons plus loin en abordant la couche réseau l'utilité de ces adresses) liée à <a href="http://www.isae.fr" class="_blanktarget">www.isae.fr</a> se référerait de façon équivalente au 10 avenue Edouard Belin, Toulouse. Cependant, les adresses IPv4 sont difficiles à mémoriser, effectivement, ces adresses sont codées numériquement sur 32 bits et cela devient même presque impossible en IPv6, la version évolutive d'IPv4, qui le sont sur 128 bits. Le système de <strong>nom de domaine</strong>, ou <strong>DNS</strong>, vient à la rescousse en créant un moyen de convertir les adresses IP en nom. Ainsi, par exemple, on peut saisir <a href="http://www.isae.fr" class="_blanktarget">www.isae.fr</a> au lieu de 192.93.254.85 (qui est l'adresse IP de l'ISAE). Faites le test dans votre navigateur en tapant cette adresse IP. Notez que tous les logiciels Internet utilisent les mêmes appels de bibliothèque pour convertir les noms DNS par les adresses IP réelles et vice-versa. Nous verrons qu'il existe une API spécifique pour cela. 
+<p>
+Une adresse DNS <span style="text-decoration: underline;">complète</span> est dite <strong>FQDN</strong> (<strong>Fully Qualified Domain Name</strong>). Elle consiste en un nom de machine et un nom de domaine. Ici www est la machine et isae.fr son domaine. Attention à distinguer l'URL (qui référence une ressource) du FQDN qui référence une machine.
+<p>
+Un des intérêts du système DNS est qu'il rend possible la modification de l'adresse IP d'un site web, d'une machine, ... indépendamment de son nom FQDN. Ceci permet, par exemple, lors du basculement vers un nouveau fournisseur Internet, de changer l'adressage d'un site sans le nom des machines et du domaine. Il est également possible d'avoir plusieurs noms DNS différents pointant vers la même adresse IP, ce qui permet notamment à un serveur web tournant sur une adresse donnée de gérer différents noms de domaines pointant vers différents sites web. 
+<p>
+Le système DNS est hiérarchique et distribué. Prenons par exemple <a href="http://www.isae.fr" class="_blanktarget">www.isae.fr</a>, quatre serveurs DNS différents peuvent être sollicités pour résoudre ce nom en adresse IP. Le premier c'est le "." qui termine tout nom FQDN (il faudrait donc écrire non pas : "<a href="http://www.isae.fr" class="_blanktarget">www.isae.fr</a>" mais "<a href="http://www.isae.fr" class="_blanktarget">www.isae.fr.</a>") il correspond à la «zone racine du DNS", pour fr, pour isae.fr et <a href="http://www.isae.fr" class="_blanktarget">www.isae.fr</a>. La recherche d'un nom au travers de ce système hiérarchique peut être lourde et longue. Aussi, les résultats de recherche DNS sont normalement mis en cache localement. Si un nom ne se trouve pas dans le cache, la recherche peut prendre quelques secondes. La hiérarchie DNS est totalement indépendante de la hiérarchie relative aux adresses IP.
+</body>
+</html>

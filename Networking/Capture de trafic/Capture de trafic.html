@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head>
+    <title>Capture de trafic</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+
+</head>
+<body>
+    <h1>Capture de trafic</h1>
+<p>Dans ce lab, nous allons capturer un trafic ping et un trafic UDP avec <strong>wireshark</strong> et/ou <strong>tshark</strong> et/ou <strong>tcpdump</strong> (au choix) afin d'observer cette encapsulation protocolaire.</p>
+<p>Tous les trois sont des outils de capture de trafic. En cliquant sur le bouton droit au dessus d'un noeud de votre topologie, vous pouvez lancer soit tcpdump, tshark ou wireshark sur les interfaces réseaux présentes. L'outil wireshark est simplement une version graphique de tshark tandis que tcpdump est l'outil historique le plus répandu de capture de trafic.</p>
+
+<h2>wireshark</h2>
+
+<strong>wireshark</strong> est un outil très puissant et notamment un outil d'analyse de réseau de premier plan utilisé aussi bien par les professionnels de la sécurité informatique que les développeurs d'applications réseaux à des fins de débogage.
+<p>Cet outil se lance uniquement avec les droits administrateur. En effet, vous utilisez une fonction particulière de la carte réseau dite <em>promiscuous mode</em>, qui permet de capturer et faire remonter tous les paquets et non pas uniquement ceux qui vous sont destinés. Nous expliquerons dans les sections qui suivent en détail ce mécanisme. Aussi, il est nécessaire de faire une petite manipulation une fois l'émulateur. Dans n'importe quel terminal tapez (à réaliser une fois et à chaque démmarage d'un scénario d'émulation):</p>
+<p><code>setcap 'CAP_NET_RAW+eip CAP_NET_ADMIN+eip' /usr/bin/dumpcap</code></p>
+<p>Ainsi vous pourrez utiliser le clic droit sur une machine de votre scénario d'émulation.</p>
+
+<h2>tcpdump</h2>
+
+Les options (options normalement valides aussi pour tshark) importantes de <strong>tcpdump</strong> sont listées ci-dessous :i
+<ul class="nobullet">
+<li> <strong><code><span style="color: blue;">-i any</span></code></strong> : Ecoute sur toutes les interfaces</span></li>
+<li> <strong><code><span style="color: blue;">-i eth0</span></code></strong> : Ecoute sur l'interface eth0, si -i n'est pas spécifié, tcpdump prendra la première interface réseau disponible, généralement eth0<br /></span></li>
+<li><span class="notranslate"><strong><code><span style="color: blue;">-l</span></code></strong></span> : Option <span style="text-decoration: underline;">très importante et obligatoire dans votre cas</span>, permettant d'afficher en temps réel les paquets capturés (utile avec les machines virtuelles)<span class="notranslate"></span></span></li>
+<li> <strong><code><span style="color: blue;">-D</span></code></strong> : Affiche la liste des interfaces disponibles</span></li>
+<li> <strong><code><span style="color: blue;">-n</span></code></strong> : Ne pas résoudre les noms d'hôtes.</span></li>
+<li> <strong><code><span style="color: blue;">-nn</span></code></strong> : Ne pas résoudre les noms d'hôtes <em>ou</em> des noms de port.</span></li>
+<li> <strong><code><span style="color: blue;">-q</span></code></strong> : Pour obtenir une sortie moins verbeuse sur les informations protocolaires<br /></span></li>
+<li> <strong><code><span style="color: blue;">-X</span></code></strong> : Afficher <em>le contenu</em> du paquet à la fois en hexadécimal et ASCII<br /></span></li>
+<li> <strong><code><span style="color: blue;">-XX</span></code></strong> : Identique à <strong><code><span style="color: blue;">-X</span></code></strong>, mais affiche également l' en-tête Ethernet</span></li>
+<li><span class="notranslate"><strong><code><span style="color: blue;">-e</span></code></strong> : </span>Affiche l'en-tête Ethernet<span class="notranslate"></span></span></li>
+<li> <strong><code><span style="color: blue;">-v, -vv, -vvv</span></code></strong> : Augmenter la quantité d'informations de paquets que vous obtenez en retour</span></li>
+<li> <strong><code><span style="color: blue;">-c</span></code></strong> : Seulement obtenir <em>x</em> nombre de paquets, puis arrêter</span></li>
+<li> <strong><code><span style="color: blue;">-s</span></code></strong> : Définir le <em>snaplength</em> (taille) de la capture en octets.</span> <span class="notranslate"> Utilisez <code>-s0</code> pour obtenir tout</span></span></li>
+<li> <strong><code><span style="color: blue;">-S</span></code></strong> : Imprimer les numéros de séquence en absolu et pas en relatif par défaut</span><br /></span></li>
+</ul>
+
+<h2>Quelques exemples :</h2>
+<ul>
+	<li><code>tcpdump -l udp -e -i eth0</code></li>
+	<li><code>tcpdump -lnS</code></li>
+	<li><code>tcpdump -lnnvvXS</code></li>
+</ul>
+
+<p>Il est également possible d'utiliser des expressions qui avec un peu de maîtrise, permettent de mettre en place des filtres très fin. Il en existe trois types principaux : <code>type (host, net, proto)</code>, <code>dir (src, dst, src or dst, src and dst)</code>, <code>proto (tcp, udp, icmp)</code>. Quelques exemples :</p>
+<ul>
+	<li><code>tcpdump src port 1025 and tcp</code></li>
+	<li><code>tcpdump udp and src port 53</code></li>
+	<li><code>tcpdump net 10.0.0.0/24</code></li>
+	<li><code>tcpdump src 10.0.2.21</code></li>
+	<li><code>tcpdump udp</code></li>
+</ul>
+<p>Comme toujours, n'hésitez pas à faire <code>man tcpdump</code> pour en savoir plus.</p>
+
+<div class=lms-example>
+Repartez de la topologie du <em>running example</em> et faites un ping entre la machine de gauche vers le serveur de droite de cette topologie. Une fois le ping lancé, ouvrez <span style="text-decoration: underline;">un terminal sur chaque routeur intermédiaire</span> et lancez tcpdump en affichant l'en-tête Ethernet. Vous obtenez à l'écran une capture des paquets aller et retour avec notamment un affichage des adresses IP source et destination dans chacun des deux terminaux, ainsi que des adresses MAC source et destination (nous reviendrons sur ce format de paquet dans la section suivante). Vous observez ici, comme expliqué dans les slides d'introduction, une partie de l'en-tête ajoutée par la couche liaison et une partie de l'en-tête ajoutée par la couche réseau.
+<br>Que remarquez-vous entre ces deux captures ? Certains champs restent-ils identiques ? Nous discuterons plus loin dans ce cours la raison de la modification des champs capturés.
+</div>
+
+<div class=lms-example>
+Faites la même experimentation en générant un trafic UDP avec tsock. Réalisez une capture complète du paquet avec l'option -X pour afficher notamment les données de l'application contenues dans chaque paquet. Que remarquez-vous ? Outre le fait que vous ne soyez pas administrateur et donc qu'il vous faudrait une permission spéciale, pourquoi l'utilisation de tcpdump ne vous est elle pas autorisée sur le réseau de l'école et justifie l'utilisation de l'image virtuelle CORE ?
+</div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+    <title>Analysons une capture de paquets</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+    <h1>Analysons une capture de paquets</h1>
+<p>Voici une capture de paquet IP réalisée avec la commande <strong>tcpdump</strong> et l'option<strong> -X</strong></p>
+<pre>root@xxxxxx:# tcpdump -i eth2 -X<br />tcpdump: verbose output suppressed, use -v or -vv for full protocol decode<br />listening on eth2, link-type EN10MB (Ethernet), capture size 65535 bytes<br />    0x0000:  4500 0054 c82c 4000 4001 a555 0aa1 03d3  E..T.,@.@..U....<br />    0x0010:  c05d fe55 0800 cb4b 4208 0029 e55d d157  .].U...KB..).].W<br />    0x0020:  44ca 0400 0809 0a0b 0c0d 0e0f 1011 1213  D...............<br />    0x0030:  1415 1617 1819 1a1b 1c1d 1e1f 2021 2223  .............!"#<br />    0x0040:  2425 2627 2829 2a2b 2c2d 2e2f 3031 3233  $%&amp;'()*+,-./0123<br />    0x0050:  3435 3637                                4567<br /><br /></pre>
+<ol>
+<li>Décodez uniquement les champs <strong>Version, IHL, Total Length, Time To Live, Protocol, Source Address, Destination Address</strong> de ce paquet IP (attention les valeurs sont en hexadécimal). Référez-vous au <a target="_blank" href="../Des en-têtes de paquets/Des en-têtes de paquets.html">format de l'entête IP</a> précedemment abordé. Vous pouvez utiliser le mode programmation de gnome-calculator pour convertir les valeurs de cet en-tête :
+	<p>	
+	<center>
+	<img src="calc.png" alt="">
+	</center>
+	</p>
+</li>
+<li>Une fois décodé, déterminez en résolvant les adresses IP avec l'outil <strong>nslookup</strong> (outil que nous allons voir juste ensuite) le nom des machines source et destination. Pour cela tapez <strong>nslookup</strong> suivi de l'adresse IP décodée.<br /></li>
+<li>Ce paquet contient-il des options ?</li>
+<li>A votre avis, quelle type d'application pourrait avoir envoyé ce paquet IP ?<br /></li>
+</ol>
+</body>
+</html>

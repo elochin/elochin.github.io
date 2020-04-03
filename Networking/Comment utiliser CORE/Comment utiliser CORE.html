@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+    <title>Comment utiliser CORE ?</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+	<h1>Comment utiliser CORE ?</h1>
+
+Pour des raisons de sécurité, l'application CORE est exécutée dans une machine virtuelle Linux. Vous pouvez télécharger l'image virtuelle qui est utilisée en cours à cette adresse : <a target="_blank" href="ftp://ci.isae.fr/vcore.ova">ftp://ci.isae.fr/vcore.ova</a>. Il vous faudra pour la lire un logiciel de lancement d'image virtuelle tel <a href="https://www.virtualbox.org/">Virtual Box</a> disponible gratuitement. Il est également possible d'installer CORE directement sur votre machine si vous êtes sous Linux. Pour cela, voir <a target="_blank" href="http://www.brianlinkletter.com/installing-the-core-network-emulator-in-ubuntu-linux/">Installing CORE on Ubuntu</a> ou visitez le <a target="_blank" href="http://www.nrl.navy.mil/itd/ncs/products/core">site web du projet CORE</a> pour d'autres types d'image (VMWare, ...). Dans les salles de classe ISAE, CORE se démarre comme décrit ci-dessous: 
+<p>Ouvrez un terminal : Application/System Tools/Terminal
+<ul>
+<li>Dans le terminal, tapez <code>start_core</code></li>
+<li>La machine virtuelle ouvre une fenêtre dans laquelle vous pouvez lancer l'émulateur CORE en cliquant sur l'icône correspondante sur le bureau</li>
+<li>Pour échanger des fichiers entre la machine virtuelle et son hôte sous Linux vous devez copier depuis votre machine de travail vos fichiers sous le repertoire <code>/scratch/shared_core</code> (par exemple : <code>cp file.txt /scratch/shared_core</code>). Vous les retrouverez dans la machine virtuelle sous le répertoire <code>/media/sf_shared_core</code></li>
+</ul>
+<p>
+
+<img src="core.png">
+
+<h2>Mode Edit &amp; Execute</h2>
+
+<p>L'émulateur CORE dispose de deux modes de fonctionnement: Edit et Execute.<br /><br />Par défaut, CORE GUI (<em>Graphical User Interface</em>) démarre en mode Edit, et présente une toile vierge et une barre d'outils sur le côté gauche de la toile. L'utilisateur peut alors dessiner un scénario de réseau en utilisant les outils en mode <em>Modify</em>, puis exécuter la simulation en appuyant sur la touche verte <em>Start</em>.<br /><br />Démarrez la simulation en cliquant sur le bouton <em>Start</em>. CORE exécute des commandes qui démarrent toutes les machines virtuelles et les relient entre elles de la manière indiquée sur la toile.<br /><br />Une fois exécuté, les différents noeuds du réseau sont en cours d'exécution en temps réel, comme si vous étiez en présence d'un véritable ensemble d'ordinateurs, routeurs, commutateurs et câbles.</p>
+
+<h2>Essayez par vous-même</h2>
+<ul>
+<li>Lancez une nouvelle session CORE</li>
+<li>Chargez le réseau nommé "Simple.imn"</li>
+<li>Lancez (bouton vert) l'émulation</li>
+<li>Ouvrez un shell sur la station n1 (il suffit de double cliquer sur n1 pour obtenir un terminal)</li>
+<li>Effectuez un ping depuis n1 vers n3 en utilisant son adresse IP (qui devrait être 10.0.0.22) en tapant dans le terminal n1: <code>ping 10.0.0.22</code> vous devriez voir le résultat de la commande ping en temps réel ! Nous verrons dans la suite de ce cours plus de détail sur la commande ping et d'autres outils réseaux</span></li>
+<li>Arrêtez la session d'émulation (bouton rouge)</li>
+<li>Ajoutez une nouvelle station et connectez là avec n7</li>
+<li>Lancez la session</li>
+<li>Essayez un ping entre n1 et cette nouvelle station</li>
+<li>Arrêtez l'émulation<br><br><strong><span style="color: #ff0000;">Il est important d'arrêter les sessions d'émulation, car elles utilisent de nombreuses ressources en arrière-plan. Vérifiez qu'il n'y a pas plus d'émulation en cours d'exécution (Session / Change Session et supprimer la session appropriée si elle existe)</span></strong></li>
+</ul>
+</div>
+</body>
+</html>

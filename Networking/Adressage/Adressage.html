@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+    <title>Adressez votre réseau IP</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+    <h1>Adressez votre réseau IP</h1>
+Nous allons effectuer un adressage complet de la topologie réseau symbolisée sur le schéma suivant.
+<p>
+<img src="fig1.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" width="616" height="258" />
+<p>
+Il y a trois réseaux locaux sur ce schéma constitués chacun de deux machines. Deux routeurs interconnectent l'ensemble. Ainsi nous obtenons un total de quatre sous-réseaux : les trois LAN + le réseau entre les routeurs</p>
+<p>
+Avant toute chose, sur une feuille de papier proposez un adressage IP pour cette topologie en utilisant la classe C suivante 192.168.<span style="color: #0000ff;"><b>x</b></span>.<span style="color: #ff0000;"><b>y</b></span>/24</p>
+<p>
+Combien vous faudra-t-il de sous réseaux, représentés par la valeur <span style="color: #0000ff;"><b>x</b></span>, pour réaliser l'adressage de votre topologie ? Par défaut, bien que le zéro soit autorisé, utilisez une valeur de x &gt; 1. Certains routeurs (et c'est le cas de CORE) refusent de router des adresses contenant des zéros.</p>
+<p>
+Faites confirmer votre adressage par votre tuteur ou vérifiez avec votre voisin de sa cohérence. </p>
+<p>
+Maintenant reproduisez ce réseau avec CORE. Vous pouvez soit changer l'adressage automatique de CORE via la boite de configuration réseau que vous obtiendrez en cliquant avec le bouton droit de la souris, au dessus d'une machine sur "Configure" comme illustré ci-dessous :</p>
+<p>
+<img src="fig2bis.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /> </span></p>
+<p>
+Ou alors vous pouvez utiliser la ligne de commande et l'outil <b>ifconfig</b> afin de mettre en place votre plan d'adressage. Consultez tout d'abord la page de manuel de <b>ifconfig</b>. Par exemple pour une interface identifiée par eth0, la syntaxe est :<b> ifconfig eth0 <em>mon_adresse_IP</em> netmask <em>mon_netmask</em></b></p>
+<p>
+Pour créer un LAN de machines, il vous faudra utiliser un élément réseau qui réalise une connexion au niveau physique. C'est élément est l'équivalent d'une simple prise multiple permettant de connecter plusieurs machines sur un même LAN. C'est élément est soit un hub, soit un switch et à pour symbole sous CORE l'icone suivant :</span></p>
+<p>
+<img src="fig3.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p>
+En revanche, l'élément qui permet d'interconnecter des sous-réseaux entre-eux porte le nom de routeur et sont symbolisés ainsi :</span></p>
+<p>
+<img src="fig4.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>
+Une fois l'adressage réalisé pour l'ensemble du réseau, lancez un ping entre deux machines de LAN différents afin de vérifier que tout est correct. <b><span style="color: #ff0000;">Attention ! Il vous faudra attendre environ 40 secondes avant que les routeurs annoncent leurs routes et que vous puissiez pinguer si vous avez oublié d'activer RIP.</span></b> Soyez patient si votre premier ping ne fonctionne pas.</span></p>
+<p>
+Laissez tourner le ping et lancez une capture de trafic avec <code>tcpdump</code> ou wireshark sur un des routeurs. Observez les adresses IP source et destination des paquets ping que vous capturez et notamment des requêtes et des réponses. </p>
+<p>
+Faite une sauvegarde de votre topologie si vous voulez la réutiliser par la suite.</p>
+</body>
+</html>

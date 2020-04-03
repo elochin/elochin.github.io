@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+    <title>Création d'un réseau IP virtuel</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+
+<h1>Création d'un réseau IP virtuel</h1>
+
+Nous allons effectuer un adressage aliasé de notre topologie exemple. Cela veut dire qu'au dessus de l'adressage automatique en 10.x.x.x géré par CORE, vous allez effectuer un second adressage IPv4 toujours en utilisant la classe C suivante 192.168.<span style="color: #0000ff;"><b>x</b></span>.<span style="color: #ff0000;"><b>y</b></span>/24
+<p>
+Nous allons utiliser la commande <b>ifconfig</b> afin de mettre en place ce nouvel adressage virtuel. Consultez tout d'abord la page de manuel du <b>ifconfig</b>. Nous allons créé un alias d'interface en ajoutant :0 à chaque interface. Par exemple pour une interface eth0 :<b> ifconfig  eth0:0 <em>mon_adresse_IP</em> netmask <em>mon_netmask</em></b></p>
+<p><span style="text-decoration: underline;">Attention</span> à ne taper <b>eth0</b> au lieu de <b>eth0:0</b>, vous supprimeriez alors l'adressage par défaut de CORE.</p>
+<ul>
+<li>Une fois que vous avez tapé cette commande, refaite un <b>ifconfig</b> afin de bien vérifier que l'ajout de l'alias. Vous veriez avoir deux adresses : celle automatique de CORE en 10.x.x.x sur <b>eth0</b> et la vôtre sur <b>eth0:0</b>.</li>
+<li>Faite cette opération pour l'ensemble du réseau et lancez un ping entre les deux extrémités de votre réseau.</li>
+<li>Ajouter maintenant deux autres machines du côté de la source connectées au même routeur et de façon identique deux autres serveurs du côté de la destination comme illustré ci-dessous : </li>
+</ul>
+<p>
+<img style="display: block; margin-left: auto; margin-right: auto;" src="virtuel.png" alt="" />
+<ul>
+<li>Adressez les de façon cohérente. Sur quelle adresse réseau devez-vous les placer ? </li>
+<li>Laissez tourner le ping et effectuez un <b>tcpdump</b> sur un des routeurs. Que remarquez vous pour l'adresse de destination ?</li>
+<li>Consultez la table ARP de votre machine émettrice. Voyez-vous vos nouvelles adresses dans cette table ?</li>
+<li>Qu'en concluez-vous ?</p>
+</ul>
+</body>
+</html>

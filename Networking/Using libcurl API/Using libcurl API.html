@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+    <title>Using libcurl API</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body bgcolor=white>
+	<h1>Using libcurl API</h1>
+In order to brush up your C programming skills, although some of you are already experienced or wrote tons of lines during their <i>césure</i> ;) I propose to illustrate the <code>libcurl</code> capabilities by writing a simple C code.
+  The objective is to fetch a content provided by a webpage via an HTTP request. This library is well documented and avalaible here : <a href="https://curl.haxx.se/libcurl/c/">https://curl.haxx.se/libcurl/c/</a>
+</p>
+<p>You need to link the library using <code>-lcurl</code> when compiling with <code>gcc</code>.</p>
+<code>#include &lt;stdio.h&gt;
+  <br>#include &lt;curl/curl.h&gt;
+  <br>
+  <br>int main(void)
+  <br>{
+  <br>&nbsp; CURL *curl;
+  <br>&nbsp; CURLcode res;
+  <br>&nbsp; FILE* file = fopen("webpage.html", "w");
+  <br>
+  <br>&nbsp; curl_global_init(CURL_GLOBAL_DEFAULT);
+  <br>
+  <br>&nbsp; curl = curl_easy_init();
+  <br>&nbsp; if(curl) {
+  <br>&nbsp;&nbsp;&nbsp; curl_easy_setopt(curl, CURLOPT_URL, "<a href="https://www.isae-supaero.fr/fr">https://www.isae-supaero.fr/fr</a>");
+  <br>&nbsp;&nbsp;&nbsp; /* Write the downloaded webpage in a file */
+  <br>&nbsp;&nbsp;&nbsp; curl_easy_setopt(curl, CURLOPT_WRITEDATA, file);
+  <br>&nbsp;&nbsp;&nbsp; /* Perform the request, res will get the return code !!must be added after curl_easy_setopt()!! */
+  <br>&nbsp;&nbsp;&nbsp; res = curl_easy_perform(curl);
+  <br>&nbsp;&nbsp;&nbsp; /* Check for errors */
+  <br>&nbsp;&nbsp;&nbsp; if(res != CURLE_OK)
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fprintf(stderr, "curl_easy_perform() failed: %s\n",
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; curl_easy_strerror(res));
+  <br>
+  <br>
+  <br>&nbsp;&nbsp;&nbsp; /* always cleanup */
+  <br>&nbsp;&nbsp;&nbsp; curl_easy_cleanup(curl);
+  <br>&nbsp; }
+  <br>
+  <br>&nbsp; curl_global_cleanup();
+  <br>&nbsp; fflush(file);
+  <br>&nbsp; fclose(file);
+  <br>
+  <br>&nbsp; return 0;
+  <br>}
+  <br>
+</code>
+<p>Look at this page <a href="https://curl.haxx.se/libcurl/c/CURLOPT_PROXY.html">https://curl.haxx.se/libcurl/c/CURLOPT_PROXY.html</a> to add the capability to cross ISAE proxy (<code>http://suproxy.isae.fr:3128/</code>) to this piece of code.
+<br>Your objective is to display over your terminal a simple line (I mean, using <code>printf()</code>), current weather given by <a href="http://wttr.in/toulouse">http://wttr.in/toulouse</a>
+<p>Note that <code>string.h</code> is really complete and powerful, check <code>man strcpy</code>, <code>man strtok</code>, ...</p>
+<p>See also : <a href="https://www.gnu.org/software/libc/manual/html_mono/libc.html#String-and-Array-Utilities">https://www.gnu.org/software/libc/manual/html_mono/libc.html#String-and-Array-Utilities</a>
+</p>
+</body>
+</html>

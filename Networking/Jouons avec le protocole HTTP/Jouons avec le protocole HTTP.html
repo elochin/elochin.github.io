@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+    <title>Jouons avec le protocole HTTP</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+	<h1>Jouons avec le protocole HTTP</h1>
+		
+Comme tout protocole de communication de l'Internet, le protocole HTTP possède une RFC numérotée <a href="https://tools.ietf.org/html/rfc7231">RFC7231</a> et explicitant les procédures nécessaires à son implémentation.
+<p>
+Les Request For Comments (RFC) sont des documents officiels numérotés décrivant les aspects techniques d'Internet ou de matériels le composant (routeurs, ...) publiés par l'<a target="_blank" href="https://www.ietf.org">Internet Engineering Task Force</a> (IETF). Très peu de RFC deviennent des standards, mais tous les documents publiés par l'IETF sont des RFC. Quelques-unes finissent par devenir des standards d'Internet et suivent alors une procédure complète de conversion.
+<p>
+Ainsi, si un jour vous souhaitez implémenter un client HTTP quelconque, il vous faudra prendre connaissance de cette RFC (pour tester la resistance à une attaque informatique d'un site web aussi, mais là c'est une autre histoire...).</p>
+<p>
+La méthode <code>GET</code>, permettant de récupérer une page web, est décrite dans la section suivante de la <a href="https://tools.ietf.org/html/rfc7231#section-4.3.1">RFC7231</a> (veillez bien à cliquer sur le lien vers cette RFC qui pointe vers la section qui vous concerne et que vous devez également lire). C'est cette méthode qui se trouvera embarquée dans un paquet IP que vous enverrez lorsque vous solliciterez une page telle <code>http://www.isae.fr/</code> dans votre navigateur préféré.</p>
+
+<p>Nous allons tester cette méthode en utilisant <code>netcat</code> qui est un programme permettant d'établir une connexion avec un hôte distant et sollicté le service web. C'est le "couteau suisse" de TCP/IP. Il se lance avec la commande <code>nc</code><span>, permet de créer des connexions TCP ou UDP et d'envoyer des lignes de texte au travers de la connexion créée. Pour cela, taper dans un terminal : <code>nc -v www.isae.fr http</code>. Cette commande est similaire à ce que vous faites lorsque vous tapez dans votre navigateur <code>http://www.isae.fr/</code>.</p>
+
+<p>Dans cette commande, <code>http</code> correspond au service que vous souhaitez obtenir (cela pourrait être <code>smtp</code> pour l'envoi d'un email, <code>ssh</code> pour une connexion sécurisée, ...). Tous ces services correspondent à un port de communication sur la machine distante. Un port de communication est un point d'entrée du système qui permet d'accèder au programme en mémoire fournissant un service web. Sur tous les systèmes, il existe un fichier de correspondance entre service et numéro de port, ce fichier porte le nom de <code>/etc/services</code> (consultez ce fichier sur votre machine de cours). En effet, il est toujours plus facile de retenir un nom qu'un numéro. Nous verrons qu'il en est de même avec les noms de machine et leurs adresses réseau. En d'autres termes, cette commande stipule simplement que vous souhaitez établir une connexion sur le port 80 de la machine www.isae.fr, le port 80 proposant l'accès au service web de la machine (nous détaillerons plus loin dans ce cours lorsque nous aborderons la couche transport le principe de port de communication). Pour en revenir aux slides, vous venez d'effectuer la procédure d'établissement de connexion. Bien évidemment, cela suppose que la machine possède effectivement un service web tournant sur le port 80 (bref, ça ne marchera pas avec la machine de votre voisin de classe). Une fois la commande <code>nc</code> saisie vous devriez obtenir une invite de commande : </p>
+<pre><code>elochin@thorgal:~$ nc -v www.isae.fr http
+www.isae.fr [192.93.254.122] 80 (http) open</code></pre>
+<p>Vous venez d'établir une connexion avec le serveur web de l'ISAE ! Cette phase correspond à la procédure dite de <a href="https://fr.wikipedia.org/wiki/Three-way_handshake"><code><em>handshake</em></code></a> (poignée de main) qui permet de vérifier que les deux hôtes sont bien en relation. En suivant la RFC</span>, il ne vous reste plus qu'à saisir dans le terminal la commande suivante : </span><code>GET /index.html<br /></span></code></span></p>
+
+<h2>Qu'observez-vous ?</h2>
+
+Comme vous le constatez, votre navigateur ne fait donc que de l'interprétation du code HTML renvoyé. Une sauvegarde dans un fichier du code reçu et une interprétation correcte vous permettraient d'afficher la page HTML résultante.</span></p>
+
+<h2>Etablissez une connexion au serveur de courrier de l'ISAE et envoyez-vous un email :</h2>
+
+<div class="lms-info">
+De la même façon qu'un navigateur web tel Firefox n'est qu'une application qui ne fait que traduire un code HTML en quelque chose de lisible sur votre écran, un client mail tel que Thunderbird ne fait qu'interpréter un format standardisé de courriers électroniques dans un format lisible pour un utilisateur. Vous voyez certainement où je veux en venir, une machine sur laquelle tourne un programme de serveur d'emails est donc tout aussi accessible via le même procédé de connexion qu'un serveur web. Il ne vous manque plus qu'à consulter la <a href="https://tools.ietf.org/html/rfc821">RFC821</a> (regarder l'exemple 1) pour connaître les commandes permettant de vous envoyer un email via <code>nc.</code> Sachant que le port de communication utilisé est le 25 et que le serveur d'email de l'ISAE est mail.isae.fr ... à vos claviers!
+</div>
+<p>
+<div class="lms-warning">
+<span style="color: #ff0000;"><code>IMPORTANT A LIRE !</code></span> Afin d'éviter certaines tentations et de vous faire réprimander, voire exclure de l'école comme certains de vos camarades les années passées, certains d'entre-vous auront peut-être remarqué que le champs émetteur offre quelques largesses permettant peut-être de votre point de vue de faire des blagues maladroites, néanmoins considérées comme de l'<a href="https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000023709201&amp;cidTexte=LEGITEXT000006070719">usurpation d'identité</a> au niveau pénal. Avez-vous d'ailleurs bien lu la <a href="http://intranet.isae.fr/sites/intranet/IMG/pdf/CH_SI_ISAE_fr_a.pdf">Charte SI ISAE</a></span> sur ce sujet ? Allez faire un tour en ligne 45 page 8. <br /></span></p>
+</div>
+<p>Sachez que <span style="text-decoration: underline;"><strong>personne n'est anonyme sur Internet</strong></span> (consulter le champ complet de votre email envoyé pour vous en convaincre : avec Wali, clic droit sur l'email concerné puis "Voir le code source" ou "View/Header/All" sous Thunderbird) et qu'à bien des niveaux protocolaires, il est toujours possible de tracer quelqu'un (plus de détails vous seront donnés dans le module<span style="color: #0000ff;"><span style="background-color: #ffffff; color: #000000;"> S4 -</span><span style="background-color: #ffffff;"> Cybercriminalité et guerre électronique</span></span>). Le SI possède des outils très puissants permettant de tracer vos empreintes numériques.</span></p>
+
+</body>
+</html>

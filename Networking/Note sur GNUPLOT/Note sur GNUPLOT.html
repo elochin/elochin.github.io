@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <link rel="stylesheet" href="../mystyle.css">
+  <title>Note sur l'utilisation de GNUPLOT</title>
+</head>
+<body>
+  <h1>Note sur l'utilisation de GNUPLOT</h1>
+ <code>gnuplot</code> est un utilitaire en ligne de commande permettant de tracer des graphiques en 2 ou 3 dimensions. Les graphiques peuvent être directement affichés à l'écran et/ou enregistrés sous divers formats bitmap (PNG, JPEG,...) ou vectoriels (PDF, EPS, SVG,...). Parce qu'il permet de générer des graphiques de qualité et largement configurables, <code>gnuplot</code> se révèle un outil de choix pour la représentation de données scientifiques. Enfin, puisqu'il utilise un système de script pour décrire le graphique à produire, <code>gnuplot</code> peut être employé partout où des graphiques doivent être générés ou mis à jour automatiquement.</p>
+<p>Son utilisation est très simple, je vous propose de l'utiliser sous forme de script. Pour cela, récupérez le script <a href="data/example.gp">example.gp</a> et le fichier <a href="data/data.txt">data.txt</a> puis exécutez dans un terminal en tapant : <code>gnuplot  example.gp</code>. Vous obtiendrez alors deux fichiers résultats au format PDF et PNG. Les détails et explications de ce script données ci-dessous vous seront largement suffisants pour réaliser les BE qui suivent :</p>
+
+<pre><code>
+# Définition d&#39;une fonction qui sera tracée par la suite
+f(x)=sin(x*x)
+ 
+# Limitation des axes x et y
+set xrange [-pi:pi]
+set yrange [-2:2]
+ 
+# On trace tout d&#39;abord la fonction prédéfinie ci-dessus
+plot f(x)
+
+# Trace une autre fonction : attention à utiliser &quot;replot&quot; après un &quot;plot&quot;
+replot cos(x+1)/2
+
+# On trace à partir d&#39;un fichier (les données sont contenues dans data.txt) en utilisant la 1ere colonne pour x et 2nde colonne pour y avec des lignes + points
+replot &quot;data.txt&quot; using 1:2 title &quot;data&quot; with linespoints
+
+# On génère un PNG
+set terminal pngcairo size 350,200 font &quot;DejaVu Sans,10&quot;
+set output &#39;example.png&#39;
+replot
+
+# On génère un PDF
+set terminal pdf
+set output &#39;example.pdf&#39;
+replot
+
+# On affiche le résultat à l&#39;écran (optionnel)
+pause -1
+</code></pre>
+
+<p><code>gnuplot</code> possède de très nombreuses fonctionnalités, consultez cette page qui vous donnera également des exemples permettant de dessiner avec <code>gnuplot</code> directement depuis un code en C ou en Python : <a href="https://doc.ubuntu-fr.org/gnuplot">Gnuplot Wiki</a> ou encore ce mini tutoriel de Duke University : <a href="https://people.duke.edu/~hpgavin/gnuplot.html">GNUPLOT 4.2 - A Brief Manual and Tutorial</a></p>
+</body>
+</html>

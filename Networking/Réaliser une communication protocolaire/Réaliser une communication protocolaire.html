@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+<head>
+    <title>Réaliser une communication protocolaire</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+    <h1>Réaliser une communication protocolaire</h1>
+Chaque couche présentée précédemment implémente un protocole de communication qui permet à une couche donnée de l'émetteur de communiquer avec son équivalent au niveau récepteur. Par exemple, soit A un hôte établissant une communication avec B, le protocole IP de la couche IP de A communique avec son équivalent sur B, idem pour le protocole transport, liaison, applicatif, ... 
+<p>
+Un <b>protocole de communication</b> est donc une spécification de plusieurs règles pour un type de communication spécifique. Par exemple, lorsque vous tapez une adresse du type <a href="http://www.isae.fr/" class="_blanktarget">http://www.isae.fr/</a> dans votre navigateur web, vous demandez explicitement une communication en utilisant le protocole HTTP vers la machine distante <a href="http://www.isae.fr" class="_blanktarget">www.isae.fr</a>. Ainsi, vous ouvrez <span style="text-decoration: underline;"><strong>un point de connexion ou socket</strong></span>, entre votre machine et la machine dénommée <a href="http://www.isae.fr" class="_blanktarget">www.isae.fr</a> en utilisant le <strong>protocole de communication</strong> HTTP qui offre un <strong>service</strong> de transfert hypertexte (i.e. service web).</p>
+<p>Pour qu'une machine puisse communiquer avec une autre au travers du réseau, elle a donc besoin de son adresse ou de son nom et d'un port qui identifie le protocole de communication à utiliser. Ce port sera transformé en valeur numérique par la machine au même titre que son nom qui sera transformé en adresse IP numérique. Ces données sont essentielles à un programme pour renseigner la <strong>socket</strong> de communication que vous manipulerez par la suite.</p>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+<head>
+    <title>Introduction : sockets, ports et adresses IP</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+    <h1>Introduction : sockets, ports et adresses IP</h1>
+
+    Une socket est un mécanisme standard pour communiquer au travers du réseau. Une socket peut être vue comme l’extrémité d’une connexion de façon très similaire à une prise téléphonique. Les sockets ne sont qu’une abstraction qui s’occupe de tous les détails pratiques du modèle en couche décrit précédemment. Pour le programmeur, une socket permet d’envoyer et de recevoir des données au travers du réseau. Bref, c'est juste un point d'entrée pour l'émission et la réception des données.
+<p>L'interface socket se trouve entre la couche application et la couche transport. Elle masque ainsi toute la complexité des services des couches inférieures et offre au programmeur une interface de programmation avancée facile d'utilisation et standard (API: Application Programming Interface). C'est cette interface que nous allons détailler et utiliser par la suite.</p>
+<p>Concrètement, au niveau du réseau une socket de communication correspond au quadruplet : adresse source et destination, port source et destination. Tandis que l'adresse correspond à l'identifiant réseau numérique de la machine appelé adresse IP, le port correspond à l'identifiant numérique du service souhaité (http, https, ftp, ...). En bref, lorsque vous tapez dans votre navigateur l'adresse suivante : <code>http://www.isae.fr/</code> vous travaillez au niveau de la couche application. Les machines travaillant uniquement avec des nombres, la couche transport fera correspondre le nom du protocole (http) identifiant le service web au numéro standard 80 tandis que la couche réseau se chargera de faire correspondre le nom de la machine souhaitée (www.isae.fr) avec son adresse sur le réseau (192.93.254.122). </p>
+<p>La numérotation de ces protocoles/services est donnée dans le fichier du même nom : <code>/etc/services</code> (consultez celui-ci pour information).</p>
+<p>Lorsque vous effectuez cette requête dans votre navigateur, vous générez donc un paquet contenant ces informations (i.e le quadruplet adresse source, port source, adresse destination, port destination). Supposons que ma machine depuis laquelle j'effectue cette requête web vers le serveur de l'ISAE ait l'adresse 10.161.10.1, mes paquets auront un en-tête, par exemple, identifié par (10.161.10.1, 4578, 192.93.254.122, 80). Je dis "par exemple" car le numéro de port source (ici 4578) dépendra des processus qui tourneront sur votre machine et correspondra au numéro de votre navigateur. Ce numéro de port source étant utilisé pour la réception des données réponses (i.e. le contenu de la page web demandée), vous n'aurez jamais à vous occuper de cette partie lorsque vous programmerez une socket : seuls le port et l'adresse de destination vous seront nécessaires.</p>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+    <title>Network Address Translation</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+
+<h1>Network Address Translation</h1>
+
+Une façon connexe de fournir une protection pour les machines d'un réseau est d'utiliser la technique de translation d'adresse : <strong>Network Address Translation</strong> ou <strong>NAT</strong> (<a href="https://www.ietf.org/rfc/rfc3022.txt">RFC 3022</a>, autrement noté NAPT pour Port Network Address Translation). Au lieu d'attribuer pour chaque hôte d'un site une "vraie" adresse IP (i.e. une adresse IP routable), une seule adresse est affectée à un routeur de bordure. Les machines internes obtiennent des adresses IP "internes" (i.e. non routable, pour mémoire, les adresses commençant par 192.168.0.0/16 ou 10.0.0.0/8 ne pouvant pas être utilisées sur Internet). Les connexions entrantes vers les machines internes sont bloquées. Quand une machine interne veut se connecter à l'extérieur, le routeur NAT intercepte la connexion, alloue un nouveau port, et transmet la connexion comme si la demande provenait de ce nouveau port et de sa propre adresse IP. La machine distante répond, le routeur NAT mémorise alors les données de connexion, puis transmet à l'hôte interne qui a effectué la requête en réécrivant les champs des paquets entrants : adresse et port. Bien configuré, le NAT améliore la sécurité d'un site en cachant l'ensemble du réseau interne de l'Internet. Il permet également à plusieurs machines de partager une seule adresse IP. C'est la raison pour lauqelle il est populaire auprès des utilisateurs qui ont une connexion haut débit unique et qui souhaitent utiliser plusieurs ordinateurs. Un routeur NAT typique vendu pour usage résidentiel (votre box ADSL par exemple) ou de petite entreprise est souvent simplement appelé un "routeur", ou plus précisément, une "passerelle résidentielle". 
+<p>
+Il y aurait pléthore à écrire sur le NAT et notamment si l'on devait considérer le comportement d'application particulière telle la VoIP ou encore le peer-to-peer. Cela sort évidemment du contexte de ce cours mais vous pouvez aller jeter un oeil à la <a href="https://tools.ietf.org/html/rfc6314">RFC6314</a> qui vous en apprendra plus concernant la VoIP.
+<p>
+Supposons que l'on utilise un routeur NAT, et que deux hôtes internes d'adresse IP : @A et @B cherchent à se connecter à partir du port 3000 au port 80 sur deux hôtes externes ayant pour adresses respectives : @C et @D. Voici à quoi la table de routage du NAT pourrait ressembler:
+<table border="1"><colgroup> <col width="18%" /> <col width="18%" /> <col width="29%" /> <col width="17%" /> <col width="17%" /> </colgroup>
+<thead valign="bottom">
+<tr><th>remote host</th><th>remote port</th><th>outside source port</th><th>inside host</th><th>inside port</th></tr>
+</thead>
+<tbody valign="top">
+<tr>
+<td>@C</td>
+<td>80</td>
+<td>3000</td>
+<td>@A</td>
+<td>3000</td>
+</tr>
+<tr>
+<td>@D</td>
+<td>80</td>
+<td>3000</td>
+<td>@B</td>
+<td>3000</td>
+</tr>
+</tbody>
+</table>
+<p>Ainsi et par exemple, un paquet IP à destination de @C provenant de &lt;@A,3000&gt; aurait son champs source réécrit &lt;@NAT, 3000&gt; et aurait donc pour en-tête IP : &lt;@src - port_src - @dst - port dst&gt; &lt;@NAT - 3000 - @C - 80&gt;. Pour @B nous obtenons : &lt;@NAT - 3000 - @D - 80&gt;</p>
+<p>Maintenant supposons que @B ouvre une connexion vers &lt;@C,80&gt;. Pour éviter un conflit, NAT va simplement incrémenter le numéro de port en sortie et enregistrer l'entrée suivante : &lt;@NAT - 3001 - @C - 80&gt;</p>
+<table border="1"><colgroup> <col width="18%" /> <col width="18%" /> <col width="29%" /> <col width="17%" /> <col width="17%" /> </colgroup>
+<thead valign="bottom">
+<tr><th>remote host</th><th>remote port</th><th>outside source port</th><th>inside host</th><th>inside port</th></tr>
+</thead>
+<tbody valign="top">
+<tr>
+<td>C</td>
+<td>80</td>
+<td>3000</td>
+<td>A</td>
+<td>3000</td>
+</tr>
+<tr>
+<td>D</td>
+<td>80</td>
+<td>3000</td>
+<td>B</td>
+<td>3000</td>
+</tr>
+<tr>
+<td>C</td>
+<td>80</td>
+<td>3001</td>
+<td>B</td>
+<td>3000</td>
+</tr>
+</tbody>
+</table>
+<p>NAT fonctionne toujours (en général) pour le trafic sans numéro de port tels que la trafic résultant d'un ping bien que le tableau ci-dessus n'illustre pas comment NAT peut gérer ce trafic. Pour information, la méthode utilisée est expliquée ici <a href="https://tools.ietf.org/html/rfc7857">RFC7857</a>.Cependant, pour des raisons de sécurité le protocole ICMP (celui utilisé par le ping) est bien souvent non translaté (comme pour le réseau ISAE).
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+    <title>Running example</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+
+<h1>Exemple compagnon (<em>running example</em>)</h1>
+
+Afin de plus facilement illuster ce cours, nous utiliserons le réseau représenté sur le schéma ci-dessous. 
+Ce réseau sera notre <em>running example</em> (que l'on pourrait traduire par "exemple compagnon"). 
+Il représente une connexion entre une application d'utilisateur domestique (vous par exemple) et une machine sur un réseau distant tel celui de l'ISAE au travers de l'Internet. 
+Cet exemple sera utilisé pour illustrer les concepts majeurs des réseaux.
+<p>
+<center>
+<img src="runningExample.png" alt=0 width=1200px>
+</center>
+
+<h2>Reproduisez ce réseau avec CORE</h2>
+
+<p>
+Maintenant que vous êtes familiés avec l'utilisation de CORE, reproduisez ce réseau avec l'émulateur CORE avec la topologie simplifiée suivante :
+
+<center>
+<img src="topo1.png" alt=0>
+</center>
+
+<p>Attention de bien choisir deux routeurs (sur le schéma : n1, n2), un portable (n3) et un hôte (n4). Vous pouvez obtenir une numérotation différente du schéma en fonction de l'ordre avec lequel vous avez créé vos éléments. Cela n'a pas d'importance pour la suite.</p>
+<p>CORE opère à un adressage automatique du réseau. Observez les adresses qui sont automatiquement choisies. Celles débutant en 10.x.x.x sont des adresses IP version 4 tandis que celle débutant par 2001::x sont en version 6. Vous apprendrez plus loin dans ce cours, lorsque nous aborderons la couche réseau, à manipuler ces adresses, comprendre leur signification et réaliser un plan d'adressage d'un réseau par vous-même.</p>
+<p>Ensuite, cliquez avec le bouton droit sur le routeur n1, puis <strong>configure</strong>, <strong>Services </strong>et activez<strong> RIP </strong>(colonne de gauche) en cliquant sur les lettres pour le faire apparaitre en surbrillance (pas de clic sur l'icone outil).</p>
+
+<center>
+<img src="topo2.png" alt=0>
+</center>
+
+<p>RIP (<em>Routing Information Protocol</em>) est un protocole de routage permettant de déterminer automatiquement l'interface de sortie des paquets qui traversent un routeur. Pour se faire, le routeur échange tout simplement la table de ses liens avec ses voisins. On parle alors de routage à <b>vecteur de distances</b> (<i>distance vector</i>). Ce type de protocole de routage permet de construire des tables de routages distribuées qui passent facilement à l'échelle puisque aucun routeur ne possède une vision globale du réseau, la diffusion des routes se faisant de proche en proche. L'algorithme utilisé par RIP est basé sur l'<a target="_blank" href="https://fr.wikipedia.org/wiki/Algorithme_de_Bellman-Ford">algorithme de Bellman-Ford</a>. D'autres protocoles de routage utilisent au contraire un algorithme à <strong>état de liens</strong> (<em>link-state</em>) qui détermine toutes les routes possibles d'une source vers une destination donnée. Vous avez déjà rencontré et programmé cet algorithme en 1A, il s'agit de l'<a target="_blank" href="https://fr.wikipedia.org/wiki/Algorithme_de_Dijkstra">algorithme Dijkstra</a>.</p>
+<p>Nous utilisons ici cet algorithme pour occulter la partie du routage que vous aborderez plus loin dans ce cours. Notamment, vous apprendrez à créer vos propres régles de routage manuellement.</p>
+<p>Nous allons maintenant ajouter des capacités et des délais aux trois liens de cette topologie. Pour cela, il suffit de double-cliquer sur un des liens pour accèder à ses propriétés. Choisissez 10Mbps et 100ms pour le premier lien (ce qui est une bonne représentation d'un accès ADSL standard); 100Mbps et 1ms pour les deux autres. La boite de dialogue correspondante est donnée ci-dessous.</p>
+
+<center>
+<img src="topo3.png" alt=0>
+</center>
+
+<p>Votre réseau est prêt ! Vous pouvez maintenant lancer votre émulation et tester les outils proposés dans la suite de ce cours.</p>
+<p>Prenez du temps pour explorer l'outil et vous familiariser avec celui-ci afin de pouvoir l'utiliser de façon fluide et effectuer les TD plus facilement.</p>
+</body>
+</html>

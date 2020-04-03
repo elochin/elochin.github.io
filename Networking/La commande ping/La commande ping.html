@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+    <title>La commande ping</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+
+	<h1>La commande <code>ping</code></h1>
+
+C'est un outil de diagnostic et de sondage réseau très puissant et utile. Il vous permettra, entre autres, de vérifier qu'une machine distante est accessible. Il donne également des statistiques sur le chemin traversé. Faites un man <code>ping</code> pour accèder à sa page de manuel et explorer les options disponibles.
+
+<pre>
+<code>
+ping www.isae.fr
+ping 192.93.254.85
+</code>
+</pre>
+
+Parfois, la commande <code>ping</code> échoue parce que les paquets de retour sont bloqués par un pare-feu. Dans ce cas vous n'obtenez aucune réponse. Cela ne veut donc pas nécessairement dire que la machine est éteinte, il y a plusieurs façons de valider ou pas cette hypothèse qui sort pour l'instant du cadre de ce cours. Par exemple, si vous ouvrez un terminal depuis votre machine (et non pas depuis CORE) et sachant que la machine <code>www.isae.fr</code> est bien active (vous pouvez le vérifier avec votre naviguateur web) vous n'obtiendrez pas de réponse :
+<pre>
+<code>
+e.lochin@pc-lochin:~$ ping www.isae.fr
+PING drupalprod.isae.fr (192.93.254.85) 56(84) bytes of data.
+^C
+--- drupalprod.isae.fr ping statistics ---
+7 packets transmitted, 0 received, 100% packet loss, time 6048ms
+</code>
+</pre>
+
+La raison est la suivante : <code>ping</code> utilise un protocole particulier (nommé ICMP pour Internet Control Message Protocol) qui fonctionne <b>au niveau de la couche IP</b>, niveau protocolaire auquel un pare-feu (firewall en anglais) opère également. Nous verrons plus loin dans le cours l'importance de ces couches. La <a href="https://tools.ietf.org/html/rfc792">RFC792</a> définit ce protocole ICMP et décrit notamment les codes de retour qu'il utilise (n'hésitez pas à cliquer sur le lien de la <a href="https://tools.ietf.org/html/rfc792">RFC792</a> pour la consulter). Au contraire, votre navigateur Internet fonctionne au niveau application et utilise le <b>protocole web HTTP</b> que nous avons déjà manipulé. Dans le cas de www.isae.fr, vous constatez donc qu'il est possible de communiquer via le protocole HTTP utilisé par votre naviguateur web avec www.isae.fr mais pas avec le protocole ICMP utilisé par la commande <code>ping</code>. Ce choix est effectué par le pare-feu de l'ISAE qui pour des raisons de sécurité (que vous pourrez aborder plus en détail si vous le souhaitez en module S4 - <b>Cybercriminalité et guerre electronique</b>) filtre la réponse (mais pas la requête !) du protocole ICMP. En effet, <code>ping</code> permet de donner de facto des indications sur la topologie du réseau et sur les machines actives à un utilisateur malintentionné. Par exemple, avant de réaliser un cambriolage, avoir connaissance du plan du batiment ciblé est nécessaire, le SI de l'ISAE ne va donc pas offrir cette possibilité à un attaquant extérieur (et même intérieur).
+<p>
+La commande <code>ping</code> est cependant très utile pour trouver un problème réseau et les administrateurs systèmes ont généralement la possibilité de l'utiliser (le pare-feu opère donc à un filtrage différencié pour cela). De manière générale et comme tout outil, il peut-être utilisé légitimement ou pas.
+
+<div class=lms-example>
+<ul>
+<li>Experimentez la commande ping sur le réseau que vous avez créé avec CORE en jouant notamment avec les options <code>-i</code> et <code>-s</code> (taper <code>man ping</code> pour plus d'information);</li>
+<li>Observez bien les réponses obtenues en termes de délai;</li>
+<li>Ensuite, changez les délais des liens de votre topologie réseau. Choississez 100Mbps 1ms pour le lien d'accès (de la source vers le routeur 1) et de sortie (du routeur 2 à la destination) puis mettez le lien central à 10Mbs et 100ms;</li>
+<li>Effectuez de nouveau des pings à plusieurs endroits de la topologie et observez les résultats;</li>
+<li>Inspectez bien toutes les valeurs retournées par ping. En fonction de la distance temporelle de la destination sur votre topologie, regardez ce qui se passe au niveau du champ TTL. Nous reparlerons plus tard de ce champ particulier, mais n'hésitez pas à creuser plus loin et explorez par vous-même en regardant ce que la page de manuel du ping explique sur cette valeur.</li>
+</ul>
+</div>
+
+</body>
+</html>

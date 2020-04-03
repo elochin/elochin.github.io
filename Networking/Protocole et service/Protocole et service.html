@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+<head>
+    <title>Protocole et service</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+    <h1>Protocole et service</h1>
+
+    Dans les réseaux informatiques, la notion de service est définie dans la norme UIT-T X.200. Pour comprendre cette notion, il faut considérer qu'un réseau informatique, quel que soit sa taille ou sa complexité, est vu comme une boîte noire qui fournit un service aux utilisateurs comme le montre la figure ci-dessous.  Ces utilisateurs peuvent être des utilisateurs ou des processus en cours d'exécution sur un système informatique.</p>
+<div class="figure align-center" id="fig-users"><img style="display: block; margin-left: auto; margin-right: auto;" src="http://cnp3book.info.ucl.ac.be/1st/html/_images/intro-figures-014-c.svg" width="620" height="310" />
+</div>
+
+<h2>Utilisateurs et fournisseurs de services</h2>
+
+<p> De nombreux utilisateurs peuvent être connectés à un même fournisseur de services.  Grâce à ce fournisseur, chaque utilisateur doit être en mesure d'échanger des messages avec un autre utilisateur et ce, quelque soit son fournisseur.  Pour être en mesure de délivrer ces messages, le fournisseur de services doit pouvoir identifier sans ambiguïté chaque utilisateur.  Dans les réseaux informatiques, chaque utilisateur est identifié par une adresse unique, nous verrons plus loin comment ces adresses sont construites et utilisées.  À ce stade, et si l'on considère une transmission point à point dite <em>unicast</em>, la principale caractéristique de ces adresses est leur unicité.  Deux utilisateurs différents connectés au réseau ne peuvent pas utiliser la même adresse.</p>
+<p> Tout au long de ce cours, nous allons définir un service comme un ensemble de fonctionnalités fournies par un système (et ses éléments sous-jacents) à son utilisateur.  Un utilisateur interagit avec un service grâce à un point d'accès au service. Dans la figure ci-dessus, les utilisateurs interagissent avec un fournisseur de services.  Dans la pratique, le prestataire de services peut-être réparti sur plusieurs hôtes, mais ce détail de mise en oeuvre n'est pas important à ce stade. Les interactions entre un utilisateur et un fournisseur de services sont exprimées dans la norme ITU-T X200 sous forme de primitives, comme montré sur la figure ci-dessous.  Ces primitives sont une représentation abstraite des interactions entre un utilisateur et un fournisseur de services.  Dans la pratique, ces interactions pourraient être mises en œuvre, par exemple, comme des appels système (c'est ce que vous verrez lorsque l'on abordera l'API socket en Java qui vous permettra de développer vos propres applications réseau).</p>
+
+<h2> Les quatre types de primitives</h2>
+
+<p> Il existe quatre types de primitives qui sont définies comme suit :</p>
+<div class="figure align-center"><img style="display: block; margin-left: auto; margin-right: auto;" src="http://cnp3book.info.ucl.ac.be/1st/html/_images/intro-figures-016-c.svg" width="590" height="295" /></div>
+<blockquote>
+<div>
+<ul class="simple">
+<li> <cite>X.request,</cite> cette primitive correspond à une demande émise par un utilisateur vers un prestataire de services</li>
+<li> <cite>X.indication,</cite> cette primitive est générée par le fournisseur de réseau et transmise à un utilisateur. Elle est bien souvent la résultante d'une précédente requête distante <cite>X.request</cite>.</li>
+<li> <cite>X.response,</cite> cette primitive est générée par un utilisateur afin de répondre à une primitive <cite>X.indication</cite></li>
+<li> <cite>X.confirm,</cite> cette primitive est délivrée par le founisseur de service pour confirmer à un utilisateur qu'une précédente primitive <cite>X.request</cite> a bien été traitée avec succès</li>
+</ul>
+</div>
+</blockquote>
+<p> Toutes ces primitives peuvent être combinées pour modéliser différents types de services.  Le service le plus simple dans les réseaux informatiques est appelé le service sans connexion. Ce service est appelé ainsi car il n'y a pas besoin de créer une connexion avant de transmettre des données, au contraire du service orienté connexion.</p>
+<p>Ce service peut être modélisé en utilisant deux primitives:</p>
+<blockquote>
+<div>
+<ul class="simple">
+<li> <cite>DATA.request (source, destination, SDU),</cite> cette primitive est émise par un utilisateur qui spécifie, en tant que paramètres, son adresse (source), l'adresse du destinataire du message et le message lui-même.  Nous allons utiliser l'<cite>unité</cite> de <cite>données</cite> de <cite>service</cite> (<em>Service Data Unit</em>) pour nommer le message qui est échangé de façon transparente entre deux utilisateurs d'un service</li>
+<li> <cite>DATA.INDICATION (source, destination, SDU)</cite>, cette primitive est délivrée par un fournisseur de services à un utilisateur.  Elle contient en tant que paramètres une SDU, ainsi que les adresses de l'expéditeur et les utilisateurs destinataires</li>
+</ul>
+</div>
+</blockquote>
+<p> Lors de l'examen du service fourni dans un réseau informatique, il est souvent utile d'être en mesure de décrire les interactions entre les utilisateurs et le fournisseur graphiquement.  Une représentation fréquemment utilisée est le diagramme de séquence.  Un diagramme de séquence décrit les interactions entre deux utilisateurs et un fournisseur de services en fonction du temps.  Par convention, les utilisateurs sont représentés dans les parties gauche et droite du diagramme alors que le fournisseur de services occupe le milieu du diagramme.  Dans un tel diagramme, le temps s'écoule depuis le haut, vers le bas du diagramme.  Chaque primitive est représentée par une flèche horizontale pleine, à laquelle son nom est attaché.  Les lignes pointillées sont utilisées pour représenter la relation possible entre deux (ou plusieurs) primitives.  Un tel diagramme fournit des informations sur l'ordre des différentes primitives, notez que la distance entre deux primitives ne représente pas une quantité précise de temps.</p>
+<p> La figure ci-dessous fournit une représentation du service sans connexion. L'utilisateur sur la gauche, dont l' adresse <cite>S,</cite> émet une primitive <cite>DATA.request</cite> contenant un SDU <cite>M</cite> qui doit être délivré par le prestataire de services à destination <cite>D.</cite>  La ligne pointillée entre les deux primitives indique que la primitive <cite>DATA.indication</cite> est délivrée à l'utilisateur sur la droite correspondant à la primitive <cite>DATA.request</cite> précedemment envoyée par l'utilisateur sur la gauche.</p>
+<div class="figure align-center"><img style="display: block; margin-left: auto; margin-right: auto;" src="http://cnp3book.info.ucl.ac.be/1st/html/_images/intro-figures-017-c.svg" width="717" height="512" />
+</div>
+
+	<h2>Un service simple, fiable et sans connexion</h2>
+
+Il existe plusieurs implémentations possibles du service sans connexion.  Un <cite>service fiable</cite> sans <cite>connexion</cite> est un service où le fournisseur de service garantit que tous les SDU présentés en <cite>Data.requests</cite> par un utilisateur seront délivrés à leur destination. Dans la pratique, une livraison parfaite est difficile.  Pour cette raison, les réseaux informatiques fournissent généralement un <cite>service de connexion peu fiable.</cite></p>
+
+<h2>Un service sans connexion non fiable peut perdre un SDU</h2>
+
+Un service sans <cite>connexion non fiable</cite> peut souffrir de différents types de problèmes par rapport à un <cite>service</cite> sans <cite>connexion fiable.</cite>  Tout d' abord, un <cite>service</cite> sans <cite>connexion non fiable</cite> ne garantit pas la livraison de tous les SDU.  Ceci peut être exprimé sous forme graphique à l'aide du diagramme de temps de la séquence ci-dessous.</p>
+<div style="text-align: center;" class="figure align-center"><img src="http://cnp3book.info.ucl.ac.be/1st/html/_images/intro-figures-034-c.svg" /></div>
+<div style="text-align: left;" class="figure align-center">Dans la pratique, un <cite>service</cite> sans <cite>connexion non fiable</cite> délivrera une large fraction de SDU.  Cependant, la livraison d'un SDU n'est pas garantie, l'utilisateur (ou le programme) doit donc être en mesure de récupérer la perte de tout SDU.</div>
+
+<h2> Un service sans connexion fiable peut dupliquer SDU</h2>
+
+Une seconde imperfection qui peut affecter un <cite>service</cite> sans <cite>connexion non fiable</cite> est qu'il peut dupliquer SDU.  Certains fournisseurs de services sans connexion non fiables peuvent délivrer un SDU envoyé par un utilisateur deux fois ou même plus comme illustré par le diagramme de séquence ci-dessous.</p>
+<div style="text-align: center;" class="figure align-center"><img src="http://cnp3book.info.ucl.ac.be/1st/html/_images/intro-figures-033-c.svg" />
+</div>
+
+<h2>Un service sans connexion non fiable peut délivrer des SDU erronés</h2>
+
+Enfin, certains fournisseurs de services sans connexion non fiables peuvent délivrer un SDU différent (relatif à une erreur de transmission ou une interférence par exemple) de celui qui a été initialement fourni dans le <cite>DATA.request.</cite>  Ceci est illustré dans la figure ci-dessous.
+
+<div style="text-align: center;" class="figure align-center"><img src="http://cnp3book.info.ucl.ac.be/1st/html/_images/intro-figures-035-c.svg" />
+</div>
+
+Lorsqu'un utilisateur interagit avec un fournisseur de services, il lui faut connaître précisément les limites du service sous-jacent pour être en mesure de surmonter tout problème qui pourrait survenir.  Cela nécessite donc la connaissance de la définition précise des caractéristiques du service sous-jacent.
+
+<p><span style="text-decoration: underline;">Exemple :</span> disponibilité du service de téléphonie chez un founisseur de services Internet (extrait des CGV) : "<em>supérieure ou égale à 97% sur le mois calendaire écoulé ; du courrier électronique (en envoi et en réception) : supérieure ou égale à 99% (...)  délai de rétablissement des services : dès lors que l’accès est fonctionnel, les délais de rétablissement sont les suivants à compter de la signalisation : Service de téléphonie: 72 heures ; Service TV &amp; radio : 24 heures ; Service Internet : 24 heures ; Service de courrier électronique : 24 heures." </em></p>
+<p>Pas de téléphone fixe possible pendant 72h ... OK il me reste mon cellulaire ;)</p>
+
+<h2>Un service sans connexion qui préserve l'ordonnancement de SDU envoyés par un utilisateur</h2>
+
+Une autre caractéristique importante du service sans connexion est la préservation de l'ordonnancement des SDU envoyés par un utilisateur.  De son point de vue, c'est bien souvent une caractéristique souhaitable.  Ceci est illustré dans la figure ci-dessous :
+
+<div style="text-align: center;" class="figure align-center"><img alt="../_images/intro-figures-036-c.png" src="http://cnp3book.info.ucl.ac.be/1st/html/_images/intro-figures-036-c.png" />
+</div>
+
+<p>Cependant, de nombreux services sans connexion, et notamment les services peu fiables, ne garantissent pas toujours que l'ordre d'émission sera conservé comme illustré dans la figure ci-dessous. C'est alors à l'application ou à <a class="autolink" title="La couche transport" href="http://lms.isae.fr/mod/resource/view.php?id=33141">la couche transport</a> (que nous détaillerons plus loin) qui sera en charge de gérer ces déséquencements.<br /></p>
+<div style="text-align: center;" class="figure align-center"><img src="http://cnp3book.info.ucl.ac.be/1st/html/_images/intro-figures-037-c.svg" /></div>
+
+<h2>Un service sans connexion confirmé (avec accusé de réception)</h2>
+
+Le <cite>service</cite> sans <cite>connexion</cite> est largement utilisé dans les réseaux informatiques.  Plusieurs variantes de ce service de base ont été proposées.  L'une d'elles est le <cite>service</cite> sans <cite>connexion confirmée.</cite>  Ce service utilise une primitive <cite>DATA.confirm</cite> en plus des primitives <cite>DATA.request</cite> et <cite>DATA.INDICATION</cite> classiques.  Cette primitive est émise par le prestataire de services pour confirmer à un utilisateur la bonne livraison d'un SDU à son destinataire.  Notez que, comme pour le service enregistré du bureau de poste, le <cite>DATA.confirm</cite> indique seulement que le SDU a bien été livré à la destination. La primitive <cite>DATA.confirm</cite> ne précise pas si le SDU a été traité par l'utilisateur destinataire.  Ce <cite>service</cite> sans <cite>connexion confirmé</cite> est illustré ci-dessous.
+<div style="text-align: center;" class="figure align-center"><img src="http://cnp3book.info.ucl.ac.be/1st/html/_images/intro-figures-018-c.svg" />
+</div>
+
+	<h2>Un service orienté connexion</h2>
+	Le <cite>service de connexion</cite> que nous venons de décrire est fréquemment utilisé par les utilisateurs qui ont besoin d'échanger des petites SDU ou ont besoin d'une interactivité forte comme pour les jeux en ligne. Les utilisateurs qui ont besoin d'envoyer ou de recevoir plusieurs SDU différents, une quantité très importante, ou qui ont besoin d'échanges structurés, préfèrent souvent le <cite>service orienté connexion</cite>.
+	
+<p> Une invocation du <cite>service orienté connexion</cite> est divisé en trois phases.  La première phase est l'établissement d'une <cite>connexion.</cite>  Une <cite>connexion</cite> est une association temporaire entre deux utilisateurs par l'intermédiaire d'un prestataire de services.  Il peut exister plusieurs connexions en même temps entre une paire quelconque d'utilisateurs.  Une fois établie, la connexion est utilisée pour transférer les SDU. <cite>La connexion résultante </cite>fournit un flux bidirectionnel soutenant l'échange des SDU entre les deux utilisateurs qui se sont associés par le biais de la <cite>connexion.</cite>  Ce lien est alors utilisé pour transférer des données au cours de la deuxième phase de la connexion appelée la phase <cite>de transfert de données.</cite>  La troisième phase est la fin de la connexion.  Une fois que les utilisateurs ont fini d'échanger des SDU, ils demandent au fournisseur de services de mettre fin à la connexion.  Comme nous le verrons plus tard, il y a aussi des cas où le fournisseur de services peut avoir besoin de mettre fin à une connexion lui-même.</p>
+
+<h2>Modélisation d'un établissement de connexion</h2>
+
+L'établissement d'une connexion peut être modélisée en utilisant quatre primitives: <cite>CONNECT.REQUEST,</cite> <cite>CONNECT.INDICATION,</cite> <cite>CONNECT.RESPONSE</cite> et <cite>CONNECT.CONFIRM.</cite>  La primitive <cite>CONNECT.REQUEST</cite> est utilisée pour l'établissement d'une connexion.  Le principal paramètre de cette primitive est <cite>l'adresse</cite> de l'utilisateur de destination.  Le fournisseur de services offre une primitive<strong></strong> <cite>CONNECT.INDICATION</cite>  pour informer l'utilisateur destinataire de la tentative de connexion.  Si elle accepte d'établir une connexion, il répond par une primitive <cite>CONNECT.RESPONSE</cite>.  À ce stade, la connexion est considérée comme semi-ouverte par la destination qui peut commencer à envoyer des SDU.  Le fournisseur de services traite alors le <cite>CONNECT.RESPONSE</cite> et confirmera à l'utilisateur qui a initié la connexion par un <cite>CONNECT.CONFIRM</cite>. Cette primitive clôture la phase d'établissement de connexion.  À ce stade, la connexion est considérée comme pleinement ouverte et les deux utilisateurs peuvent envoyer des SDU.  Un établissement de connexion est illustré ci-dessous.
+<div style="text-align: center;" class="figure align-center"<img src="http://cnp3book.info.ucl.ac.be/1st/html/_images/intro-figures-019-c.svg" />
+</div>
+
+<h2>Deux types de rejet pour une tentative d'établissement de connexion</h2>
+
+L'exemple précédent montre un établissement de connexion réussie. En pratique, toutes les connexions ne sont pas établies avec succès. Une raison possible est que la destination peut ne pas établir, pour des raisons politiques, de configuration, de performance, une connexion avec l'émetteur.  Dans ce cas, le destinataire répond à la primitive <cite>CONNECT.INDICATION</cite>  par une primitive <cite>DISCONNECT.REQUEST</cite> qui contient un paramètre pour indiquer pourquoi la connexion a été refusée.  Le prestataire de services véhiculera une primitive <cite>DISCONNECT.INDICATION</cite>  pour informer l'utilisateur initiateur.  Une deuxième raison est lorsque le fournisseur de services ne peut pas atteindre l'utilisateur de destination.  Cela peut se produire parce que l'utilisateur destinataire n'est pas actuellement connecté au réseau ou à cause de congestion (nous verrons ce qu'est la congestion plus en détail dans une prochaine section).  Dans ces cas, le fournisseur de services répond au <cite>CONNECT.REQUEST</cite> avec un <cite>DISCONNECT.INDICATION</cite>  dont le paramètre "<cite>raison"</cite> contient des informations supplémentaires à propos de l'échec de la connexion.
+
+<div style="text-align: center;" class="figure align-center"><img src="http://cnp3book.info.ucl.ac.be/1st/html/_images/intro-figures-020-c.svg" />
+</div>
+
+<h2>Mode de transfert par message (<em>message-mode</em>) dans un service orienté connexion</h2>
+
+Une fois que la connexion a été établie, le fournisseurs de services ouvre aux utilisateurs des flux de communication.  Le premier flux de données peut être utilisé par l'émetteur de SDU.  Le second flux de données permet au destinataire de répondre et d'envoyer des SDU.  Les flux de données peuvent être organisés de différentes manières.  Une première organisation est le <strong>mode de transfert par message</strong>. Avec ce mode, le fournisseur de services garantit qu'un et un seul <cite>DATA.INDICATION</cite> sera livré à l'extrémité du flux de données pour chaque primitive <cite>DATA.request</cite> émise par l'autre extrémité. Ce mode de transfert par message est illustré dans la figure ci-dessous.  Le principal avantage de ce mode est que le destinataire reçoit exactement les SDU qui ont été envoyés par l'autre utilisateur.  Si chaque SDU contient une commande, la destination peut traiter chacune de ces commandes dès qu'il reçoit un SDU.
+
+<div style="text-align: center;" class="figure align-center"><img src="http://cnp3book.info.ucl.ac.be/1st/html/_images/intro-figures-021-c.svg" />
+</div>
+
+<h2>Mode de transfert par flot (<em>stream-mode</em>) dans un service orienté connexion</h2>
+
+Cependant, le  mode de transfert par message n'est pas largement utilisé sur Internet. Le plus populaire des services de transferts orientés connexion est le <strong>mode par flot</strong>.  Avec ce mode, le fournisseur de services délivre un flux d'octets qui relie les deux utilisateurs communiquant.  L'utilisateur émet des octets de données en utilisant les primitives <cite>DATA.request</cite> qui contiennent des séquences d'octets pour SDU.  Le fournisseur de services fournit des SDU contenant les octets consécutifs à l'utilisateur de réception en utilisant des primitives <cite>DATA.INDICATION.</cite>  Le prestataire de services assure que tous les octets envoyés à une extrémité du flux sont livrés correctement dans le même ordre à l'autre extrémité.  Cependant, le fournisseur de services n'a pas pour but de préserver les limites de la SDU.  Il n'y a pas de relation imposée par le prestataire de services entre le nombre de <cite>DATA.request</cite> et le nombre de primitives <cite>DATA.INDICATION.</cite>  Le mode flot est illustré dans la figure ci-dessous.  Dans la pratique, une conséquence de l'utilisation du ce mode est que si les utilisateurs veulent échanger des SDU structurés, ils devront fournir les mécanismes qui permettent au récepteur de séparer les SDU successifs dans le flux d'octets qu'il reçoit. Les protocoles de la couche d'application utilisent souvent des délimiteurs spécifiques tels que le caractère de fin de ligne pour délimiter un SDU dans un flot d'octects (<em>bytestream</em>).</p>
+
+<div class="figure align-center"><img style="display: block; margin-left: auto; margin-right: auto;" src="http://cnp3book.info.ucl.ac.be/1st/html/_images/intro-figures-022-c.svg" />
+</div>
+
+<h2>Libération de la connexion</h2>
+
+<p> La troisième phase d'une connexion est sa libération.  Comme une connexion comporte trois parties (deux utilisateurs et un fournisseur de services), l'un des utilisateurs peut demander la résiliation de la connexion.  En règle générale, les liaisons sont coupées à la demande d'un utilisateur une fois que le transfert de données est terminé. Dans certains cas, le fournisseur de services peut être contraint de mettre fin à une connexion.  Cela peut être dû à un manque de ressources de ce dernier ou parce que l'un des utilisateurs n'est plus accessible.  Dans ce cas, le fournisseur de services émettra des primitives <cite>DISCONNECT.INDICATION</cite> aux deux utilisateurs.  Ces primitives contiennent en tant que paramètre des informations sur la raison de la fin de la connexion.  Malheureusement, comme illustré dans la figure ci-dessous, quand un fournisseur de services est obligé de mettre fin à une connexion, il ne peut pas garantir que tous les SDU envoyés par chaque utilisateur ont bien été délivrés.  Cette libération de connexion est dite "brusque" car elle peut causer des pertes de données.</p>
+
+<div style="text-align: left;" class="figure align-center"><img style="display: block; margin-left: auto; margin-right: auto;" src="http://cnp3book.info.ucl.ac.be/1st/html/_images/intro-figures-038-c.svg" />
+</div>
+
+<p>Une libération de connexion brusque peut également être déclenchée par l'un des utilisateurs.  Si un utilisateur a besoin, pour une raison quelconque, de mettre fin à une connexion rapidement, il peut émettre une primitive <cite>DISCONNECT.REQUEST</cite> et demander une libération brutale.  Le prestataire de services traitera la demande, arrêtera les deux flux de données et enverra une primitive <cite>DISCONNECT.INDICATION</cite> à l'utilisateur distant dès que possible.  Comme illustré dans la figure ci-dessous, cette version de déconnexion brusque peut également entraîner des pertes de SDU.</p>
+
+<div style="text-align: center;" class="figure align-center"><img src="http://cnp3book.info.ucl.ac.be/1st/html/_images/intro-figures-023-c.svg" />
+</div>
+
+<h2>Libération de connexion grâcieuse (<em>graceful deconnection</em>)</h2>
+
+Pour assurer une livraison fiable des SDU envoyés par chaque utilisateur via une connexion bidirectionnelle, nous devons considérer les deux directions qui composent une connexion comme indépendantes l'une de l'autre.  Un utilisateur doit être en mesure de libérer le sens de la connexion qu'il a utilisé une fois qu'il a envoyé toutes ses SDU. Cependant, il peut toujours continuer à recevoir des SDU dans le sens inverse car, comme c'est le cas pour son sens de connexion, seule la destination peut la clôturer.  Cette version de connexion "grâcieuse" est généralement effectuée comme montré sur la figure ci-dessous.  Un utilisateur émet une primitive <cite>DISCONNECT.REQUEST</cite> à son fournisseur de services une fois qu'il a émis toutes ses primitives <cite>DATA.REQUEST</cite>.  Le fournisseur de services va attendre jusqu'à ce que toutes les primitives <cite>de DATA.INDICATION</cite> aient bien été livrées au destinataire avant d'émettre une primitive <cite>DISCONNECT.INDICATION</cite>.  Cette primitive informe la destination qu'elle ne recevra plus de SDU sur cette connexion. Cependant, il est encore capable de délivrer des primitives <cite>DATA.REQUEST</cite> dans la direction opposée.  Une fois que l'utilisateur a émis toutes ses primitives <cite>DATA.request</cite>, il émet une primitive <cite>DISCONNECT.REQUEST</cite> afin de demander la résiliation de la connexion restante.  Le fournisseur de services traitera la demande et émettra une primitive <cite>DISCONNECT.INDICATION</cite> à l'émetteur une fois qu'il aura livré toutes les primitives <cite>DATA.INDICATION</cite> en attente.  À ce stade, toutes les données ont été livrées et les deux sens de la connexion sont alors libérés avec succès. La connexion est désormais close.
+
+<div class="figure align-center"><img style="display: block; margin-left: auto; margin-right: auto;" src="http://cnp3book.info.ucl.ac.be/1st/html/_images/intro-figures-024-c.svg" />
+</div>
+
+	<h2>Fiabilité du service orienté connexion</h2>
+
+Un point important à noter à propos du service orienté connexion est sa fiabilité.  Un service <cite>orienté connexion</cite> ne peut garantir la livraison correcte de tous les SDU à condition que la connexion ait été libérée grâcieusement.  Cela implique que tant que la connexion est active, il n'y a aucune garantie sur la livraison effective des SDU échangés puisque celle-ci peut-être libérée brusquement à tout moment.</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <link rel="stylesheet" href="../mystyle.css">
+  <meta name="generator" content="pandoc" />
+  <title>The Chaotic Nature of TCP Congestion Control</title>
+</head>
+<body>
+	<h1>The Chaotic Nature of TCP Congestion Control</h1>
+A mon humble avis, une des découvertes la plus surprenante sur TCP fut la mise en évidence du caractère chaotique, en fonction de conditions initiales, de son algorithme de contrôle congestion purement déterministe. Ce résultat a d'ailleurs reçu le prix du <em>best paper</em> lors de la prestigieuse conférence IEEE INFOCOM 2000, une des <em>top 10</em> conférence réseaux dans le monde. Lors de la parution de cet article, je n'ai pu m'empêcher de reproduire et vérifier ces résultats. Je vous propose de reproduire les mesures effectuées dans ce papier.</p>
+<p>L'article est disponible ici : <a href="data/tcpchaosInfocom2000.pdf">The Chaotic Nature of TCP Congestion Control</a>. Vous constaterez que les mesures ont été effectuées sous ns-2 en utilisant l'une des premières et plus simple version de TCP qui porte le nom de Tahoe.</p>
+<p>Télécharger l'archive <a href="data/chaos.tgz">chaos.tgz</a> qui contient un ensemble de scripts permettant de reproduire les expérimentations de cet article. Pour lancer l'ensemble, utiliser la commande contenue dans cette archive : <code>sh launch.sh</code>. Cette commande réalise les opérations suivantes :</p>
+<ol style="list-style-type: decimal">
+<li><code>ns chaos.tcl 200 5 20</code> : lance la simulation avec les paramètres de la première expérimentation de l'article (régime non chatotique)</li>
+<li><code>perl chaos.pl</code> : script réalisant le calculs des équations (1) et (2) page 3</li>
+<li><code>sed '1,300d' result.txt &gt; result.bak</code> : supprime les 300 premières lignes de la simulation afin d'exclure la phase de slowstart et ne considérer que la phase de congestion avoidance</li>
+<li><code>gnuplot cwnd12.gp ; gnuplot cwndvstime.gp</code> : traçages des courbes</li>
+<li><code>evince result.pdf TCPwindows.pdf</code> : affichage des résultats</li>
+</ol>
+<h2>Questions</h2>
+<ol style="list-style-type: decimal">
+<li>Afin de visualiser la phase de congestion avoidance, tracez les courbes de progression des fenêtres des 2 flots TCP présentées sur la Fig. 3 de l'article. Utilisez la commande <code>sed</code> comme ci-dessus pour supprimer la phase transitoire (i.e. le slowstart);</li>
+<li>Relancez les tests avec TCP/Newreno, observez-vous des différences ?</li>
+<li>Plusieurs autres variantes de contrôle de congestion sont disponibles ici : <a href="http://netlab.caltech.edu/projects/ns2tcplinux/ns2linux/">TCP Linux Agents</a>. Aidez-vous également du slide 28 du cours ns-2. Modifiez le script en testant les variantes cubic et westwood. Obtenez-vous les mêmes régions chaotiques ?</li>
+<li>Trouvez d'autres conditions menant à un régime chaotique avec une des autres version des protocoles.</li>
+</ol>
+</body>
+</html>
+</body>
+</html>

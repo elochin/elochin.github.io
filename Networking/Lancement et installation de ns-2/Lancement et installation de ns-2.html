@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+    <title>Lancement et installation de ns-2</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+    <h1>Lancement et installation de ns-2</h1>
+<h2>Depuis une salle info</h2><p>Pour lancer ns-2 depuis une machine des salles info, ouvrez un terminal et tapez : <code>module load ns-allinone/2.35</code> puis la commande : <code>ns</code>. A ce jour le simulateur est disponible uniquement en salles 61-001, 002, 014. <br></p><p></p><h2>Sur votre PC Linux Debian/Ubuntu avec un paquetage</h2><p></p>
+<p>Pour installer ns-2 sous Debian ou Ubuntu, <code>apt install ns2</code>, il existe les paquetages suivants dans la distribution :</p><ul><li>
+ns2 - Discrete event simulator targeted at networking research
+</li><li>ns2-dbg - Symboles de débogage de ns2
+</li><li>ns2-doc - Documentation pour ns2
+</li><li>ns2-examples - Exemples pour ns2</li></ul><p>Enfin installer GNUPLOT via la commande <code>apt install gnuplot-x11</code></p><h2>Sur votre PC (autre système) avec les sources<br></h2><p>Dans le cas où vous souhaiteriez compiler et installer ns-2 sur une autre distribution Linux (voire MacOSX ou Windows/Cygwin sans aucune garantie que cela fonctionne car je n'ai pas testé), téléchargez la distribution complète <a href="https://lms.isae.fr/mod/resource/view.php?id=56812">ns-allinone.</a><br></p>
+
+<ul>
+	<li>Décompressez l'archive avec <code>tar xvzf ns-allinone-2.36.rc1.tgz</code></li>
+	<li>Puis <code>cd ns-allinone-2.36.rc1/</code></li>
+	<li>Enfin <code>./install</code><br></li>
+</ul>
+<p>A la fin de la compilation, regardez bien ce qui est indiqué dans le terminal, pour ma part :</p><code>Please put /home/elochin/ns-2/ns-2.36-elo/bin:/home/elochin/ns-2/ns-2.36-elo/tcl8.6.9/unix:/home/elochin/ns-2/ns-2.36-elo/tk8.6.9/unix</code><br><code>into your PATH environment; so that you'll be able to run itm/tclsh/wish/xgraph.</code><br><br><code>IMPORTANT NOTICES:</code><br><br><code>(1) You MUST put /home/elochin/ns-2/ns-2.36-elo/otcl-1.14, /home/elochin/ns-2/ns-2.36-elo/lib, </code><br><code>&nbsp;&nbsp;&nbsp; into your LD_LIBRARY_PATH environment variable.</code><br><code>&nbsp;&nbsp;&nbsp; If it complains about X libraries, add path to your X libraries </code><br><code>&nbsp;&nbsp;&nbsp; into LD_LIBRARY_PATH.</code><br><code>&nbsp;&nbsp;&nbsp; If you are using csh, you can set it like:</code><br><code>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; setenv LD_LIBRARY_PATH &lt;paths&gt;</code><br><code>&nbsp;&nbsp;&nbsp; If you are using sh, you can set it like:</code><br><code>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; export LD_LIBRARY_PATH=&lt;paths&gt;</code><br><br><code>(2) You MUST put /home/elochin/ns-2/ns-2.36-elo/tcl8.6.9/library into your TCL_LIBRARY environmental</code><br><code>&nbsp;&nbsp;&nbsp; variable. Otherwise ns/nam will complain during startup.</code><br><br><code>After these steps, you can now run the ns validation suite with cd ns-2.36.rc1; ./validate</code><br><br><code>For trouble shooting, please first read ns problems page http://www.isi.edu/nsnam/ns/ns-problems.html. Also search the ns mailing list archive for related posts.</code><br></div><p>Ne faire que les points #1 et #2 avec <code>export LD_LIBRARY_PATH=/path...</code> et <span><code>export TCL_LIBRARY_PATH=/path...</code> et les chemins (paths) qui vous serons retournés. Il vous faudra également installer le langage Perl et GNUPLOT.</code><br></p>
+</body>
+</html>

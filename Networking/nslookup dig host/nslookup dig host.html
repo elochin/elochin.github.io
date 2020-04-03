@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+    <title>nslookup, dig et host</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+	
+	<h1><code>nslookup</code>, <code>dig</code> et <code>host</code></h1>
+
+	Ce trio de commandes, toutes développées par l'Internet Systems Consortium, permet la résolution de nom DNS. Elles diffèrent par leur commodité et leurs options. La plus ancienne est nslookup, celle avec le plus d'options (et de loin) est dig, tandis que la plus récente et sans doute le plus pratique pour une utilisation courante est host.
+	<p>
+Consultez leurs pages de manuel correspondante en tapant man nom_de_la_commande et expérimentez dans un terminal les résultats obtenus.
+<p>
+
+<pre>
+<code>
+$ nslookup www.isae.fr
+Server:        10.132.1.11
+Address:    10.132.1.11#53
+
+www.isae.fr    canonical name = drupalprod.isae.fr.
+Name:    drupalprod.isae.fr
+Address: 192.93.254.85
+
+$dig www.isae.fr
+
+; <<>> DiG 9.9.5-3ubuntu0.8-Ubuntu <<>> www.isae.fr
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 14679
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 2, ADDITIONAL: 3
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;www.isae.fr.            IN    A
+
+;; ANSWER SECTION:
+www.isae.fr.        3600    IN    CNAME    drupalprod.isae.fr.
+drupalprod.isae.fr.    3600    IN    A    192.93.254.85
+
+;; AUTHORITY SECTION:
+isae.fr.        86400    IN    NS    supns.isae.fr.
+isae.fr.        86400    IN    NS    filaong.isae.fr.
+
+;; ADDITIONAL SECTION:
+supns.isae.fr.        3600    IN    A    192.93.254.35
+filaong.isae.fr.    3600    IN    A    192.93.254.38
+
+;; Query time: 1 msec
+;; SERVER: 10.132.1.11#53(10.132.1.11)
+;; WHEN: Mon May 30 14:20:13 CEST 2016
+;; MSG SIZE  rcvd: 155
+</code>
+</pre>
+</body>
+</html>

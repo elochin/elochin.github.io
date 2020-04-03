@@ -1,0 +1,132 @@
+<!doctype html>
+<html>
+<head>
+    <title>Des en-têtes de paquets</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+    <h1>Des en-têtes de paquets</h1>
+
+Chaque couche ajoute son propre en-tête. Les en-têtes Ethernet sont généralement de 14 octets; pour IP et TCP de 20 octets et enfin pour UDP de 8 octets. Parfois, la taille de l'en-tête peut-être supérieure à la charge utile. C'est souvent le cas avec le transport de la VoIP ou avec l'utilisation d'une version particulière de la couche IP : IPv6. Aussi, cet en-tête peut-être compressé pour des raisons de performance de transfert. La taille maximale des paquets prise en charge par un réseau local donné (par exemple Ethernet, Token Ring ou ATM) est un attribut intrinsèque du réseau local sur lequel il sera émis. Ethernet permet un maximum de 1500 octets de données. Cette taille correspond à la taille maximum qui peut être transmise à la couche liaison par la couche IP (dénommé MTU pour <em>Maximum Transfert Unit</em>). Cependant, l'ajout des en-têtes par la couche liaison font que ce paquet aura une taille de 1518 octets (et ne sera pas fragmenté ... mais ceci est une autre histoire qui vous sera expliquée dans le cours sur IP).
+<p>
+Vous pouvez vérifier le MTU de votre interface en tapant la commande <code>ifconfig</code> dans votre terminal ou dans une machine virtuelle de l'émulateur CORE. Sans argument, cette commande vous listera les informations concernant toutes vos cartes réseaux. Tapez <code>ifconfig eth0</code> pour obtenir les informations concernant une interface précise. Avez-vous trouvé la ligne correspondante au MTU ? 
+<p>
+Les datagrammes sont véhiculés au sein de réseaux à commutation par paquets. Ainsi, l'en-tête contient l'adresse de la destination et potentiellement d'autres informations de livraison. Les nœuds internes du réseau appelés routeurs s'assurent alors de les acheminer vers leur destination finale. 
+<p>
+Il est peut-être intéressant de noter que les paquets sont des tampons construits sur une base de 8 bits (1 octet), et tout le matériel d'aujourd'hui se base sur cette métrique octale (le matériel accepte par convention, l'ordre dans lequel les bits d'un octet sont transmis) mais ce ne fut pas toujours le cas. Par le passé des machines, telles le <a href="https://en.wikipedia.org/wiki/PDP-10">PDP-10</a> de DEC system, avaient une taille de mot de 36 bits; un mot pouvant contenir cinq caractères ASCII 7 bits. Les premières spécifications de l'Internet ont introduit le terme d'octet et requis l'homogénéisation des séquences d'octets. Les hôtes incompatibles devaient alors être en mesure de faire la conversion. Notez qu'il existe encore des problèmes de données d'octet; à titre d'exemple, les entiers binaires peuvent être représentés comme une séquence d'octets soit en <a href="https://fr.wikipedia.org/wiki/Endianness"><em>big-endian</em> ou<em> little-endian</em></a>. La <a class="rfc reference external" href="http://tools.ietf.org/html/rfc1700.html">RFC 1700</a> précise que les protocoles Internet utilisent l'ordre des octets <em>big-endian</em>, parfois également appelé <em>network byte order</em>. Vous serez forcément confrontés au problème si vous travaillez avec certains drones ou robots basés sur des architectures ARM et pas Intel par exemple.</p>
+
+<p>Nous allons bientôt réaliser une capture de trafic avec l'outil <strong>tcpdump</strong>, aussi, le connaissance du format des en-têtes vous sera d'une aide précieuse.</p>
+
+<h2>L'en-tête Ethernet</h2>
+
+L'en-tête Ethernet standard possède les champs suivants :
+<center>
+<img src="https://www.computer-networking.info/1st/html/_images/8023.png" alt="Ethernet">
+</center>
+<p></p>
+<p>A votre niveau, les champs d'importance pour la compréhension de ce cours sont les deux champs adresse source et adresse destination où les adresses physiques des machines sont renseignées. <span style="text-decoration: underline;">Rappel :</span> ces adresses sont visibles avec la commande <strong>ifconfig</strong>. Elles sont un identifiant de votre carte réseau <strong>unique</strong>. </p>
+<p>Un paquet émis sur une interface réseau d'un noeud quel qu'il soit, entraine l'inscription de son adresse matériel dans la trame Ethernet en tant qu'adresse source. Pour celle de destination, ce sera l'adresse matériel de l'hôte ou du noeud destinataire <strong>du même lien local</strong>. En effet, cet hôte ou noeud destinataire appartient obligatoirement <strong>au même réseau physique</strong> que l'émetteur. Cela signifie que depuis l'ISAE, vous ne verrez jamais l'adresse physique, par exemple, de la machine <code>www.google.fr</code>, mais l'adresse physique de la passerelle de l'école qui vous connecte à Internet ou vers un autre noeud, connecté à un autre réseau, qui vous acheminera vers Internet. C'est la raison pour laquelle dans l'expérimentation précédente de capture de trafic vous observiez un changement des adresses matérielles inscrites dans les paquets capturés. Vous comprenez maintenant le périmètre d'adressage de cette couche liaison qui se <strong>limite aux communications sur le lien local/physique</strong> d'où son nom.</p>
+<p>En revanche, l'adresse de destination reste inchangée durant tout le parcours du datagramme et correspond bien à l'adresse IP distante (e.g. celle de <code>www.google.fr</code>). Nous verrons par la suite pourquoi il est alors nécessaire d'avoir à la fois des adresses matériels et des adresses IP lorsque nous aborderons la couche IP et notamment le protocole <strong>ARP (<em>Address Resolution Protocol</em>)</strong>.</p>
+
+<h2>L'entête IP</h2>
+
+Le contenu de l'en-tête IP (défini en <a target="_blank" href="https://tools.ietf.org/html/rfc791">RFC791</a>) est donné ci-dessous :
+<br>
+<pre>    0                   1                   2                   3   
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |Version|  IHL  |Type of Service|          Total Length         |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |         Identification        |Flags|      Fragment Offset    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Time to Live |    Protocol   |         Header Checksum       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       Source Address                          |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Destination Address                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Options                    |    Padding    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</pre>
+<p></p>
+<p>Au contraire de la couche précédente, les adresses renseignées dans cet en-tête correspondront à l'adresse de l'émetteur et l'adresse de destination finale (dans ce cas, ce sera bien l'adresse IP de www.google.fr qui y sera inscrite). Cette couche ne travaille pas au niveau liaison mais au niveau Internet d'où son nom.</p>
+<p>Cet en-tête est découpé en plusieurs champs, correspondant à des mots de 32 bits (d'où la numérotation qui se trouve au dessus du schéma descriptif ci-dessus extrait de la <a target="_blank" href="https://tools.ietf.org/html/rfc791">RFC791</a>). </p>
+<p>Le premier mot contient donc les 4 champs suivants :</p>
+
+<ul>
+<li><em>Version</em> (4 bits) : qui donne la version du protocole IP utilisé codé sur 4 bits et donc ayant pour valeur 4 pour la version IPv4</li>
+
+<li><em>IHL</em> (<em>Internet Header Length</em>) (4 bits) : la taille de l'en-tête. Cette valeur est à multiplier par 4 pour connaître le nombre d'octets constituant l'en-tête.  Il peut varier de 5 (soit 20 octets d'entête) à 15 (60 octets d'entête) par la présence ou non d'options</li>
+
+<li><em>Type of Service</em> (8 bits) : permet de différencier le service donné comme donner une priorité particulière au datagramme. Ce champ a été redéfini en DSCP (DiffServ Code Point) par la <a target="_blank" href="https://tools.ietf.org/html/rfc2474">RFC2474</a>. Il sort à ce stade du périmètre de votre cours et sera abordé avec les architectures réseaux à qualité de service dans un module du parcours TR de la filière ITR</li>
+
+<li><em>Total Length</em> (16 bits) : donne la taille totale en octets du datagramme (ou du fragment). Ainsi, un datagramme ne peut pas excéder 65535 octets (2^16 − 1). La norme impose à toute implémentation de pouvoir traiter des datagrammes d'au moins 576 octets. Si un datagramme devant traverser un réseau est de taille supérieure à ce que le réseau peut<br />transmettre (i.e. au MTU du réseau), il sera fragmenté par le routeur ou la station émettrice. Fragmenter veut dire que le datagramme sera découpé en datagrammes plus petits (des fragments) qui pourront alors être transmis. Ces fragments auront alors pour longueur totale la taille des données qu'ils transportent plus la longueur de l'en-tête indiquée dans le champ IHL. Le datagramme d'origine sera reconstitué par le destinataire.</li>
+</ul>
+
+<p>Les autres mots comprennent les champs suivants :</p>
+
+<ul>
+	<li> <em>Identification (16 bits)</em> : numéro identifiant le datagramme de façon non ambiguë par rapport à sa source (identifiée par l'adresse IP source). Il permet de réassembler les fragments d'un même datagramme au niveau du destinataire</li>
+	<li><em>Flags (3 bits)</em> : c'est indicateur de fragmentation qui se composent des 3 bits dont le premier est inutilisé :</li>
+	<ul>
+		<li><em>bit 0</em> : bit inutilisé toujours à 0</li>
+		<li><em>bit Don't Fragment</em> : si positionné à 1, indique que ce datagramme ne doit pas être fragmenté. Dans ce cas, un routeur qui n'a d'autre choix que le fragmenter va le détruire et enverra un message ICMP de compte rendu de destination inaccessible</li>
+		<li><em>bit More</em> : si positionné à 1, indique que le datagramme n'est qu'une partie (fragment) du datagramme d'origine et que ce n'est pas le dernier fragment. Si à 0, indique que le datagramme est le dernier fragment du datagramme d'origine. On reconnaît un datagramme non fragmenté lorsque le bit More est à 0 et que le champs Fragment Offset est aussi à 0</li>
+	</ul>
+<li><em>Fragment Offset (13 bits)</em> : également utilisé pour la fragmentation. En multipliant sa valeur par 8, on obtient la position dans le datagramme d'origine du premier octet de données de ce datagramme. L'offset est différent de 0 uniquement si le datagramme a été fragmenté. Il vaut 0 si le datagramme n'est pas fragmenté, ou si c'est le premier fragment</li>
+<li><em>TTL (Time To Live) (8 bits)</em> : valeur fixant la durée de vie en secondes du datagramme. Le but est d'éliminer un datagramme qui ne serait pas arrivé à destination dans le délai imparti, ou d'éliminer les fragments d'un datagramme lorsqu'il ne peut être reconstitué (fragment perdu ou retardé). En pratique, tout routeur devant transmettre le datagramme va décrémenter sa durée de vie d'au moins 1. Il en résulte que le TTL est une limite du nombre de routeurs pouvant être traversés jusqu'à la destination</li>
+<li><em>Protocol (8 bits)</em> : le type de protocole (et donc le type d'en-tête) qui suit. Il sert au démultiplexage car indique à quel protocole (UDP, TCP, ICMP, ...) et donc à la couche transport, à qui il faut remettre les données transportées dans le datagramme. Les valeurs possibles de ce champ et leur signification sont décrites dans la RFC1700</li>
+<li><em>Checksum (16 bits)</em> : permet de contrôler l'intégrité de l'entête (mais pas des données). Si le checksum calculé par le destinataire s'avère différent de celui figurant dans le datagramme, ce dernier est détruit</li>
+<li><em>Adresse IP Source (32 bits)</em> : entier non signé identifiant l'adresse IP de l'émetteur du datagramme On représente une telle adresse en notation décimale pointée</li>
+<li><em>Adresse IP Destination (32 bits)</em> : entier non signé identifiant l'adresse IP du destinataire du datagramme. On représente une telle adresse en notation décimale pointée</li>
+<li><em>Options (taille variable, pouvant être nulle)</em> : elles comprennent la découverte du MTU, l'enregistrement d'une route suivie par un datagramme, le routage à la source, etc. En cas de fragmentation, certaines options sont copiées dans tous les datagrammes (comme le routage à la source), d'autres ne le sont que dans le premier (comme enregistrement de la route). Le champ IHL permet de vérifier la présence d'options</li>
+<li><em>Bourrage (Taille variable, pouvant être nulle)</em> : n'est présent que pour compléter la taille des options jusqu'à un multiple de 4 octets. Ceci parce que la taille de l'en-tête est HLI × 4 octets</li>
+<li><em>Données (taille variable)</em> : les données véhiculées par le datagramme. Au niveau de ma machine destinatrice du datagramme, ces octets seront communiqués au protocole indiqué par le champ Protocol si le Checksum est valide. La taille maximale de ce champ est 65535 moins la longueur de l'en-tête</li>
+</ul>
+	
+
+<h2>L'en-tête UDP</h2>
+
+L'en-tête UDP (défini en <a target="_blank" href="https://www.ietf.org/rfc/rfc768.txt">RFC768</a>) est très simple comme montré ci-dessous :
+
+<pre>                                    
+                  0      7 8     15 16    23 24    31  
+                 +--------+--------+--------+--------+ 
+                 |     Source      |   Destination   | 
+                 |      Port       |      Port       | 
+                 +--------+--------+--------+--------+ 
+                 |                 |                 | 
+                 |     Length      |    Checksum     | 
+                 +--------+--------+--------+--------+ 
+                 |                                     
+                 |          data octets ...            
+                 +---------------- ...               </pre>
+<p>
+Comme vous le constatez, il est constitué de deux champs contenant les numéros de port source et destination respectivement utilisés par l'application source et destination. Il contient également un champ taille et un champ de contrôle. Nous nous focaliserons dans la suite de ce cours principalement sur ces numéros de port qui permettent le multiplexage des applications au niveau de la couche transport, fonctionnalité essentielle de cette dernière, lorsque nous l'aborderons par la suite. </p>
+
+<h2>L'en-tête TCP</h2>
+
+Enfin l'en-tête TCP, plus complexe que celui d'UDP, défini en RFC793 est le suivant :
+<pre>                                 
+    0                   1                   2                   3   
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |          Source Port          |       Destination Port        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                        Sequence Number                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Acknowledgment Number                      |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Data |           |U|A|P|R|S|F|                               |
+   | Offset| Reserved  |R|C|S|S|Y|I|            Window             |
+   |       |           |G|K|H|T|N|N|                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |           Checksum            |         Urgent Pointer        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Options                    |    Padding    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                             data                              |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</pre>
+<p>Nous reviendrons plus tard sur ces champs qui feront l'objet d'un cours avancé sur la couche transport. Comme pour UDP, vous remarquez que cet en-tête débute avec les champs port source et destination.</p>
+</body>
+</html>

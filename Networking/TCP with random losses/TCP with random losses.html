@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+    <link rel="stylesheet" href="../mystyle.css">
+  <title>TCP en présence de pertes aléatoires</title>
+</head>
+<body>
+
+<h1>TCP en présence de pertes aléatoires</h1>
+
+Soit une connexion TCP NewReno qui traverse un réseau où les paquets sont jetés aléatoirement de façon uniforme avec une probabilité <em>p</em>. Soit <em>RTT</em>, le temps aller-retour de la connexion et <em>rwnd</em> la fenêtre annoncée du récepteur. On notera <em>S</em> la taille des paquets TCP en octets avec <em>S=500B</em>. Le seuil du <em>slowstart</em> (<code>Agent/TCP set max_ssthresh_</code>) au début de la connexion est égal à <em>rwnd</em> et l'option DelAck est activée. L'objectif de cette simulation est d'étudier les performances de TCP dans un tel scénario, en particulier lorsque nous changeons la probabilité de perte de paquets <em>p</em>.</p>
+<p>Deux approximations existent pour le débit TCP en présence de pertes aléatoires. La première, appelée <em>square root formula</em>, ne tient pas compte des délais d'attente, ni de <em>rwnd</em> et est formulée ainsi :</p>
+<div align="center">
+<img alt="" src="data/sqrtTCP.png"/>
+</div>
+<p>La seconde plus complète et plus complexe à calculer est appelée PFTK (du mon de ses auteurs) est à la forme suivante :</p>
+<div align="center">
+<img alt="" src="data/PFTK.png"/>
+</div>
+<p>Vous trouverez ici : <a href="data/pftk.gp">pftk.gp</a> un script gnuplot qui trace ces deux courbes pour un RTT donné. N'oubliez pas de changer la valeur du RTT pour analyser vos résultats par la suite. Votre travail sera de valider ces deux expressions à l'aide de simulations ns-2.</p>
+<p>Construisez une topologie réseau très simple de deux noeuds <em>S</em> et <em>D</em> avec les paramètres suivants :</p>
+<pre><code>$ns duplex-link $S $D 1Mb 100ms DropTail
+$ns queue-limit $S $D 10000</code></pre>
+<p>Rappels :</p>
+<ul>
+<li>pour TCP Newreno : <code>set tcp [new Agent/TCP/Newreno]</code></li>
+<li>pour utiliser DelAck : <code>set sink [new Agent/TCPSink/DelAck]</code></li>
+<li>pour changer la taille des paquets : <code>$tcp set packetSize 500</code></li>
+</ul>
+<p>Utilisez la procédure <code>monitor-queue</code> (présente dans le script <code>aqm.tcl</code> du précédent TP) pour calculer le taux d'occupation de la file d'attente d'un routeur. Enfin Je vous rappelle qu'il est possible de fixer la taille d'une file d'attente en nombre de paquets (ici 100) de la façon suivante : <code>$ns queue-limit $S $D 100</code></p>
+<p><strong>Questions</strong></p>
+<ol style="list-style-type: decimal">
+<li>Quel est le <a href="https://en.wikipedia.org/wiki/Bandwidth-delay_product"><font color = "blue">produit délai de bande passante</font></a> d'un tel réseau ? Définissez la fenêtre du récepteur et le seuil du <em>slowstart</em> à ce produit.</li>
+<li>Ajoutez le code qui vous permet de tracer la taille de la fenêtre en fonction du temps. Tracez l'évolution de cette fenêtre en utilisant gnuplot</li>
+<li><p>Ajoutez un modèle d'erreur entre S et D :</p>
+<pre><code>set lossModel [new ErrorModel]
+$lossModel set rate value-of-p
+$lossModel unit packet
+$lossModel drop-target [new Agent/Null]
+$set lossyLink [$ns link $S $D]
+$lossyLink install-error $lossModel</code></pre>
+<p>Tracez la fenêtre de congestion de la connexion TCP pour p=10^-4 et p=10^-2. Interprétez les résultats.</p></li>
+<li>Changez la probabilité de perte p entre 5.10^-5 et 5.10^-1. Pour chaque probabilité, calculez l'utilisation du lien par la simulation, l'utilisation donnée par la formule racine carrée et l'utilisation donnée par la formule PFTK. Comment les performances de TCP varient-elles lorsque p augmente ? Expliquez.</li>
+<li>Laquelle des deux formules se rapproche le mieux du débit de TCP ?</li>
+<li><p>Dans quel cas pouvons-nous considérer que la formule de la racine carrée est une bonne approximation du débit TCP ?</p></li>
+</ol>
+</body>
+</html>

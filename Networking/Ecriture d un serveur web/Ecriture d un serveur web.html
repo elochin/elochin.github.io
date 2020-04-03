@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+<head>
+    <title>Ecriture d'un serveur web</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+    <h1>Ecriture d'un serveur web</h1>
+Nous allons maintenant créer un mini serveur web.
+<p>Le serveur répondra à des requêtes en localhost sur le port 8080. Nous utiliserons Firefox comme client. Pour consulter la page du serveur il faudra alors saisir dans Firefox : <code>http://127.0.0.1:8080</code>
+</p>
+<p>Celui-ci renverra la chaine de caractères suivante (que vous pouvez bien évidemment personnaliser) :
+</p>
+<code> 
+	char response[] = "HTTP/1.1 200 OK\r\n"
+	<br>"Content-Type: text/html; charset=UTF-8\r\n\r\n"
+	<br>"&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;title&gt;Mon serveur web&lt;/title&gt;"
+	<br>"&lt;body bgcolor=lightgreen&gt;&lt;h1&gt;Hello from my own web server !&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;\r\n";
+</code>
+<p>Ecrire le code de ce serveur en suivant le squelette ci-dessous pour vous aider :
+</p>
+<code>
+	sock = socket(AF_INET, SOCK_STREAM, 0);
+</code>
+<br>remplir la <code>struct sockaddr_in;</code>
+<br>
+<code>
+	bind(...);<br>
+	listen(...);<br>
+	while(1) {
+	<br><div span class=tab></div>accept(...);
+	<br><div span class=tab></div>send(sock_fd, response, sizeof(response), 0);
+	<br><div span class=tab></div>close(...);
+	<br>}
+	<br>
+</code>
+<div class="lms-info">Le résultat attendu est illustré par le binaire suivant : <a href="https://lms.isae.fr/pluginfile.php/122452/mod_resource/content/1/webserver">webserver</a> que vous pouvez tester afin de bien comprendre ce qui vous est demandé.
+  </div>
+    
+  <h2>Ecriture d'une version plus réaliste</h2>
+
+Nous allons étendre le premier serveur web que vous avez précédemment développé afin de mettre en évidence un fonction plus réaliste avec échange de messages HTTP.
+<p>
+Les objectifs seront les suivants :
+<ul>
+	<li>Le serveur ne gère qu'une seule requête
+	<li>Il devra analyser la requête HTTP du client...
+	<li>... et récupérer la page demandée qui suit la requête GET sur son propre système de fichiers
+	<li>puis créer la réponse HTTP correspondante et la renvoyer au client
+	<li>Pour info la spécification complète de HTTP 1.0 est disponible dans la <a href="https://tools.ietf.org/html/rfc1945">RFC1945</a>
+</ul>
+
+<h3>Guide de programmation</h3>
+
+Votre serveur va recevoir d'un client tel que Firefox une requête de type <code>GET</code>. Il vous faudra analyser cette requête et pour cela, 
+vous pouvez utiliser la fonction <code>strtok()</code> de la librairie <code>string.h</code> voir la section du manuel de la libgc suivante pour cela : <a href="https://ftp.gnu.org/old-gnu/Manuals/glibc-2.2.3/html_chapter/libc_5.html#SEC79">Finding Tokens in a String</a>
+<p>
+Faisons un parrallèle avec votre cours de Java de 2A. En langage Java, vous aviez effectué cette opération avec :
+<pre><code>BufferedReader inFromClient = 
+        new BufferredReader(new InputStreamReader(connectionSocket.getInputStream()));
+</code></pre>
+Puis récupéré la ligne stockée dans <code>BufferedReader</code> par la méthode <code>readLine()</code> comme suit :
+<pre><code>requestMessageLine = inFromClient.readLine();
+</code></pre>
+L'analyse de la syntaxe du message contenu dans <code>requestMessageLine</code> était réalisée simplement par la classe <code>StringTokenizer</code> (du paquetage <code>java.util</code>). Cette classe vous permettait de récupérer uniquement les «jetons» (éléments syntaxiques) de chaque ligne. L'objectif étant de vérifier que la syntaxe est correcte et d'obtenir enfin le nom de fichier demandé par le client :
+<pre><code>StringTokenizer tokenizedLine = new StringTokenizer(requestMessageLine);
+
+if (tokenizedLine.nextToken().equals("GET"))
+{
+System.out.println("Found a GET"); fileName = tokenizedLine.nextToken();
+// should be the filename but still need to check it and remove / ...
+
+if (fileName.startsWith("/") == true)
+{
+fileName = fileName.substring(1);
+}
+...
+</code></pre>
+L'étape suivante était d'aller chercher le fichier sur le disque avec la classe <code>FileInputStream</code> :
+<pre><code>File file = new File(fileName);
+int numOfBytes = (int) file.length();
+
+FileInputStream inFile = new FileInputStream(fileName);
+byte[] fileInBytes = new byte[numOfBytes];
+inFile.read(fileInBytes);
+</code></pre>
+Puis d'écrire la réponse HTTP (ne pas oublier de terminer vos lignes avec <code>\r\n</code>. Faites attention de bien écrire le content-type correspondant au fichier demandé :
+<pre><code>.htm: Content-Type: text / htm\r\n
+.css: Content-Type: text / css\r\n 
+.png: Content-Type: image / png\r\n
+.jpg: Content-Type: image / jpeg\r\n
+.gif: Content-Type: image / gif\r\n
+</code></pre>
+Cela donnait par exemple :
+<pre><code>outToClient.writeBytes("HTTP/1.0 200 Document Follows\r\n");
+if (fileName.endsWith(".html") || fileName.endsWith(".htm")) { outToClient.writeBytes("Content-Type: text/html\r\n"); }
+if (... // it can be css, png, jpg, etc...
+</code></pre>
+Enfin, vous devrez envoyer la longueur et le fichier :
+<pre><code>outToClient.writeBytes("Content-Length: " + numOfBytes + "\r\n");
+outToClient.writeBytes("\r\n");
+outToClient.write(fileInBytes, 0, numOfBytes);
+</code></pre>
+N'oubliez pas de fermer la socket une fois la réponse obtenue.
+<p>
+Pour tester votre programme, vous pouvez télécharger cette page <a href="dmi.zip">homepage exemple</a>. Utilisez un navigateur quelconque pour demander une des pages. Vous pouvez placer les fichiers HTML au même niveau que vos fichiers java.
+
+<div class=lms-info>
+Remarques
+<br>
+    <br>N'essayez pas d'utiliser le port 80, mais pour des raisons de privilège, utilisez un port quelconque au dessus de 10000. Enfin n'oubliez pas de reconfigurer le paramètre proxy du navigateur si nécessaire
+</div>
+</body>
+</html>

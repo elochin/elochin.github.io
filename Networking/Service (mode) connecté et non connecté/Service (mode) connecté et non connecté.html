@@ -1,0 +1,143 @@
+<!doctype html>
+<html>
+<head>
+    <title>Service (mode) connecté et non connecté</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+    <h1>Service (mode) connecté et non connecté</h1>
+Nous allons illustrer le concept de mode (ou service) connecté et non-connecté au travers d'une expérimentation très simple avec CORE.
+<p>Pour cela, utilisez la topologie exemple sous l'émulateur CORE. Vérifiez tout d'abord que depuis la machine à gauche de cette topologie, vous "<em>pinguez"</em> la machine de destination à droite. Une fois fait, lancez votre scénario d'émulation et double-cliquez sur chacune des machines d'extrémités afin d'avoir une fenêtre donnant accès au terminal pour chacune. Nous allons utiliser un programme très simple <strong>tsock</strong>, dont le mode d'utilisation est donné ci-dessous</p>
+
+<p><strong>tsock</strong> est ce que l'on appelle communément une application client/serveur de génération de trafic. Auparavant, nous avons déjà utilisé un client avec la commande telnet. Le serveur, quant à lui, n'était pas sous votre contrôle. Ici, vous contrôlez les deux parties. Pour générer ce trafic, nous allons utiliser tour à tour deux protocoles (dont nous parlerons plus en détail dans la suite de ce cours : UDP et TCP). Votre objectif est de déterminer (ou d'illustrer si vous connaissez déjà la réponse) lequel travaille en mode connecté et lequel travaille en mode déconnecté. Il vous faudra donc lancer dans chacun des terminaux uniquement un client en UDP puis en TCP et observer lequel émet du trafic sans que le serveur soit lancé. Faire de même avec un serveur UDP et TCP, croiser les protocoles et expérimenter les combinaisons possibles afin de bien comprendre ce qui se passe.</span></p>
+<p>A vous de me dire quels sont les modes utilisés par ces deux protocoles.</span></p>
+<p></p>
+<p>L'usage général de l'application <b>tsock</b> est le suivant (à cet instant, certaines options ne vous seront pas forcéments utiles) :</p>
+<ul>
+<li><span face="Arial, sans-serif"><span size="2"><b>tsock -p [-options] port</b></span></span><span face="Arial, sans-serif"> met en œuvre un </span><span face="Arial, sans-serif"><span style="text-decoration: underline;">puits</span></span><span face="Arial, sans-serif"> de réception d'information en attente sur le port </span><span face="Arial, sans-serif"><span size="2"><b>port</b>. Un puits est un simple destinataire qui réceptionne un paquet sans le traiter comme par exemple, le délivrer une l'application</span></span><span face="Arial, sans-serif"><b> </b></span></span></li>
+<li><span face="Arial, sans-serif"><span size="2"><b>tsock -s [-options] host port</b></span></span><span face="Arial, sans-serif"> met en œuvre une </span><span face="Arial, sans-serif"><span style="text-decoration: underline;">source</span></span><span face="Arial, sans-serif"> d'information vers un puits s'exécutant sur la station </span><span face="Arial, sans-serif"><span size="2"><b>host</b></span></span><span face="Arial, sans-serif"> en attente sur le port </span><span face="Arial, sans-serif"><span size="2"><b>port</b></span></span><span face="Arial, sans-serif"></span></span></li>
+</ul>
+<p><span size="2">Les options communes au puits et à la source sont :</span></span></p>
+<ul>
+<li><span face="Arial, sans-serif"><span size="2"><b>-u</b></span></span><span face="Arial, sans-serif"> : utilise le service fourni par UDP ; par défaut, le service fourni par TCP est utilisé</span></span></li>
+<li><span face="Arial, sans-serif"><span size="2"><b>-l ##</b></span></span><span face="Arial, sans-serif"> : longueur des données à émettre / longueur </span><span face="Arial, sans-serif"><span style="text-decoration: underline;">maximale</span></span><span face="Arial, sans-serif"> des données à lire par l’application tsock émettrice / réceptrice ; par défaut, cette longueur est de 30 octets</span></span></li>
+<li><span face="Arial, sans-serif"><span size="2"><b>-w</b></span></span><span face="Arial, sans-serif"> : supprime l’affichage à l’écran des données émises / lues</span></span></li>
+</ul>
+<p><span face="Arial, sans-serif">Les options spécifiques à la source (</span><span face="Arial, sans-serif"><span size="2">-s</span></span><span face="Arial, sans-serif">) sont :</span></span></p>
+<ul>
+<li><span face="Arial, sans-serif"><span size="2"><b>-n ##</b></span></span><span face="Arial, sans-serif"> : définit le nombre d’émissions de données (par défaut : 10)</span></span></li>
+<li><span face="Arial, sans-serif"><span size="2"><b>-d</b></span></span><span face="Arial, sans-serif"> : impose au service de transport TCP d'envoyer les données sans délai</span></span></li>
+<li><span face="Arial, sans-serif"><span size="2"><b>-t ##</b></span></span><span face="Arial, sans-serif"> : définit la taille des buffers d'émission du protocole de transport en charge du transfert ; par défaut : taille définie par le système</span></span></li>
+</ul>
+<p><span face="Arial, sans-serif">Les options spécifiques au puits (</span><span face="Arial, sans-serif"><span size="2">-p</span></span><span face="Arial, sans-serif">) sont:</span></span></p>
+<ul>
+<li><span face="Arial, sans-serif"><span size="2"><b>-n ##</b></span></span><span face="Arial, sans-serif"> : définit le nombre de réceptions (par défaut : infini)</span></span></li>
+<li><span face="Arial, sans-serif"><span size="2"><b>-t ##</b></span></span><span size="4"> : définit la taille des buffers de réception du protocole de transport en charge du transfert ; par défaut : taille définie par le système</span></span></li>
+</ul>
+<p></p>
+<p><span size="2">Les données émises par le programme source sont composées de la manière suivante :</span></span></p>
+<ul>
+<li><span face="Arial, sans-serif">la taille totale d’une donnée est de 30 octets par défaut et peut être modifiée par l'option </span><span face="Arial, sans-serif"><span size="2">–l ##</span></span><span face="Arial, sans-serif"> </span></span></li>
+<li><span size="2">une donnée est composée de deux champs :</span></span>
+<ul>
+<li><span size="2">le premier représente le numéro de la donnée ; il est codé en ASCII sur cinq positions et prend pour valeur : ----0, ----1, …, 99999 (« - » désignant un blanc) ;</span></span></li>
+<li><span face="Arial, sans-serif">le second champ consiste en la répétition d'un même caractère ASCII : la 1</span><sup><span face="Arial, sans-serif">ère</span></sup><span face="Arial, sans-serif"> donnée émise contient la répétition du caractère 'a', la 2</span><sup><span face="Arial, sans-serif">ème</span></sup><span face="Arial, sans-serif"> 'b', ..., la 26</span><sup><span face="Arial, sans-serif">ème</span></sup><span face="Arial, sans-serif"> 'z', la 27</span><sup><span face="Arial, sans-serif">ème</span></sup><span face="Arial, sans-serif"> 'a', etc.</span></span></li>
+</ul>
+</li>
+</ul>
+<p></p>
+<p><b>Exemple</b></span></p>
+<p>Format de la 3<sup>ème</sup> donnée émise de longueur 20 :</span></p>
+<pre><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">1---5 6--------------------20<br /><b>----3 cccccccccccccccccccc</b></span></span></pre>
+<p>Format de la 29<sup>ème</sup> donnée émise de longueur 25 :</span></p>
+<pre><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">1---5 6-------------------------25<br /><b>---29 ccccccccccccccccccccccccc</b></span></span></pre>
+<p><span face="Arial, sans-serif">Exécuté en tant que Source, le programme </span><span face="Arial, sans-serif"><span size="2"><b>tsock</b></span></span><span face="Arial, sans-serif"> affiche :</span></span></p>
+<ul>
+<li><span size="2">sur la première ligne, les informations suivantes :</span></span>
+<ul>
+<li><span size="2">SOURCE : taille de la donnée émise, n° de port utilisé localement, valeur des options, protocole de transport utilisé --&gt; nom de la machine destinataire</span></span></li>
+<li><span size="2">puis pour chaque donnée émise :</span></span></li>
+<li><span size="2">SOURCE : Envoi n° xxxxx (yyyyy) [*…*]</span></span></li>
+</ul>
+</li>
+</ul>
+<p><span face="Arial, sans-serif">où </span><span face="Arial, sans-serif"><span size="2">xxxxx</span></span><span face="Arial, sans-serif"> est le numéro de l’envoi (codé en ASCII sur 5 positions), </span><span face="Arial, sans-serif"><span size="2">yyyyy</span></span><span face="Arial, sans-serif"> est la taille de la donnée envoyée et </span><span face="Arial, sans-serif"><span size="2">*…*</span></span><span face="Arial, sans-serif"> désigne les caractères contenus dans la donnée émise.</span></span></p>
+<p><span face="Arial, sans-serif">Exécuté en tant que Puits, le programme </span><span face="Arial, sans-serif"><span size="2"><b>tsock</b></span></span><span face="Arial, sans-serif"> affiche :</span></span></p>
+<ul>
+<li><span size="2">sur les deux premières lignes, les informations suivantes :</span></span>
+<ul>
+<li><span size="2">PUITS : taille de la donnée reçue, n° de port utilisé localement, valeur des options, protocole de transport utilisé</span></span></li>
+<li><span size="2">PUITS : connexion acceptée avec &lt;@ IP de la machine source&gt;</span></span></li>
+<li><span size="2">puis pour chaque donnée reçue <br /></span></span></li>
+<li><span size="2">PUITS: Réception n°xxxxx (yyyyy) [*…*]</span></span></li>
+</ul>
+</li>
+</ul>
+<p><span face="Arial, sans-serif">où </span><span face="Arial, sans-serif"><span size="2">xxxxx</span></span><span face="Arial, sans-serif"> est le numéro de la réception, </span><span face="Arial, sans-serif"><span size="2">yyyyy</span></span><span face="Arial, sans-serif"> est la taille de la donnée reçue envoyée et </span><span face="Arial, sans-serif"><span size="2">*…*</span></span><span face="Arial, sans-serif"> désigne les caractères contenus dans la donnée reçues.</span></span></p>
+<p></p>
+<p><b>Exemple de session tsock entre deux machines n1 (10.0.0.20) et n2 (10.0.0.21)</b></span></p>
+<p style="margin-bottom: 0cm; line-height: 100%;" align="justify"></p>
+<dl><dd>
+<table style="width: 587px;" cellspacing="0" cellpadding="5"><colgroup><col width="575" /> </colgroup>
+<tbody>
+<tr>
+<td style="border: 1px solid #000000; padding: 0cm 0.12cm;" width="575" valign="top">
+<p style="margin-top: 0.07cm;" align="justify"><span size="2"><b>Machine 10.0.0.20 (Source) </b></span></span></p>
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid #000000; padding: 0cm 0.12cm;" width="575" valign="top">
+<p style="margin-left: 0.13cm; margin-top: 0.07cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">n1&gt; tsock -s 10.0.0.21 9000</span></span></p>
+<p style="margin-left: 0.13cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">SOURCE : lg_tampon_em=30, port=9000, nb_envois=10, TP=tcp -&gt; 10.0.0.21</span></span></p>
+<p style="margin-left: 0.13cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">SOURCE : Envoi n°1 (30) [----1aaaaaaaaaaaaaaaaaaaaaaaaa]</span></span></p>
+<p style="margin-left: 0.13cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">SOURCE : Envoi n°2 (30) [----2bbbbbbbbbbbbbbbbbbbbbbbbb]</span></span></p>
+<p style="margin-left: 0.13cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">SOURCE : Envoi n°3 (30) [----3ccccccccccccccccccccccccc]</span></span></p>
+<p style="margin-left: 0.13cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">SOURCE : Envoi n°4 (30) [----4ddddddddddddddddddddddddd]</span></span></p>
+<p style="margin-left: 0.13cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">SOURCE : Envoi n°5 (30) [----5eeeeeeeeeeeeeeeeeeeeeeeee]</span></span></p>
+<p style="margin-left: 0.13cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">SOURCE : Envoi n°6 (30) [----6fffffffffffffffffffffffff]</span></span></p>
+<p style="margin-left: 0.13cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">SOURCE : Envoi n°7 (30) [----7ggggggggggggggggggggggggg]</span></span></p>
+<p style="margin-left: 0.13cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">SOURCE : Envoi n°8 (30) [----8hhhhhhhhhhhhhhhhhhhhhhhhh]</span></span></p>
+<p style="margin-left: 0.13cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">SOURCE : Envoi n°9 (30) [----9iiiiiiiiiiiiiiiiiiiiiiiii]</span></span></p>
+<p style="margin-left: 0.13cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">SOURCE : Envoi n°10 (30) [---10jjjjjjjjjjjjjjjjjjjjjjjjj]</span></span></p>
+<p style="margin-left: 0.13cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">SOURCE : fin</span></span></p>
+<p style="margin-left: 0.13cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">n1&gt; </span></span></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+<p style="margin-top: 0.07cm; margin-bottom: 0.07cm; line-height: 100%;" align="justify"><br /><br /></p>
+<dl><dd>
+<table style="width: 587px;" cellspacing="0" cellpadding="5"><colgroup><col width="575" /> </colgroup>
+<tbody>
+<tr>
+<td style="border: 1px solid #000000; padding: 0cm 0.12cm;" width="575" valign="top">
+<p style="margin-top: 0.07cm;" align="justify"><span size="2"><b>Machine n2 (Puits) </b></span></span></p>
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid #000000; padding: 0cm 0.12cm;" width="575" valign="top">
+<p style="text-indent: 0.13cm; margin-top: 0.07cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">n2 &gt; tsock -p 9000</span></span></p>
+<p style="text-indent: 0.13cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">PUITS : lg_tampon_rec=30, port=9000, nb_receptions=infini, TP=tcp</span></span></p>
+<p style="text-indent: 0.13cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">PUITS : connexion acceptée avec 10.0.0.20</span></span></p>
+<p style="text-indent: 0.13cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">PUITS : Reception n°1 (30) [----1aaaaaaaaaaaaaaaaaaaaaaaaa]</span></span></p>
+<p style="text-indent: 0.13cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">PUITS : Reception n°2 (30) [----2bbbbbbbbbbbbbbbbbbbbbbbbb]</span></span></p>
+<p style="text-indent: 0.13cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">PUITS : Reception n°3 (30) [----3ccccccccccccccccccccccccc]</span></span></p>
+<p style="text-indent: 0.13cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">PUITS : Reception n°4 (30) [----4ddddddddddddddddddddddddd]</span></span></p>
+<p style="text-indent: 0.13cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">PUITS : Reception n°5 (30) [----5eeeeeeeeeeeeeeeeeeeeeeeee]</span></span></p>
+<p style="text-indent: 0.13cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">PUITS : Reception n°6 (30) [----6fffffffffffffffffffffffff]</span></span></p>
+<p style="text-indent: 0.13cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">PUITS : Reception n°7 (30) [----7ggggggggggggggggggggggggg]</span></span></p>
+<p style="text-indent: 0.13cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">PUITS : Reception n°8 (30) [----8hhhhhhhhhhhhhhhhhhhhhhhhh]</span></span></p>
+<p style="text-indent: 0.13cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">PUITS : Reception n°9 (30) [----9iiiiiiiiiiiiiiiiiiiiiiiii]</span></span></p>
+<p style="text-indent: 0.13cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">PUITS : Reception n°10 (30) [---10jjjjjjjjjjjjjjjjjjjjjjjjj]</span></span></p>
+<p style="text-indent: 0.13cm; margin-bottom: 0cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; font-size: medium;" face="Courier New"><span size="2">PUITS : fin</span></span></p>
+<p style="text-indent: 0.13cm;" align="justify"><span style="font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif;" face="Courier New"><span style="font-size: small;" size="2"><span style="font-size: medium;">n2 &gt;</span> </span></span></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+</body>
+</html>

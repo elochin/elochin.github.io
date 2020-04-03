@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+<head>
+    <title>LAB : Boucle de routage et champs TTL</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+
+    <h1>LAB : Boucle de routage et champs TTL</h1>
+	<img style="float: left; margin-left: 15px; margin-right: 15px; margin-top: 10px; margin-bottom: 10px;" src="loop.png">
+	L'inconvénient potentiel des topologies redondantes est l'apparition de boucles de routage. Ces boucles résultent d'entrées dans les tables de routage des routeurs qui provoquent une circulation sans fin d'un datagramme. Par exemple, dans le réseau précédent, nous aurions une boucle de routage si, pour une destination C inexistante, S1 transmet un datagramme pour C à S2, qui transmet à S4, puis à S3 pour revenir à S1. Si aucun mécanisme ne prévenait ce problème, nous aurions alors dans l'Internet des paquets qui tourneraient indéfiniment sans jamais atteindre leur destination et consommeraient des ressources à la fois en énergie et en capacité. Les <b>boucles de routage</b> surviennent généralement lorsque les tables de routages sont distribuées, ce qui est bien souvent le cas, puisque la complexité du réseau Internet ne permet pas d'avoir un système de gestion centralisé. Cependant, quand bien même un tel système central existerait, des boucles de routage temporaires pourraient apparaître en raison de retards de notification d'une route. Par exemple, une route qui serait à un instant donné indisponible puis de nouveau accessible très rapidemment.
+	<p>
+	Pour pallier à ce problème, la solution se trouve dans les datagrammes IP qui possèdent un champ particulier décrémenté à chaque fois que le paquet traverse un routeur. Ce champs porte le nom de <b>Time-To-Live (TTL)</b> qui, comme son nom l'indique, autorise la "vie" du paquet tant que sa valeur est supérieure à zéro. Cela limite le nombre de transmissions d'un paquet au sein d'un réseau. La valeur du TTL initiale, généralement de 64, varie en fonction des systèmes. Lorsque ce champ est décrémenté à zéro par un routeur, celui-ci générera un message ICMP vers la source pour indiquer que le datagramme a été détruit à cause d'une mise à zéro de son TTL.
+<p>
+Vous avez déjà très certainement observé durant vos manipulations avec CORE et les nombreux ping effectués, que la valeur du TTL variait en fonction de la machine destination choisie. Si ce n'est pas le cas, depuis une machine de gauche sur votre topologie, pinguez chaque routeur et une machine de droite et observez le TTL retourné.
+<p>
+Il existe une autre commande qui se base sur la décrémentation du TTL dont nous avons parlé au début de ce cours : <code>traceroute</code>. Cette commande très utile permet d'enregistrer le chemin suivi par le paquet jusqu'à sa destination. Vous savez maintenant qu'un chemin IP n'est pas statique et il est probable qu'en jouant avec cette commande chez vous et en fonction de la destination choisie vous observiez différents résultats.
+<p>
+<div class=lms-example>Sur notre topologie exemple, cela ne sera évidemment pas le cas. Je vous propose de tester cette commande, d'observer le résultat obtenu et d'essayer de déterminer par vous-même en faisant une capture de trafic depuis la source effectuant le traceroute, l'astuce utilisée par cette commande pour enregistrer tous les routeurs du chemin.</div>
+</body>
+</html>

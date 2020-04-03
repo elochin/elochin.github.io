@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+<head>
+    <title>Les "sniffers" de paquets</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body>
+
+<h1>Les "sniffers" de paquets <code>tcpdump</code>, <code>tshark</code> et <code>wireshark</code></h1>
+
+Tous les trois sont des outils de capture de trafic. Par la suite, nous manipulerons exclusivement avec <code>tcpdump</code>, l'outil historique de capture de trafic disponible sur tous systèmes. En cliquant sur le bouton droit au dessus d'un noeud de votre topologie, vous pouvez lancer soit tcpdump, tshark ou wireshark sur les interfaces réseaux présentes. L'outil wireshark est simplement une version graphique de tshark. Attention à l'utilisation de ces deux derniers, au contraire de tcpdump qui vous retournera une capture brute, tshark et wireshark utilisent des filtres de dissection des paquets (dissectors) qui peuvent porter à confusion. C'est pour cette raison que je vous conseille de travailler avec <code>tcpdump</code>. Je préfère effectuer l'analyse par moi-même que de laisser des outils automatiser des processus parfois complexes et qui peuvent être mal interprétés. Pour vous en convaincre : lisez les explications de cet article <a target="_blank" href="http://www.packetu.com/2014/12/27/dont-let-wiresharks-assumptions-mislead-troubleshooting/">Don’t Let Wireshark’s Assumptions Mislead Your Troubleshooting</a>. Cependant, si vous utilisez wireshark dans un autre cadre que ce cours, veillez à désactiver cette fonction de dissection.</p>
+</body>
+</html>
