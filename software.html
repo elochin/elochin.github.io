@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Emmanuel Lochin</title>
+<meta charset="utf-8">
+<style>
+    body {
+        font-family: Verdana, sans-serif;
+        font-size: 1em;
+        margin-right:100px;
+        margin-left:100px;
+        margin-bottom:100px;
+    }
+    h1 {
+        color: #0086c7;
+        font-size: 1.5em;
+    }
+    h2 {
+        color: #0086c7;
+        font-size: 1.2em;
+    }
+    table {
+        height: 172px;
+    }
+    table td {
+        padding: 20px;
+    }
+     code{
+	font-family:"PT Mono",monospace;
+    }
+</style>
+</head>
+<body>
+
+<h1>Simulation codes and software</h1>
+
+This webpage provides source codes, scripts and data linked to my publications research.
+
+<h2>Tetrys</h2>
+Tetrys enables a new reliability algorithm specifically useful when retransmission is either problematic or not possible. In case of multimedia or multicast communications and in the context of the Delay Tolerant Networking (DTN), the classical retransmission schemes can be counterproductive in terms of data transfer performance or not possible when the acknowledgment path is not always available. Indeed, over long delay links, packets retransmission has a meaning of cost and must be minimized. The purpose of Tetrys is to propose a novel reliability mechanism with an implicit acknowledgment strategy that could be used either within these new DTN proposals, for multimedia traffic or in the context of multicast transport protocols. This proposal is based on a new on-the-fly erasure coding concept specifically designed to operate efficient reliable transfer over bi-directional links. Tetrys allows to unify a full reliability with an error correction scheme. Tetrys is not sensitive to the loss of acknowledgments while ensuring a faster data availability to the application compared to other traditional acknowledgment schemes. 
+<br>See this paper for detail: <a href="http://oatao.univ-toulouse.fr/4867/">On-the-Fly Coding for Time-Constrained Applications</a>, in IEEE Transactions on Multimedia.
+<p>The code is now distributed by <a href="http://www.speeryt.fr">Speeryt</a>.
+
+<h2>Scheduling flows over LEO constellations on LMS channels</h2>
+This code provides ns-2 sources and scripts to reproduce experiments driven in <a href="https://www.theses.fr/2018ESAE0035">Bastien Tauran PhD thesis</a>. A journal paper dealing with these experiments is currently under review. Full fading traces are available upon request.
+<br><a href="Software/ns2_a-harq_bastien_tauran.tgz"><img src="gzip.png" alt=""/></a>
+
+<h2>Virtual Curves algorithm implemenation and ns-2 experiments</h2>
+This code provides ns-2 sources and scripts to reproduce experiments demonstrating <a href="https://oatao.univ-toulouse.fr/24113/">VIRAL: coupling congestion control with fair video quality metric</a>, allowing congestion controlled transport protocols to provide fairness in terms of both throughput and video quality. At this stage VIRAL is implemented inside TFRC protocol but should be compliant with any rate-based congestion control mechanisms that enable a smooth sending rate for multimedia applications.
+<br><a href="Software/viral.tgz"><img src="gzip.png" alt=""/></a>
+
+<h2>iQAS: an integration platform for Quality of Information Assessment as a Service</h2>
+iQAS is an integration platform for QoO Assessment as a Service. The platform is freely available <a href="https://github.com/antoineauger/iqas-platform">here</a>. Further details are provided in this <a href="http://oatao.univ-toulouse.fr/16470/">paper</a>.
+
+<h2>VoIP QoE tool for OpenBACH</h2>
+This code will be soon released as an <a href="http://www.openbach.org">OpenBACH</a> job and is available for download <a href="https://forge.net4sat.org/openbach/openbach-extra/tree/master/externals_jobs/stable_jobs/service/voip_qoe">here</a>.
+
+<h2>PSS Priority Switching Scheduler</h2>
+Following our paper <a href="http://oatao.univ-toulouse.fr/18448/">Improving RFC5865 Core Network Scheduling with a Burst Limiting Shaper</a>, Priority Switching Scheduler (PSS) code has been released and is publicly available <a href="https://forge.net4sat.org/cnes/priority-switching-scheduler/">here</a>.
+
+<h2>FLOWER Fuzzy Lower-than-Best-Effort Transport Protocol</h2>
+Among the different transport protocols providing a LBE service, Low Extra Delay Background Transport (LEDBAT) is the most used. LEDBAT is a delay-based congestion control protocol that has been standardized by the Internet Engineering Task Force (IETF). LEDBAT aims to exploit the remaining capacity while limiting the queuing delay around a predefined target which may be set up to 100 ms according to RFC 6817. Consequently, LEDBAT flows limits the amount of queuing delay introduced in the network and thus lower their impact on best-effort flows such as TCP. Despite being a widely deployed protocol, the two main LEDBAT parameters (i.e., target and gain) have been revealed to be complex to determine as their tuning highly depends on the network conditions and not dynamically configurable. Indeed, LEDBAT may become more aggressive than TCP in case of misconfiguration.
+
+<center><img src="flower.png" alt=""></center>
+
+Our protocol, FLOWER (Fuzzy LOWer-than-Best-EffoRt Transport Protocol), is a promising alternative of LEDBAT. With FLOWER, we aim to overcome the LEDBAT shortcomings while still fulfilling its goals. The principal difference with LEDBAT is that FLOWER replaces the linear P-type controller (proportional controller) of LEDBAT by a fuzzy controller to modulate the congestion window.
+
+FLOWER code is based on LEDBAT and TCP Vegas ns-2 implementations and is available for ns-2 and GNU/Linux here: 
+<br><a href="Software/FLOWER.tgz"><img src="gzip.png" alt=""/></a>
+<br>Please read <a href="https://oatao.univ-toulouse.fr/16135/">FLOWER, an Innovative Fuzzy Lower-than-Best-Effort Transport Protocol</a> for further details.
+
+<h2>STAMP: Server Topologic Analysis by Message headers Parsing</h2>
+
+STAMP builds a weight and oriented graph from an email database, an email log or just a simple email header, that allows to analyse email paths. The objective of this tool is to automatically perform an analysis of the SMTP topology. As an extension, the returned graph might help to develop methods (from graph theory, statistical analysis, ...) to identifying problems occurred.
+For further details please <a href="http://oatao.univ-toulouse.fr/3260/1/Lochin_3260.pdf">read this</a>.
+<p>
+STAMP code is available here:
+<br><a href="Software/Stamp_V0-1a-tar.gz"><img src="gzip.png" alt=""/></a>
+
+<h2>P-XCP</h2>
+
+The version of P-XCP ns-2 code of our paper <a href="http://oatao.univ-toulouse.fr/3438/">Optimal Configuration for Satellite PEPs using a Reliable Service on Top of a Routers-Assisted Approach"></a> has been realized by <A HREF="http://www.i3s.unice.fr/~lopezpac/">Dino Lopez</A> during his post-doc at ISAE and following this seminal paper: "P-XCP: A Transport Layer Protocol for Satellite IP Networks", Kaiyu Zhou et A., IEEE GLOBECOM 2004.
+
+To install P-XCP inside your ns-2 simulator, replace <code>tcp-newreno.cc, tcp-reno.cc, xcp-end-sys.cc, xcp-end-sys.h, xcp.cc, xcp.h, xcpq.cc, xcpq.h</code> with the files provided here: 
+<br><a href="Software/pxcp.tgz"><img src="gzip.png" alt=""/></a>
+<br>
+This code has been successfully tested with ns2.33.
+
+<h2>Kohonen-RED</h2>
+
+The ns-2 code of our paper <a href="http://oatao.univ-toulouse.fr/200/">Managing Congestion with a Kohonen-RED Queue</a> is available here : <doc795>
+<br><a href="Software/kred-ns2.tar.gz"><img src="gzip.png" alt=""/></a>
+
+</body>
+</html>
