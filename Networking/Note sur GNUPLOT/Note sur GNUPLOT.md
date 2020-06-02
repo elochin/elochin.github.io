@@ -1,10 +1,6 @@
-<!doctype html>
-<html>
-<head>
-    <title>Note sur l'utilisation de GNUPLOT</title>
-    <meta charset="utf-8">
-</head>
-<body>
+Note sur l'utilisation de GNUPLOT
+------------------------------------
+
 **gnuplot** est un utilitaire en ligne de commande permettant de tracer des graphiques en 2 ou 3 dimensions. Les graphiques peuvent être directement affichés à l'écran et/ou enregistrés sous divers formats bitmap (PNG, JPEG,...) ou vectoriels (PDF, EPS, SVG,...). Parce qu'il permet de générer des graphiques de qualité et largement configurables, **gnuplot** se révèle un outil de choix pour la représentation de données scientifiques. Enfin, puisqu'il utilise un système de script pour décrire le graphique à produire, **gnuplot** peut être employé partout où des graphiques doivent être générés ou mis à jour automatiquement.
 
 Son utilisation est très simple, je vous propose de l'utiliser sous forme de script. Pour cela, récupérez le script [example.gp](data/example.gp) et le fichier [data.txt](data/data.txt) puis exécutez dans un terminal en tapant : `gnuplot  example.gp`. Vous obtiendrez alors deux fichiers résultats au format PDF et PNG. Les détails et explications de ce script données ci-dessous vous seront largement suffisants pour réaliser les BE qui suivent :
