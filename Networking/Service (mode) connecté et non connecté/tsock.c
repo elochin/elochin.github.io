@@ -21,7 +21,7 @@
 
 /* Variables globales */
 
-int source;			/* 0 = puits, !0=source */
+int client;			/* 0 = serveur, !0=client */
 int buflen = 30;	        /* Taille du message à émettre  */
 int nbuf=-1;		        /* Nombre de buffer à envoyer ou à recevoir */
 
@@ -56,7 +56,7 @@ extern char *optarg;
 void err(s)
   char *s;
 {
-  fprintf(stderr,"%s: ", source?"SOURCE":"PUITS");
+  fprintf(stderr,"%s: ", client?"CLIENT":"SERVER");
   perror(s);
   fprintf(stderr,"errno=%d\n",errno);
   exit(1);
@@ -65,7 +65,7 @@ void err(s)
 void mes(s)
   char *s;
 {
-  fprintf(stderr,"%s: %s\n", source?"SOURCE":"PUITS", s);
+  fprintf(stderr,"%s: %s\n", client?"CLIENT":"SERVER", s);
 }
 
 void makebuf(buffer, lbuffer, n, motif)
@@ -98,7 +98,7 @@ void printbuf(buffer, lbuffer, nbrec)
     int i;
     int nbToPrint;
 
-    printf("%s: %s %3d (%5d) [", source?"SOURCE":"PUITS", source?"Envoi n°":"Reception n°", nbrec, lbuffer);
+    printf("%s: %s %3d (%5d) [", client?"CLIENT":"SERVER", client?"Send n°":"Receive n°", nbrec, lbuffer);
 
     if(lbuffer > 39)
 	     nbToPrint=39;
@@ -115,8 +115,8 @@ void printbuf(buffer, lbuffer, nbrec)
 }
 
 void usage() {
- 	printf("tsock -p [-options] port \n");
-        printf("tsock -c [-options] host port \n");
+ 	printf("tsock -s [-options] <port> \t\t server mode, listen on port <port>\n");
+        printf("tsock -c [-options] <host> <port> \t client mode, trigger a connection towards <host> <port>\n");
 	printf("\nCommon options\n");
         printf("-w\t\tdo not display packets received or sent\n");
         printf("-u\t\tenable UDP (default TCP)\n");	
@@ -150,7 +150,7 @@ int main(argc,argv)
     	return 1; 
   }
   
-  while ((c = getopt(argc, argv, "awpcudt:l:n:")) != -1) {
+  while ((c = getopt(argc, argv, "awscudt:l:n:")) != -1) {
     switch (c) 
       {		
       case 'w':
@@ -159,11 +159,11 @@ int main(argc,argv)
       case 'a':
 	   arp=1;
 	   break;
-      case 'p':
-	source = 0;
+      case 's':
+	client = 0;
 	break;
       case 'c':
-	source = 1;
+	client = 1;
 	break;
       case 't':
 	sockbufsize = atoi(optarg);
@@ -190,8 +190,8 @@ int main(argc,argv)
 /* ----------------------------------- */	
 /* Préparation des adresses IP et port */
 /* ----------------------------------- */
-  if(source)  
-    { /* Nous sommes une source */ 
+  if(client)  
+    { /* Nous sommes une client */ 
       if (optind == argc)             /* Y a t il encore de(s) paramètre(s) ?  */
 	usage();                   /* Si non, erreur */
       bzero((char *)&sinhim, sizeof(sinhim));
@@ -219,7 +219,7 @@ int main(argc,argv)
 	système */
     } 
   else 
-    { /* Nous sommes donc un puits */
+    { /* Nous sommes donc un serveur */
       if (optind == argc) 	       /* Reste t il encore un paramètre ? */
 	usage();                    /* Il devrait... */
       port = atoi(argv[optind]);       /* Lecture du numéro de port */
@@ -238,11 +238,11 @@ int main(argc,argv)
   if ( (buf = (char *)malloc(buflen * sizeof(char))) == (char *)NULL)
     err("malloc");
   if (nbuf==-1)
-    nbuf = (source?10:-1);
+    nbuf = (client?10:-1);
 /* ------------------------------- */	
 /* Affichage avant la transmission */
 /* ------------------------------- */	
-  if (source) 
+  if (client) 
     {
       fprintf(stdout,"SND: lg_buf_appli=%d, port=%d, nb_buf_appli=%d", buflen, port, nbuf);
       if (sockbufsize)
@@ -284,12 +284,12 @@ int main(argc,argv)
     err("bind");
   
   if (sockbufsize) {                     /* Modification de la taille des buffer socket */
-    if (source) {
+    if (client) {
       if (setsockopt(fd, SOL_SOCKET, SO_SNDBUF, &sockbufsize,
 		     sizeof sockbufsize) < 0)
 	err("setsockopt: sndbuf");
       mes("sndbuf");
-    } else { /* puits */
+    } else { /* serveur */
       if (setsockopt(fd, SOL_SOCKET, SO_RCVBUF, &sockbufsize,
 		     sizeof sockbufsize) < 0)
 	err("setsockopt: rcvbuf");
@@ -305,7 +305,7 @@ int main(argc,argv)
   
   if (!udp)                                 /* TCP ? */
     { 
-      if (source)                           /* Nous sommes la source qui émet ? */
+      if (client)                           /* Nous sommes la client qui émet ? */
 	{ 
 	  if (nodelay)                      /* Pas de concaténation dans les segments */
 	    {                                 
@@ -334,7 +334,7 @@ int main(argc,argv)
 			    &peerlen) < 0) {
 	      err("getpeername");
 	    }
-	    fprintf(stderr,"PUITS: connexion acceptée avec %s\n", 
+	    fprintf(stderr,"SERVER: connection accepted with %s\n", 
 		    inet_ntoa(peer.sin_addr));
 	  }
 
@@ -346,11 +346,11 @@ int main(argc,argv)
 /* Phase de transfert */
 /* ------------------ */	
     
-  if (source)  
+  if (client)  
     {
       short nb_sent=0;
       int cnt=1;
-      printf("Nb envoye: %d\n", nbuf);
+      printf("Number sent: %d\n", nbuf);
       while(nb_sent++ < nbuf/* && cnt >0*/ )
 	{
 	    makebuf(buf, buflen, nb_sent, motif++);
