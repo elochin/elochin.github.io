@@ -37,6 +37,3 @@ pause -1
 ```
 
 **gnuplot** possède de très nombreuses fonctionnalités, consultez cette page qui vous donnera également des exemples permettant de dessiner avec **gnuplot** directement depuis un code en C ou en Python : [Gnuplot Wiki](https://doc.ubuntu-fr.org/gnuplot) ou encore ce mini tutoriel de Duke University : [GNUPLOT 4.2 - A Brief Manual and Tutorial](https://people.duke.edu/~hpgavin/gnuplot.html)
-
-</body>
-</html>
