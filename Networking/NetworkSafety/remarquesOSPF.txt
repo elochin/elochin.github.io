@@ -1,0 +1,7 @@
+Slide 9 du cours : "généralement on utilise la plus petite adresse IP du routeur" -> c'est la plus haute
+
+Il faut 1min pour lancer la topo complexe non configurée
+
+Pensez ensuite à redistribuer les routes externes à l’AS depuis le routeur
+R1 et à configurer la liaison comme une liaison "point-to-point" (ce qui
+vous obligera à déclarer R1 et R3 comme voisins, cf. commande neighbor).
