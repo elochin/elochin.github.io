@@ -16,7 +16,7 @@ Ce TP sera réalisé avec Pynetem. Avant de rentrer dans la configuration d'une 
 
 Avant de commencer le TP nous allons apprendre à configurer OSPF sur une topologie très simple composée de deux routeurs interconnectant deux hôtes. Cette topologie est disponible [ici](topo_simple.pnet). Pour la lancer, dans un terminal taper `pynetem-emulator topo_simple.pnet`.
 
-**Première étape - adressage **
+**Première étape - adressage**
 
 Configurons cette topologie avec l'adressage suivant :
 
@@ -45,7 +45,7 @@ R1(config-if)# ip add 10.0.0.1/8
 ```
 Faire de même sur PC2 et R2 en utilisant l'adressage du plan d'adressage ci-dessus.
 
-**Deuxième étape - mise en place du routage **
+**Deuxième étape - mise en place du routage**
 
 Une fois l'adressage réalisé, vous noterez que les tables de routage de R1 et R2 ne sont pas complètes. Vous pouvez le vérifier en tapant sur chaque routeur `show ip route`.
 
