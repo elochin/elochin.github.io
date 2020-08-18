@@ -246,7 +246,7 @@ afin que celui-ci soit bien activé. Enfin n'oubliez pas de faire un `save` dans
 
 Configurez tous les routeurs OSPF et LAN restant. Pensez à désactiver l'émission de message OSPF sur les réseaux terminaux (LAN 2 à 5) et à configurer le type de réseau OSPF sur chaque interface. Les interfaces sur N1 seront configurées en mode NBMA ce qui vous obligera à déclarer R4 et R5 comme voisins via la commande `neighbor`. Vérifiez le fonctionnement, puis sauvegardez les configuration des routeurs (`save` dans Pynetem).
 
-Relancez les démons de routage FRR sur les routeurs R3, R6 et R7 en vous connectant via l'interface Pynetem sur la console de debug (par exemple `debug R3`). Depuis la console de debug faire `service frr restart`. Préparez une capture sur l’un de ces routeurs puis lancez un à un les daemons OSPF en observant un temps de pause entre chaque.
+Relancez les démons de routage FRR sur les routeurs R3, R6 et R7 en vous connectant via l'interface Pynetem sur la console de debug (par exemple `debug R3`). Depuis la console de debug faire `service frr restart`. Une alternative peut-être de faire un simple `restart <router_name>` via Pynetem. Préparez une capture sur l’un de ces routeurs puis lancez un à un les daemons OSPF en observant un temps de pause entre chaque.
 
 <font color=blue>**Question 5** - Dans les échanges entre vos routeurs, relevez et commentez l’élection du routeur désigné (DR) et du routeur désigné de secours (BDR).</font>
 
@@ -256,13 +256,13 @@ Validez le routage par destraceroutevers plusieurs réseaux (dans et hors de vot
 
 #### Re-configuration sur perte de lien
 
-Nous allons maintenant observer le comportement d’OSPF en cas de perte de lien. Nous travaillerons sur le lien R1-R3. Préparez plusieurs captures à des endroits choisis du réseau afin de voir ce qu’il se passe lors de la perte du lien. Validez le nouveau routage par des `traceroute` vers plusieurs réseaux (dans et hors de votre AS).
+Nous allons maintenant observer le comportement d'OSPF en cas de perte de lien. Nous travaillerons sur le lien R1-R3. Préparez plusieurs captures à des endroits choisis du réseau afin de voir ce qu’il se passe lors de la perte du lien. Validez le nouveau routage par des `traceroute` vers plusieurs réseaux (dans et hors de votre AS).
 
 <font color=blue>**Question 7** - Expliquez les échanges entre les routeurs (choisissez des messages pertinants).</font>
 
 ## Annexe : OSPF sur les routeurs FRR
 
-La configuration d’un routeur quagga est très similaire à la configuration d'un routeur Cisco. Vous disposez notamment de l'auto-complétion des commandes et d'une aide en ligne via la touche `?`. Une différence notable avec les routeurs Cisco est le terminal de configuration du routeur est dès le début en mode `enable`.
+La configuration d'un routeur FRR est très similaire à la configuration d'un routeur Cisco. Vous disposez notamment de l'auto-complétion des commandes et d'une aide en ligne via la touche `?`. Une différence notable avec les routeurs Cisco est le terminal de configuration du routeur est dès le début en mode `enable`.
 Les sections suivantes présentent les différentes commandes regroupées par menu.
 
 #### Commandes du menu racine
