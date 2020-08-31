@@ -38,9 +38,9 @@ Créez un tracé de la taille de la fenêtre de congestion et du seuil de démar
 
 Annotez votre graphique, semblable à la figure 2 de la section Résultats, pour montrer:
 
-*Périodes de "démarrage lent"
-*Périodes de "prévention de la congestion"
-*Instances où 3 ACK en double ont été reçus (ce qui déclenchera une "récupération rapide")
-*Instances de timeout
+* Périodes de "démarrage lent"
+* Périodes de "prévention de la congestion"
+* Instances où 3 ACK en double ont été reçus (ce qui déclenchera une "récupération rapide")
+* Instances de timeout
 
 À l'aide de vos données de tracé et / ou d'expérience, expliquez en quoi le comportement de TCP est différent dans les phases "Démarrage lent" et "Évitement de la congestion". De plus, en utilisant votre tracé, expliquez ce qui arrive à la fois à la fenêtre de congestion et au seuil de démarrage lent lorsque 3 ACK en double sont reçus.
