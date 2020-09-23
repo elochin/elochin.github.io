@@ -57,26 +57,32 @@ R1(config)# router ospf
 ```
 Si vous ajoutez un `?` à la fin de cette commande, vous verrez qu'elle prend notamment en argument une valeur d'instance (`Instance ID`) optionnelle. Nous omettrons cette valeur qui est un identifiant de processus OSPF local permettant l'exécution de plusieurs processus OSPF sur le même routeur. Cette opération n'est pas recommandée car elle crée plusieurs instances qui ajoutent une surcharge supplémentaire au routeur [[CISCO OSPF]](https://www.cisco.com/c/fr_ca/support/docs/ip/open-shortest-path-first-ospf/7039-1.html). L'autre option notée `vrf` (*virtual routing and forwarding*) est une fonctionnalité permettant à plusieurs instances d'une table de routage de coexister sur le même routeur en même temps. C'est un peu comme faire du VLAN mais au niveau IP [[CISCO VRF]](https://www.cisco.com/c/en/us/td/docs/routers/connectedgrid/cgr1000/ios/software/15_4_1_cg/vrf_cgr1000.html), cette fonctionnalité sort du cadre de ce TP et ne sera pas abordée.
 
-Une fois cette commande saisie, un processus OSPF est lancé sur le routeur mais aucune annonce n'est encore effectuée. En effet, il faut spécifiquement déclarer les interfaces qui vont entrer en jeu. Pour cela, nous allons utiliser la commande `network` qui prendra en argument l'adresse du réseau et son aire (cf. cours). (Notez que sur CISCO la notation diffère un peu et que le *wildcard mask* (inverse du *netmask*) est utilisé en lieu et place de la notation CIDR `A.B.C.D/M`). Pour les interfaces du router R1 cela donne :
+Une fois cette commande saisie, un processus OSPF est lancé sur le routeur mais aucune annonce n'est encore effectuée. En effet, il faut spécifiquement déclarer les interfaces qui vont entrer en jeu. Pour cela, nous allons utiliser la commande `network` qui prendra en argument l'adresse du réseau et son aire (cf. cours). Notez que sur CISCO la notation diffère un peu et que le *wildcard mask* (inverse du *netmask*) est utilisé en lieu et place de la notation CIDR `A.B.C.D/M` comme cela est le cas avec le router FRR sous Pynetem. 
+
+Pour les interfaces du router R1 cela donne :
+
 ```bash
 R1(config-router)# network 192.168.1.0/24 area 0
 R1(config-router)# network 10.0.0.0/8 area 0
 ```
 Il est également possible de définir un identifiant de routeur via la commande `router-id A.B.C.D`. Si non spécifiée, l'ID de routeur est l’adresse IP la plus élevée ou, si configurée, la plus élevée des adresses de *loopback*. Bien qu'il ne soit pas nécessaire de spécifier un router ID, le choisir explicitement aidera au déboguage, par exemple lors d'un `show ip ospf neighbor`.
 
-Ici, nous déclarerons chaque routeur dans une seule aire, la zéro. Réaliser maintenant les opérations similaires sur R2 puis effectuer un `ip ospf route` pour vérifier la bonne déclaration des routes dans chaque table. Notez les informations qui y sont listées, notamment la valeur entre crochets qui correspond à une métrique de distance. Le drapeau `N` signifie que ce sont des routes de réseaux.
+Ici, nous déclarerons chaque routeur dans une seule aire : la zéro. Réaliser maintenant les opérations similaires sur R2 puis effectuer un `ip ospf route` pour vérifier la bonne déclaration des routes dans chaque table. Notez les informations qui y sont listées, notamment la valeur entre crochets qui correspond à une métrique de distance. Le drapeau `N` signifie que ce sont des routes de réseaux (*Network*).
 
 <font color=blue>**Question B** - comment expliqueriez-vous la valeur de métrique choisie ?</font>
 
-Il est possible de changer cette valeur avec `ip ospf cost <val>` sur l'interface concernée. Cette valeur sera utilisé par l'algorithme SPF (*Shortest Path First*) pour recalculer le graphe en fonction.
+Il est possible de changer cette valeur de métrique avec `ip ospf cost <val>` sur l'interface concernée. Cette valeur sera utilisé par l'algorithme SPF (*Shortest Path First*) pour recalculer le graphe en fonction.
 
 Il est également possible de consulter les routes via `show ip route` qui retourne alors toute la table d'acheminement (FIB). Nous obtenons via cette commande deux valeurs entre crochets. La seconde est celle de la métrique également retournée par `ip ospf route` tandis que la première est une distance administrative (*Administrative Distance : AD*) ou route de préférence. C'est une valeur arbitraire permettant de classer les routes obtenues (par divers protocoles de routage) où une faible valeur indique une route préférée. Chaque constructeur utilise ses propres valeurs avec 110 pour OSPF (comme vous pouvez le voir), 120 pour RIP, 20 pour BGP, ... Consultez la page [CISCO show_ip_route](https://www.cisco.com/E-Learning/bulk/public/tac/cim/cib/using_cisco_ios_software/cmdrefs/show_ip_route.htm) pour plus de détails.
 
-Il est préférable de ne pas diffuser les annonces OSPF sur les réseaux d'extrémités (i.e. vers PC1 et PC2). L'option `passive-interface <interface>` permet de rendre muette une interface, ainsi le réseau attaché sera toujours annoncé mais l’interface n’émettra pas de paquets OSPF. Par exemple sur R1 :
+Il est préférable de ne pas diffuser les annonces OSPF sur les réseaux d'extrémités (i.e. vers PC1 et PC2). L'option `passive-interface <interface>` permet de rendre muette une interface, ainsi le réseau attaché sera toujours annoncé mais l’interface n’émettra pas de paquets OSPF. 
+
+Par exemple la commande suivante sur R1 :
+
 ```
 R1(config-router)# passive-interface eth0
 ```
-pour stopper les annonces OSPF vers PC1. Notez que la commande `show ip ospf interface eth0` vous permettra de vérifier la mise en oeuvre de cette option :
+permet de stopper les annonces OSPF vers PC1. Notez que la commande `show ip ospf interface eth0` vous permettra de vérifier la mise en oeuvre de cette option :
 ```
 R1# show ip ospf interface eth0
 eth0 is up
@@ -166,7 +172,7 @@ Sur le routeur R2 (qui n'a pas changé de configuration), on peut voir désormai
  N E2 0.0.0.0/0          [10/10] tag: 0
                          via 10.0.0.1, eth0
 ```
- 
+
 R1 est désormais marqué comme ASBR (Autonomous System Boundary Router) car il est situé aux limites de l'AS puisqu'il injecte une route externe, qui apparait comme de type E2 (Externe 2). Une route externe est soir qualifiée E1 ou E2 en fonction de sa métrique. La E1 est toujours préférée. Le coût des routes E2 est toujours la métrique externe, la métrique ne tiendra pas compte du coût interne pour atteindre ce réseau. Tandis que le coût des routes E1 est le coût de la métrique externe avec l'ajout du coût interne dans OSPF pour atteindre ce réseau (le coût de l'ASBR + le coût externe).
 
 Pour mémoire, vous voyez le coût de chaque route entre crochets. OSPF permet d'affecter un coût à chaque interface, pour décourager l'utilisation de liens lents, qui ne sont bons qu'à servir de secours. Notre routeur a mis un coût de 10 par défaut. Sur R1 la configuration de l'interface eth0 est la suivante :
