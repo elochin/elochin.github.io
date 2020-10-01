@@ -201,10 +201,25 @@ La topologie du réseau utilisé dans ce TP est décrite sur la Fig. 1.
 La première étape de ce TP consistera en la définition du plan d'adressage du réseau. Vous prendrez soin d'utiliser aussi peu d'adresses que possible tout en tenant compte des contraintes suivantes :
 
 * les LAN 1 à 5 doivent pouvoir accueillir jusqu'à 254 machines;
-* le réseau N1 est un réseau NBMA avec au maximum 254 machines;
-* les liaisons point-à-point ne doivent pas avoir plus de 2 routeurs.
 
-N'hésitez pas à vous aider d'un calculateur d'adresses IP comme par exemple [http://www.subnet-calculator.com/cidr.php](CIDR calculator).
+* le réseau N1 est un réseau NBMA avec au maximum 254 machines;
+
+* les liaisons point-à-point ne doivent pas avoir plus de 2 routeurs;
+
+* chaque routeur doit avoir une loopback de configurée qui sera son `router-id`.
+
+Pour ce denier point, configurez pour chaque routeur une adresse de loopback en répétant 4 fois son numéro d'identifiant. Par exemple l'adresse de loopback pour R1 sera 1.1.1.1, pour R2 : 2.2.2.2, ... Une adresse loopback se configure ainsi :
+```
+R1(config)# interface loopback 0
+R1(config-if)# ip address 1.1.1.1 255.255.255.255
+```
+Il suffit alors d'utiliser la commande `router-id` présentée plus haut comme suit :
+```bash
+R1(config)# router ospf
+R1(config-router)# router-id 1.1.1.1
+```
+
+Pour l'adressage, n'hésitez pas à vous aider d'un calculateur d'adresses IP comme par exemple [CIDR calculator](http://www.subnet-calculator.com/cidr.php]).
 
 *Note : dans l'éventualité où tous les AS de la salle seraient interconnectés, il est indispensable de s'assurer que leurs adressages soient distincts. Aussi, vous utiliserez votre numéro de groupe (unique) comme identifiant de votre réseau. Les enseignants feront donc office d'autorité de distribution d'adresses, adressez-vous à eux pour récupérer votre préfixe. Notez que l'adresse externe du routeur R1 vous sera donnée en même temps que le préfixe d'adresse à utiliser pour votre AS.*
 
