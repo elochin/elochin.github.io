@@ -127,7 +127,7 @@ Ces deux dernières commandes ayant été déjà été abordées ci-dessus en se
 
 **Quatrième étape - ajout d'une passerelle externe**
 
-Nous allons ajouter une passerelle externe sur R1. Cette passerelle permettra la connexion vers d'autres AS. <font color=red><b>Prob. de connexion du bridge</b></font>
+Nous allons ajouter une passerelle externe sur R1 qui sera connectée sur la 3ème interface du router (`eth2`). Cette passerelle permettra la connexion vers d'autres AS.
 Nous utiliserons pour cela les deux nouvelles commandes suivantes :
 
 * `default-information originate` qui indique à OSPF d'accepter de diffuser une route par défaut (ce qu'OSPF ne fait pas normalement);
@@ -189,7 +189,7 @@ Suite à cette première partie d'introduction, je vous propose de mettre en oeu
 
 ### Topologie
 
-La topologie du réseau utilisé dans ce TP est décrite par la Fig. 1. N'hésitez pas à utiliser cette image pour votre rapport.
+La topologie du réseau utilisé dans ce TP est décrite sur la Fig. 1.
 
 
 |  ![Topologie du réseau.](topoOSPF.png) |
@@ -198,14 +198,15 @@ La topologie du réseau utilisé dans ce TP est décrite par la Fig. 1. N'hésit
 
 ### Plan d’adressage
 
-La première étape de ce TP consistera en la définition du plan d’adressage du réseau. Vous prendrez soin d'utiliser aussi peu d'adresses que possible tout en tenant compte des contraintes suivantes :
+La première étape de ce TP consistera en la définition du plan d'adressage du réseau. Vous prendrez soin d'utiliser aussi peu d'adresses que possible tout en tenant compte des contraintes suivantes :
 
 * les LAN 1 à 5 doivent pouvoir accueillir jusqu'à 254 machines;
 * le réseau N1 est un réseau NBMA avec au maximum 254 machines;
 * les liaisons point-à-point ne doivent pas avoir plus de 2 routeurs.
 
 N'hésitez pas à vous aider d'un calculateur d'adresses IP comme par exemple [http://www.subnet-calculator.com/cidr.php](CIDR calculator).
-Puisque tous les AS de la salle seront interconnectés, il est indispensable de s'assurer que leurs adressages seront distincts. Les enseignants feront donc office d'autorité de distribution d'adresses, adressez-vous à eux pour récupérer votre préfixe. Notez que l'adresse externe du routeur R1 vous sera donnée en même temps que le préfixe d'adresse à utiliser pour votre AS.
+
+*Note : dans l'éventualité où tous les AS de la salle seraient interconnectés, il est indispensable de s'assurer que leurs adressages soient distincts. Aussi, vous utiliserez votre numéro de groupe (unique) comme identifiant de votre réseau. Les enseignants feront donc office d'autorité de distribution d'adresses, adressez-vous à eux pour récupérer votre préfixe. Notez que l'adresse externe du routeur R1 vous sera donnée en même temps que le préfixe d'adresse à utiliser pour votre AS.*
 
 <font color=blue>**Question 1** - Dessinez la topologie de votre AS et son plan d'adressage.</font>
 
@@ -213,7 +214,10 @@ Puisque tous les AS de la salle seront interconnectés, il est indispensable de 
 
 #### Prise en main d’OSPF
 
-Pour prendre en main le protocole OSPF, vous commencerez par configurer la liaison R1-R3. N'oubliez pas de tester la connectivité entre R1 et R3 avec un `ping`. Puis configurez OSPF entre ces deux routeurs. Vous ajouterez des routes à votre routeur R1 de façon à ce qu'il puisse atteindre les autres AS (une route par AS distant). Pensez ensuite à redistribuer les routes externes à l'AS depuis le routeur R1 et à configurer la liaison comme une liaison "point-to-point" (ce qui vous obligera à déclarer R1 et R3 comme voisins via la commande `neighbor`).
+Pour prendre en main le protocole OSPF, vous commencerez par configurer la liaison R1-R3. N'oubliez pas de tester la connectivité entre R1 et R3 avec un `ping`. Puis configurez OSPF entre ces deux routeurs. 
+
+*Note : dans le cas où votre topologie serait connectée à un autre AS (de l'un de vos camarades par exemple) il vous faudrait ajouter des routes à votre routeur R1 de façon à ce qu'il puisse atteindre les autres AS (une route par AS distant). Ensuite il vous faudrait redistribuer les routes externes à l'AS depuis le routeur R1 et à configurer la liaison comme une liaison "point-to-point".*
+
 Une fois les deux routeurs configurés, vérifiez le bon fonctionnement d'OSPF avec `show ip ospf database` (R3 doit pouvoir atteindre les autres AS et R1 doit pouvoir atteindre une machine du LAN1). Une fois fait, savegarder la configuration en faisant un `save` dans l'interface de l'émulateur Pynetem.
 
 #### Observation des mécanismes OSPF
@@ -252,19 +256,19 @@ afin que celui-ci soit bien activé. Enfin n'oubliez pas de faire un `save` dans
 
 Configurez tous les routeurs OSPF et LAN restant. Pensez à désactiver l'émission de message OSPF sur les réseaux terminaux (LAN 2 à 5) et à configurer le type de réseau OSPF sur chaque interface. Les interfaces sur N1 seront configurées en mode NBMA ce qui vous obligera à déclarer R4 et R5 comme voisins via la commande `neighbor`. Vérifiez le fonctionnement, puis sauvegardez les configuration des routeurs (`save` dans Pynetem).
 
-Relancez les démons de routage FRR sur les routeurs R3, R6 et R7 en vous connectant via l'interface Pynetem sur la console de debug (par exemple `debug R3`). Depuis la console de debug faire `service frr restart`. Une alternative peut-être de faire un simple `restart <router_name>` via Pynetem. Préparez une capture sur l’un de ces routeurs puis lancez un à un les daemons OSPF en observant un temps de pause entre chaque.
+Relancez les démons de routage FRR sur les routeurs R3, R6 et R7 en faisant un `restart <router_name>` via Pynetem. Ou alors, vous connectant via l'interface Pynetem sur la console de debug (par exemple `debug R3`) faire `service frr restart` depuis la console. Préparez une capture sur l'un de ces routeurs puis lancez un à un les daemons OSPF en observant un temps de pause entre chaque.
 
-<font color=blue>**Question 5** - Dans les échanges entre vos routeurs, relevez et commentez l’élection du routeur désigné (DR) et du routeur désigné de secours (BDR).</font>
+<font color=blue>**Question 5** - Dans les échanges entre vos routeurs, observez l’élection du routeur désigné (DR) et du routeur désigné de secours (BDR).</font>
 
 <font color=blue>**Question 6** - Avec les commandes `show ip ospf database [...]` regardez la RIB d'OSPF et indiquez l’origine des LSA observés.</font>
 
-Validez le routage par destraceroutevers plusieurs réseaux (dans et hors de votre AS).
+Validez le routage par des `traceroute` vers plusieurs réseaux.
 
 #### Re-configuration sur perte de lien
 
 Nous allons maintenant observer le comportement d'OSPF en cas de perte de lien. Nous travaillerons sur le lien R1-R3. Préparez plusieurs captures à des endroits choisis du réseau afin de voir ce qu’il se passe lors de la perte du lien. Validez le nouveau routage par des `traceroute` vers plusieurs réseaux (dans et hors de votre AS).
 
-<font color=blue>**Question 7** - Expliquez les échanges entre les routeurs (choisissez des messages pertinants).</font>
+<font color=blue>**Question 7** - Observez les échanges entre les routeurs qui permettent de palier à la route manquante.</font>
 
 ## Annexe : OSPF sur les routeurs FRR
 
