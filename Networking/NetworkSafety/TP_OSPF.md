@@ -67,6 +67,8 @@ R1(config-router)# network 10.0.0.0/8 area 0
 ```
 Il est également possible de définir un identifiant de routeur via la commande `router-id A.B.C.D`. Si non spécifiée, l'ID de routeur est l’adresse IP la plus élevée ou, si configurée, la plus élevée des adresses de *loopback*. Bien qu'il ne soit pas nécessaire de spécifier un router ID, le choisir explicitement aidera au déboguage, par exemple lors d'un `show ip ospf neighbor`.
 
+*Note : dans l'éventualité où tous les AS de la salle seraient interconnectés, il est indispensable de s'assurer que les adresses de loopback soient distinctes. Aussi, vous utiliserez votre numéro de groupe (unique) comme identifiant final soit 1.1.1.X ou X est votre numéro de groupe.*
+
 Ici, nous déclarerons chaque routeur dans une seule aire : la zéro. Réaliser maintenant les opérations similaires sur R2 puis effectuer un `ip ospf route` pour vérifier la bonne déclaration des routes dans chaque table. Notez les informations qui y sont listées, notamment la valeur entre crochets qui correspond à une métrique de distance. Le drapeau `N` signifie que ce sont des routes de réseaux (*Network*).
 
 <font color=blue>**Question B** - comment expliqueriez-vous la valeur de métrique choisie ?</font>
