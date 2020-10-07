@@ -69,7 +69,7 @@ Il est également possible de définir un identifiant de routeur via la commande
 
 *Note : dans l'éventualité où tous les AS de la salle seraient interconnectés, il est indispensable de s'assurer que les adresses de loopback soient distinctes. Aussi, vous utiliserez votre numéro de groupe (unique) comme identifiant final soit 1.1.1.X ou X est votre numéro de groupe.*
 
-Ici, nous déclarerons chaque routeur dans une seule aire : la zéro. Réaliser maintenant les opérations similaires sur R2 puis effectuer un `ip ospf route` pour vérifier la bonne déclaration des routes dans chaque table. Notez les informations qui y sont listées, notamment la valeur entre crochets qui correspond à une métrique de distance. Le drapeau `N` signifie que ce sont des routes de réseaux (*Network*).
+Ici, nous déclarerons chaque routeur dans une seule aire : la zéro. Réaliser maintenant les opérations similaires sur R2 puis effectuer un `show ip ospf route` pour vérifier la bonne déclaration des routes dans chaque table. Notez les informations qui y sont listées, notamment la valeur entre crochets qui correspond à une métrique de distance. Le drapeau `N` signifie que ce sont des routes de réseaux (*Network*).
 
 <font color=blue>**Question B** - comment expliqueriez-vous la valeur de métrique choisie ?</font>
 
@@ -110,7 +110,7 @@ Neighbor ID        Pri State          Dead Time  Address      Interface        (
 
 `Priority` le champ `Pri` indique la priorité du routeur voisin. Le routeur avec la valeur la plus petite est le plus prioritaire et devient le maître (*Designated Router - DR*). Si les priorités sont identiques, alors le routeur avec l'ID du routeur le plus élevé devient le DR (mais parfois c'est le premier routeur lancé qui le devient). Par défaut, des priorités sont fixées à 1. Vous pouvez vérifier que R2 est bien en *backup*.
 
-`State` ce champ indique l'état fonctionnel du routeur voisin. Voir [CISCO OSPF Neighbor States](https://www.cisco.com/c/en/us/support/docs/ip/open-shortest-path-first-ospf/13685-13.html). Dans l'exemple ci-dessus, cela signifie que R1 est routeur élu (DR) et qu'il est adjacent (Full).
+`State` ce champ indique l'état fonctionnel du routeur voisin. Voir [CISCO OSPF Neighbor States](https://www.cisco.com/c/en/us/support/docs/ip/open-shortest-path-first-ospf/13685-13.html). Dans l'exemple ci-dessus, cela signifie que R2 est routeur élu (DR) et qu'il est adjacent (Full).
 
 `Dead Time` indique la durée d'attente de réception d'un paquet HELLO OSPF du voisin avant de le déclarer "mort". Cette valeur est de 40s par défaut sur les réseaux point à point et de 120s sur les réseaux multipoints et à non-diffusion. Donc R1 considérera R2 "mort" si il n'obtient pas de réponse après 32s.
 
@@ -210,17 +210,20 @@ La première étape de ce TP consistera en la définition du plan d'adressage du
 
 * chaque routeur doit avoir une loopback de configurée qui sera son `router-id`.
 
-Pour ce denier point, configurez pour chaque routeur une adresse de loopback en répétant 4 fois son numéro d'identifiant. Par exemple l'adresse de loopback pour R1 sera 1.1.1.1, pour R2 : 2.2.2.2, ... Une adresse loopback se configure ainsi :
+Pour ce denier point, configurez pour chaque routeur une adresse de loopback sur un réseau indépendant. Vous pouvez, par exemple, utiliser votre numéro de groupe ou le numéro d'hôte de votre machine suivi du numéro de routeur dupliqué 3 fois. Dans ce cas l'adresse de loopback pour R1 sera 22.1.1.1, pour R2 : 22.2.2.2, ... pour le groupe 22 à condition que vous n'ayez pas déjà un réseau 22 sur votre topologie. Une adresse loopback se configure ainsi :
 ```
-R1(config)# interface loopback 0
-R1(config-if)# ip address 1.1.1.1 255.255.255.255
+R1(config)# interface loopback
+R1(config-if)# ip address 22.1.1.1/32
 ```
 Il suffit alors d'utiliser la commande `router-id` présentée plus haut comme suit :
 ```bash
 R1(config)# router ospf
-R1(config-router)# router-id 1.1.1.1
+R1(config-router)# router-id 22.1.1.1
 ```
-
+Enfin, afin que chaque routeur puisse se pinguer sur leurs adresses de loopback, pensez à déclarer ces adresses dans votre configuration de router :
+```bash
+R1(config-router)# network 22.1.1.1/32 area 0
+```
 Pour l'adressage, n'hésitez pas à vous aider d'un calculateur d'adresses IP comme par exemple [CIDR calculator](http://www.subnet-calculator.com/cidr.php]).
 
 *Note : dans l'éventualité où tous les AS de la salle seraient interconnectés, il est indispensable de s'assurer que leurs adressages soient distincts. Aussi, vous utiliserez votre numéro de groupe (unique) comme identifiant de votre réseau. Les enseignants feront donc office d'autorité de distribution d'adresses, adressez-vous à eux pour récupérer votre préfixe. Notez que l'adresse externe du routeur R1 vous sera donnée en même temps que le préfixe d'adresse à utiliser pour votre AS.*
@@ -239,15 +242,13 @@ Une fois les deux routeurs configurés, vérifiez le bon fonctionnement d'OSPF a
 
 #### Observation des mécanismes OSPF
 
-Lancez une capture sur l'un des routeurs via Pynetem et la commande `capture R1.1`. 
+Lancez une capture sur l'un des routeurs via Pynetem et la commande `capture R1.0`. 
 
 <font color=blue>**Question 2** - Quels paquets capturez-vous et à quelle fréquence ?</font>
 
 Faites un `shutdown` puis juste après un `no shutdown` depuis l'interface connectée à R3 tout en poursuivant la capture.
 
 <font color=blue>**Question 3** - Quels sont les échanges réalisés entre vos deux routeurs ?</font>
-
-<font color=blue>**Question 4** - Au moyen de la commande `show ip ospf database` dessinez le graphe valué à partir duquel OSPF calcule les routes.</font>
 
 Le lancement d'une capture peut être consommateur en ressource surtout lorsque vous travaillerez sur la topologie complexe. Aussi, il est possible de capturer les messages OSPF de la façon suivante :
 ```
@@ -275,11 +276,11 @@ Configurez tous les routeurs OSPF et LAN restant. Pensez à désactiver l'émiss
 
 Relancez les démons de routage FRR sur les routeurs R3, R6 et R7 en faisant un `restart <router_name>` via Pynetem. Ou alors, vous connectant via l'interface Pynetem sur la console de debug (par exemple `debug R3`) faire `service frr restart` depuis la console. Préparez une capture sur l'un de ces routeurs puis lancez un à un les daemons OSPF en observant un temps de pause entre chaque.
 
-<font color=blue>**Question 5** - Dans les échanges entre vos routeurs, observez l’élection du routeur désigné (DR) et du routeur désigné de secours (BDR).</font>
+<font color=blue>**Question 4** - Dans les échanges entre vos routeurs, observez l'élection du routeur désigné (DR) et du routeur désigné de secours (BDR).</font>
 
-<font color=blue>**Question 6** - Avec les commandes `show ip ospf database [...]` regardez la RIB d'OSPF et indiquez l’origine des LSA observés.</font>
+<font color=blue>**Question 5** - Avec les commandes `show ip ospf database [...]` regardez la RIB d'OSPF et indiquez l'origine des LSA observés.</font>
 
-Validez le routage par des `traceroute` vers plusieurs réseaux.
+Validez le routage par des `traceroute` ou `traceptath` vers plusieurs réseaux.
 
 #### Re-configuration sur perte de lien
 
