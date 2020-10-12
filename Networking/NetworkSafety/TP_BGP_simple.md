@@ -22,8 +22,8 @@ R1(config-router)# neighbor 54.32.10.2 remote-as 200
 ```
 puis sur R2 :
 ```
-R1(config)# router bgp 200
-R1(config-router)# neighbor 54.32.10.1 remote-as 100
+R2(config)# router bgp 200
+R2(config-router)# neighbor 54.32.10.1 remote-as 100
 ```
 
 Vous devriez voir sur votre console de debug le message d'update BGP reçu par R1 comme illustré ci-dessous :
@@ -63,9 +63,9 @@ R1(config-router)# network 27.0.0.1/32
 ```
 et pour R2 :
 ```
-R1(config)# router bgp 200
-R1(config-router)# network 200.0.0.0/8
-R1(config-router)# network 27.0.0.2/32
+R2(config)# router bgp 200
+R2(config-router)# network 200.0.0.0/8
+R2(config-router)# network 27.0.0.2/32
 ```
 La réseau 54.32.10.0/24 étant en dehors de chaque AS, celui-ci ne sera pas annoncé. 
 
