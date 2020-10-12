@@ -1,16 +1,18 @@
 ## Premiers pas avec BGP
 
-Avant de commencer le TP et de façon similaire au TP OSPF, nous allons apprendre à configurer BGP sur  une topologie très simple comme celle qui vous a été présentée en cours. Cette topologie est disponible [ici](https://e-campus.enac.fr/moodle/pluginfile.php/207824/mod_resource/content/1/topo_simple.pnet). Pour la lancer, dans un terminal taper `pynetem-emulator bgp_topo_simple.pnet`.
+Avant de commencer le TP et de façon similaire au TP OSPF, nous allons apprendre à configurer BGP sur une topologie très simple comme celle qui vous a été présentée en cours. Cette topologie est disponible [ici](topo_bgp_simple.pnet). Pour la lancer, dans un terminal taper `pynetem-emulator bgp_topo_simple.pnet`.
 
 La configuration IP ainsi que les adresses de loopback pour chaque routeur a été déjà effectuée en 27.0.0.x/32 ou x est le numéro du routeur. Ainsi vous pouvez vous concentrer sur la configuration du routage uniquement. Le schéma de cette topologie vous est présenté ci-dessous :
 
-FIG TODO
+| ![Topologie du réseau.](topoBGPsimple.png) |
+| :----------------------------------------: |
+|       *Fig. 1 Topologie du réseau.*        |
 
 Comme vous pouvez le voir, trois AS seront interconnectés grâce à BGP.
 
 ## eBGP : mise en oeuvre des relations de voisinage
 
-Nous allons tout d'abord réaliser les opérations de voisinage entre les AS. Cela concerne donc les couples de routeurs (R1, R2) et (R4, R5).  Afin d'observer les messages d'échanges BGP, un `debug bgp updates` a été activé sur R1 et R2. Les logs étant sauvés dans `/var/log/frr/bgpd.log`. Avant de commencer lancer une console de debug depuis l'interface Pynetem syr R1 : `debug R1` et taper `tail -f  /var/log/frr/bgpd.log | grep BGP`. Laissez cette console de debug active durant votre configuration afin d'observer les échanges BGP.
+Nous allons tout d'abord réaliser les opérations de voisinage entre les AS. Cela concerne donc les couples de routeurs (R1, R2) et (R4, R5).  Afin d'observer les messages d'échanges BGP, un `debug bgp updates` a été activé sur R1 et R2. Les logs étant sauvés dans `/var/log/frr/bgpd.log`. Avant de commencer, lancez une console de debug depuis l'interface Pynetem sur R1 : `debug R1` et tapez `tail -f  /var/log/frr/bgpd.log | grep BGP`. Laissez cette console de debug active durant votre configuration afin d'observer les échanges BGP.
 
 
 Configurez BGP sur R1 :
@@ -83,7 +85,7 @@ Il ne vous reste plus qu'à répéter ces opérations pour R4 et R5. Toutes ces 
 
 ## iBGP : mise en oeuvre interne de BGP dans un AS
 
-Nous allons maintenant configurer l'AS 200. Tous les routeurs feront de l'OSPF et seuls R2 et R4 seront routeurs BGP interne.
+Nous allons maintenant configurer l'AS 200. Tous les routeurs de cet AS feront de l'OSPF et seuls R2 et R4 seront routeurs BGP interne.
 
 Commençons par configurer R3 en OSPF comme vu la dernière fois en TP. La configuration de R3 sera tout simplement la suivante :
 
@@ -126,7 +128,7 @@ router bgp 200
 !
 ```
 
-Il ne nous reste plus qu'à établir la relation BGP entre R2 et R4, pour cela, il suffit que R2 déclare R4 comme voisin et vice-versa. Faites tout d'abord un `show ip bgp summary` sur R2 puis notez le retour de la commande, ensuite configurez la relation sur chaque routeur de la façon suivante sur R2 :
+Il ne nous reste plus qu'à établir la relation BGP entre R2 et R4, pour cela, il suffit que R2 déclare R4 comme voisin et vice-versa. Effectuez tout d'abord un `show ip bgp summary` sur R2 puis notez le retour de la commande, ensuite configurez la relation sur chaque routeur de la façon suivante sur R2 :
 ```
 R2(config)# router bgp 200
 R2(config-router)# no neighbor 200.1.0.2 remote-as 200
@@ -149,24 +151,23 @@ Neighbor        V         AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down State/P
 200.1.0.2       4        200       0       0        0    0    0    never       Active
 
 Total number of neighbors 2
-
 ```
 
-Comme vous le constatez l'état de R4 est en `never`. Ce qui est logique puisqu'il n'existe pas de route sur R2 vers le réseau 200.1.0.0/16. Celle-ci va être calculée par OSPF. Configurer également OSPF sur R2 :
+Comme vous le constatez l'état de R4 est en `never`. Ce qui est logique puisqu'il n'existe pas de route sur R2 vers le réseau 200.1.0.0/16. Celle-ci sera gérée par OSPF. Configurez également OSPF sur R2 :
 ```
 R2(config-router)# router ospf
 R2(config-router)# network 200.0.0.0/16 area 0
 ```
-et R4 :
+et sur R4 :
 ```
 R4(config-router)# router ospf
 R4(config-router)# network 200.1.0.0/16 area 0
 ```
-Vérifier avec un `show ip route` sur R2 qu'elle se trouve bien annoncée. Pourtant, si vous tentez un `ping 150.0.0.1`ou un `traceroute -n 150.0.0.1`depuis PC1, vous n'arrivez toujours pas à atteindre PC2.
+Vérifier avec un `show ip route` sur R2 qu'elle se trouve bien annoncée. 
 
-Il nous reste en fait deux problèmes à résoudre :
+Pourtant, si vous tentez un `ping 150.0.0.1`ou un `traceroute -n 150.0.0.1 `depuis PC1, vous n'arrivez toujours pas à atteindre PC2. En fait, il nous reste encore deux problèmes à résoudre :
 
-Le premier est de communiquer à R3 les réseaux d'extremités (celles de PC1 et PC2) qui sont gérées par BGP.  Un `show ip route` sur R3 montre clairement le problème. Pour le résoudre, il faut dire à OSPF d'aller chercher les routes calculées par BGP. Cela se fait ainsi sur R2 et R4 :
+Le premier est de communiquer à R3 les réseaux d'extremités (ceux de PC1 et PC2) qui sont gérés par BGP.  Un `show ip route` sur R3 vous illustrera clairement le problème. Pour le résoudre, il faut dire à OSPF d'aller chercher les routes calculées par BGP. Cela se fait ainsi sur R2 et R4 :
 
 ```
 R2(config-router)# router ospf
@@ -203,7 +204,7 @@ Tentez un `ping 150.0.0.1`ou un `traceroute -n 150.0.0.1` depuis PC1 pour vérif
 
 ## Pour résumer
 
-BGP est un protocole complexe avec de multiples options de configuration. Votre principale tâche est donc de vous assurer que les annonces de routes sont correctement effectuées et que vos voisins sont effectivement joignables. Les principales commandes que vous avez besoin seront :
+BGP est un protocole complexe avec de multiples options de configuration. Votre principale tâche est donc de vous assurer que les annonces de routes sont correctement effectuées et que vos voisins sont effectivement joignables. Les principales commandes dont vous avez besoin pour la suite seront :
 * `show ip route <bgp|ospf>`
 * `show ip bgp summary`
 * `show ip bgp neighbors A.B.C.D advertised-routes` 
