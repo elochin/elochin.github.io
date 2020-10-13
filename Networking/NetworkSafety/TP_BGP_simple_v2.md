@@ -126,7 +126,9 @@ Paths: (1 available, no best path)
       Origin IGP, metric 0, localpref 100, invalid, internal
       Last update: Mon Oct 12 17:50:37 2020
 ```
-Nous pouvons resoudre le problème en faisant un `redistribute connected` depuis R2 et R3. Une fois fait, tentez un `ping 150.0.0.1`ou un `traceroute -n 150.0.0.1` depuis PC1 pour vérifier le bon fonctionnement de votre configuration.
+Nous pouvons résoudre le problème en ajoutant une route statique vers le réseau 98.76.54.0/24 sur R2 et respectivement vers le réseau 54.32.10.0/24 sur R3. Afin de comprendre ce qui va se passer : faites un `show ip route` sur R2, ajoutez ensuite la route statique avec `ip route 98.76.54.0/24 200.0.0.2` et faites de nouveau un `show ip route` pour observer les changements. Affichez les routes sur R1 pour vous assurer que le réseau 150.0.0.0/8 est bien diffusé.
+
+Une fois fait, tentez un `ping 150.0.0.1` ou un `traceroute -n 150.0.0.1` depuis PC1 pour vérifier le bon fonctionnement de votre configuration.
 
 ## Pour résumer
 
