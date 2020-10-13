@@ -39,7 +39,7 @@ Vous pouvez vérifier la bonne mise en place des voisins via `show ip bgp summar
 
 ```
 IPv4 Unicast Summary:
-BGP router identifier 27.0.0.1, local AS number 100 vrf-id 0
+BGP router identifier 100.0.0.254, local AS number 100 vrf-id 0
 BGP table version 0
 RIB entries 0, using 0 bytes of memory
 Peers 1, using 20 KiB of memory
@@ -91,7 +91,7 @@ R3(config-router)# neighbor 200.0.0.1 remote-as 200
 De nouveau un `show ip bgp summary` sur R2 vous donnera :
 ```
 IPv4 Unicast Summary:
-BGP router identifier 27.0.0.2, local AS number 200 vrf-id 0
+BGP router identifier 200.0.0.2, local AS number 200 vrf-id 0
 BGP table version 220
 RIB entries 7, using 1288 bytes of memory
 Peers 2, using 41 KiB of memory
