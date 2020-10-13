@@ -83,7 +83,7 @@ Nous allons maintenant configurer l'AS 200. Pour cela il ne nous reste plus qu'Ã
 R2(config)# router bgp 200
 R2(config-router)# neighbor 200.0.0.2 remote-as 200
 ```
-et sur R4 :
+et sur R3 :
 ```
 R3(config)# router bgp 200
 R3(config-router)# neighbor 200.0.0.1 remote-as 200
