@@ -116,7 +116,7 @@ $ tc qdisc add dev eth0 parent 1:2 handle 20: myqdisc_b <args>
 
 La précédente commande renvoit également une information sur la taille de la file d'attente `qlen 1000`. Cette taille n'est pas modifiable via l'interface `tc` mais via l'interface `ip`. En utilisant, par exemple : `ip link set dev enp0s3 txqueuelen 100`, vous changerez cette taille de 1000 à 100 paquets (plus de détails avec `man ip-link`). Nécessaire par la suite pour le dimensionnement de vos *buffers* si vous utilisez certaines *qdisc* non paramétrables par `tc` comme c'est le cas pour `pfifo_fast`. Certaines *qdisc* permettent cependant de changer la taille logique de la file grâce au mot clé `limit` voir par exemple `man tc-red` ou man `tc-bfifo`.
 
-## Mise en oeuvre de la QoS avec TC
+## Comprendre et mettre en oeuvre la QoS avec TC
 
 Nous allons maintenant ...
 
