@@ -86,7 +86,7 @@ Default qdisc : 	root ---> qdisc pfifo_fast 0:
 Single qdisc : 		root ---> qdisc myqdisc 1:
 Chained qdiscs :	root ---> qdisc myqdisc_a 1: ---> qdisc myqdisc_b 2:
 Classful qdiscs :	root ---> qdisc myclassfull_qdisc 1: -+--> myclass 1.1 ---> qdisc myqdisc_b 10:
-                                                           \-> myclass 1.2 ---> qdisc myqdisc_b 20:
+                                                               \-> myclass 1.2 ---> qdisc myqdisc_b 20:
 ```
 
 L'ajout d'une *qdisc* à la racine d'une interface se fait par `tc qdisc add` tandis qu'en utilisant `tc qdisc replace`, on remplace la configuration par défaut indiquée ci-dessus. Un `tc qdisc del` supprimela hiérarchie complète et la remplace par la valeur par défaut. A noter que certaines *qdisc* sont dites *classless* et d'autre *classfull*. Dans le premier cas, ces dernières ne peuvent être attachée qu'à la racine. Il n'est pas possible de les chaîner.
@@ -122,9 +122,28 @@ Nous allons maintenant ...
 
 ### Priority Queuing - illustration du premier exemple du cours
 
-Experimentons une gestionnaire de priorité comme pour l'exemple du cours du partage entre BitTorrent et Skype.
+Experimentons un gestionnaire de priorité comme pour l'exemple du cours du partage entre BitTorrent et Skype.
 
+```bash
+root@RTR:/# tc qdisc del dev eth1 root
+root@RTR:/# tc qdisc change dev eth1 root handle 1: tbf rate 1mbit burst 32kbit latency 50ms
+root@RTR:/# tc qdisc add dev eth1 parent 1: handle 2: prio
+```
 
+```bash
+root@SRC:/# iperf3 -c 10.0.0.1 -i1 -t500
+ping 10.0.0.1 -Q 0x10
+iperf3 -c 10.0.0.1 -u -b20K -p10000 -t 20 -S 0x10
+```
+
+Vérifiez que votre configuration a bien été prise en compte avec `tc -d qdisc show` : 
+```bash
+root@RTR:/# tc -d qdisc show 
+qdisc noqueue 0: dev lo root refcnt 2 
+qdisc noqueue 0: dev eth0 root refcnt 2 
+qdisc tbf 1: dev eth1 root refcnt 2 rate 1Mbit burst 4Kb/1 mpu 0b lat 50.0ms linklayer ethernet 
+qdisc prio 2: dev eth1 parent 1: bands 3 priomap  1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1
+```
 
 ### Fair Queuing
 
