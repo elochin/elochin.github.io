@@ -1,4 +1,4 @@
-# Evolution de la fenêtre TCP
+# Evolution de la fenêtre TCP - CUBIC vs Newreno
 
 L'objectif de cette expérience est d'illustrer le comportement de base du contrôle de congestion TCP. Vous pourrez observer le modèle classique dit en "dents de scie" (*sawtooth behavior*) de la fenêtre de congestion d'un flux TCP. Vous pourrez observer comment un flux TCP répond aux indications de congestion.
 
