@@ -21,15 +21,7 @@ Sur cette figure nous pouvons également identifier :
 Afin de mieux comprendre le pourquoi de cette évolution, je vous propose de regarder ensemble la vidéo suivante :
 
 
-[![Router Buffer Animation](http://witestlab.poly.edu/respond/sites/ee136s15/files/tcp-aimd.ogv)](http://witestlab.poly.edu/respond/sites/ee136s15/files/tcp-aimd.ogv "Router Buffer Animation")
-
-<iframe width="1280" height="720" src="http://witestlab.poly.edu/respond/sites/ee136s15/files/tcp-aimd.ogv" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-
-<video controls="controls" width="528" height="304">  
-    <source src="http://witestlab.poly.edu/respond/sites/ee136s15/files/tcp-aimd.ogv" type="video/ogg">
-    <span title="No video playback capabilities, please visit the link below to view the animation.">Router Buffer Animation</span>
-</video>
+[![Router Buffer Animation](https://images.app.goo.gl/qqLpYpHDLXNhAVmg9)](http://witestlab.poly.edu/respond/sites/ee136s15/files/tcp-aimd.ogv "Router Buffer Animation")
 <p>Source: Guido Appenzeller and Nick McKeown, <a href="http://guido.appenzeller.net/anims/">Router Buffer Animations</a>.</p>
 
 La figure ci-après en vert représente l'évolution d'une fenêtre gérée par le contrôle de congestion CUBIC. Initiallement déployé dans GNU/Linux et apparu en 2005, CUBIC est devenu maintenant le contrôle de congestion utilisé par défaut dans tous les systèmes, que cela soit Windows ou MacOSX, seuls les systèmes *BSD conservent NewReno.
