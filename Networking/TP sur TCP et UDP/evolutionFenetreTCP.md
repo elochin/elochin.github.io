@@ -20,17 +20,19 @@ Sur cette figure nous pouvons également identifier :
 
 Afin de mieux comprendre le pourquoi de cette évolution, je vous propose de regarder ensemble la vidéo suivante :
 
-
-[![Router Buffer Animation](https://images.app.goo.gl/qqLpYpHDLXNhAVmg9)](http://witestlab.poly.edu/respond/sites/ee136s15/files/tcp-aimd.ogv "Router Buffer Animation")
-<p>Source: Guido Appenzeller and Nick McKeown, <a href="http://guido.appenzeller.net/anims/">Router Buffer Animations</a>.</p>
+<center>
+  <a href="http://witestlab.poly.edu/respond/sites/ee136s15/files/tcp-aimd.ogv"><img src="https://image1.slideserve.com/2740024/single-tcp-flow-router-with-large-enough-buffers-for-full-link-utilization-l.jpg" width="480"></img></a>
+  <br>
+  <p>Source: Guido Appenzeller and Nick McKeown, <a href="http://guido.appenzeller.net/anims/">Router Buffer Animations</a>.</p>
+</center>
 
 La figure ci-après en vert représente l'évolution d'une fenêtre gérée par le contrôle de congestion CUBIC. Initiallement déployé dans GNU/Linux et apparu en 2005, CUBIC est devenu maintenant le contrôle de congestion utilisé par défaut dans tous les systèmes, que cela soit Windows ou MacOSX, seuls les systèmes *BSD conservent NewReno.
 
-<center><img src="http://images2.programmersought.com/360/2e/2e30fe22f679a54a97e377886318a4c0.JPEG"  width="600"></img></center>
+<center><img src="http://images2.programmersought.com/360/2e/2e30fe22f679a54a97e377886318a4c0.JPEG" width="600"></img></center>
 
 Comme vous pouvez le constater, l'évolution est bien différente et se compose d'une phase convexe et concave 
 
-<center><img src="hhttps://www.noction.com/wp-content/uploads/2018/02/CUBIC-Function-with-Concave-and-Convex-Profiles.png" width=800></img></center>
+<center><img src="https://www.noction.com/wp-content/uploads/2018/02/CUBIC-Function-with-Concave-and-Convex-Profiles.png" width=800></img></center>
 
 ### Exercice
 
