@@ -20,6 +20,9 @@ Sur cette figure nous pouvons également identifier :
 
 Afin de mieux comprendre le pourquoi de cette évolution, je vous propose de regarder ensemble la vidéo suivante :
 
+<iframe width="1280" height="720" src="http://witestlab.poly.edu/respond/sites/ee136s15/files/tcp-aimd.ogv" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
 <video controls="controls" width="528" height="304">  
     <source src="http://witestlab.poly.edu/respond/sites/ee136s15/files/tcp-aimd.ogv" type="video/ogg">
     <span title="No video playback capabilities, please visit the link below to view the animation.">Router Buffer Animation</span>
