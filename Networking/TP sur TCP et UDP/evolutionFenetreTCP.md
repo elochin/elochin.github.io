@@ -1,6 +1,6 @@
-# Evolution de la fenêtre TCP - CUBIC vs Newreno
+# Evolution de la fenêtre TCP - CUBIC vs NewReno
 
-L'objectif de cette expérience est d'illustrer le comportement de base du contrôle de congestion TCP. Vous pourrez observer le modèle classique dit en "dents de scie" (*sawtooth behavior*) de la fenêtre de congestion d'un flux TCP. Vous pourrez observer comment un flux TCP répond aux indications de congestion.
+L'objectif de cette expérience est d'illustrer le comportement de base du contrôle de congestion TCP. Vous pourrez observer le modèle classique dit en "dents de scie" (*sawtooth behavior*) de la fenêtre de congestion d'un flux TCP et comment un flux TCP répond aux indications de congestion.
 
 La figure ci-dessous présente une évaluation classique d'une fenêtre de congestion de la version NewReno de TCP qui est la version historique la plus usitée :
 
@@ -47,4 +47,6 @@ Créez un tracé de la taille de la fenêtre de congestion et du seuil de démar
 
 À l'aide de vos données de tracé et/ou d'expérience, expliquez en quoi le comportement de TCP est différent dans les phases "Démarrage lent" et "Évitement de la congestion". De plus, en utilisant votre tracé, expliquez ce qui arrive à la fois à la fenêtre de congestion et au seuil de démarrage lent lorsque 3 ACK en double sont reçus.
 
-Effectuez de nouveau les mesures avec l'option `-P3` de `iperf3` afin de générer 3 flots en parallèle, quels résultats obtenez-vous ? 
+Effectuez de nouveau les mesures avec l'option `-P3` de `iperf3` afin de générer 3 flots en parallèle, quels résultats obtenez-vous ?
+
+Reportez vos mesures et conclusions dans votre cahier de laboratoire.
