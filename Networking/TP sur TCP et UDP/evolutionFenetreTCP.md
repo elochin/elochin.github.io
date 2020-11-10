@@ -36,13 +36,15 @@ Comme vous pouvez le constater, l'évolution est bien différente et se compose 
 
 ### Exercice
 
-Créez un tracé de la taille de la fenêtre de congestion et du seuil de démarrage lent pour chaque flux TCP pendant la durée de l'expérience, comme dans la figure 1 de la section Résultats.
+Toujours en utilisant votre topologie de tests avec une limitation du débit au niveau de R1 (i.e. `tc qdisc add dev eth1 root netem rate 10M delay 10ms limit 10`), générez un trafic TCP/Newreno (un trafic CUBIC) avec la commande suivante depuis PC0 vers PC1 : `iperf3 -J reno.json -c 10.1.1.1 -t 60 -C reno` (et `-J cubic.json -C cubic` pour CUBIC). 
+Analysez les fenêtres grâce au script [cwnd.awk](cwnd.awk).
+Créez un tracé de la taille de la fenêtre de congestion et du seuil de démarrage lent pour chaque flux TCP pendant la durée de l'expérience. Annotez votre graphique pour montrer:
 
-Annotez votre graphique, semblable à la figure 2 de la section Résultats, pour montrer:
+* les périodes de "démarrage lent";
+* les périodes de "prévention de la congestion";
+* les instances où 3 ACK en double ont été reçus (ce qui déclenchera une "récupération rapide");
+* les instances de timeout.
 
-* Périodes de "démarrage lent"
-* Périodes de "prévention de la congestion"
-* Instances où 3 ACK en double ont été reçus (ce qui déclenchera une "récupération rapide")
-* Instances de timeout
+À l'aide de vos données de tracé et/ou d'expérience, expliquez en quoi le comportement de TCP est différent dans les phases "Démarrage lent" et "Évitement de la congestion". De plus, en utilisant votre tracé, expliquez ce qui arrive à la fois à la fenêtre de congestion et au seuil de démarrage lent lorsque 3 ACK en double sont reçus.
 
-À l'aide de vos données de tracé et / ou d'expérience, expliquez en quoi le comportement de TCP est différent dans les phases "Démarrage lent" et "Évitement de la congestion". De plus, en utilisant votre tracé, expliquez ce qui arrive à la fois à la fenêtre de congestion et au seuil de démarrage lent lorsque 3 ACK en double sont reçus.
+Effectuez de nouveau les mesures avec l'option `-P3` de `iperf3` afin de générer 3 flots en parallèle, quels résultats obtenez-vous ? 
