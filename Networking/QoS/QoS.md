@@ -176,7 +176,7 @@ Ce qui nous permettra d'observer l'évolution du délai du `ping` en fonction de
 root@SRC:/# iperf3 -c 10.0.0.1 -u -b20K -t 20 -S 0x10
 ```
 
-<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" style="zoom:5%;" /> Pour observer la mise en oeuvre du *priority queuing* : 
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> Pour observer la mise en oeuvre du *priority queuing* : 
 
 1. depuis SRC générez un trafic TCP standard avec : `iperf3 -c 10.0.0.1 -i1 -t500`; 
 2. ensuite dans une autre console lancez un *ping* **sans marquage** conjointement avec ce trafic : `ping 10.0.0.1`
@@ -188,7 +188,7 @@ root@SRC:/# iperf3 -c 10.0.0.1 -u -b20K -t 20 -S 0x10
 
 Nous allons illustrer le principe de partage équitable avec l'ordonnanceur Stochastic Fair Queuing. Dérivé de WFQ que nous avons vu en cours, SFQ limite le nombre de file d'attente en agrègeant les flots grâce à un processus aléatoire. SFQ est une solution au problème de passage à l'échelle de WFQ. 
 
-<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" style="zoom:5%;" />Réalisez l'expérimentation suivante :
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 />Réalisez l'expérimentation suivante :
 
 1. consultez la page de manuel de SFQ : `man tc-sfq` et lire uniquement la section ALGORITHM pour comprendre son fonctionnement;
 2. nous n'utiliserons pas de paramètre optionnel pour ce test, regardez simplement comment metttre en oeuvre SFQ dans la section EXAMPLE;
@@ -221,14 +221,14 @@ Supposons que l'on génère un trafic avec un simple *ping* en faisant varier la
 * taille du paquet (`-s`) : 1500 octets, inter-espacement (`-i`) : 0.1 sec => 1500*8/0.1 = 120Kbit/s (plus proche de 114Kbit/s)
 * taille du paquet (`-s`) : 1500 octets, inter-espacement (`-i`) : 0.01 sec => 1500*8/0.01 = 1.2Mbit/s (plus proche de 0.94Mbit/s)
 
-<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" style="zoom:5%;" />Expérimentons avec un TBF :
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30/>Expérimentons avec un TBF :
 
 1. paramétrez un TBF sur l'interface de sortie du routeur avec :`tc qdisc add dev eth1 root handle 1: tbf rate 1mbit burst 1500b limit 1500b`;
 2. lancez `tc -s qdisc show` pour obtenir les statistiques de la file. Réalisez un ping depuis SRC avec : `ping -s 1500 10.0.0.1` et consultez de nouveau `tc -s qdisc show` qu'observez-vous ? Quelle taille maximale devez-vous utiliser pour votre `ping` et pourquoi ?
 
 Le retour de `tc -s qdisc show` renvoit la limite sous forme de latence, celle affichée avec la configuration précédente est nulle (`lat 0us`).  En changeant la valeur de la limite avec `limit 5000b` par exemple, la valeur de la latence retournée par `tc -s qdisc show` passe à 28ms sur ma machine. Cette valeur se calcule par la multiplication du débit et du tampon soit soit 1Mbit * 5000B = 25ms, les 3ms de différence proviennent de la taille du *burst* qui lui est envoyé à la vitesse maximale de l'interface.
 
-<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" style="zoom:5%;" />Reparamètrez votre TBF avec le débit et la limite suivant : `tc qdisc add dev h1-eth0 root tbf rate 100kbit burst 1500b limit 5000b`. Quelles valeurs sont retournées par `tc -s qdisc show` lorsque vous faites un :
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 />Reparamètrez votre TBF avec le débit et la limite suivant : `tc qdisc add dev h1-eth0 root tbf rate 100kbit burst 1500b limit 5000b`. Quelles valeurs sont retournées par `tc -s qdisc show` lorsque vous faites un :
 
 1. `ping 10.0.0.2 -s1458`
 2. `ping 10.0.0.2 -s1458 -i 0.1`
@@ -356,7 +356,7 @@ tc filter add dev $DEV parent 1:0 protocol ip prio 1 u32 match ip dport 5002 0xf
 tc filter add dev $DEV parent 1:0 protocol ip prio 1 u32 match ip dport 5003 0xffff flowid 1:4
 ```
 
-<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" style="zoom:5%;" />Analyser ce script afin de trouver quelles sont les règles qui permettent de filtrer le trafic puis tester le en générant un trafic UDP et deux trafics TCP. dans les classes prévues à cet effet. Observez l'isolation obtenue. Modifiez le comportement des classes en ajoutant/supprimant les mots clés `bounded` et `isolated`.  TODO JSON et calcul débit.
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30/>Analyser ce script afin de trouver quelles sont les règles qui permettent de filtrer le trafic puis tester le en générant un trafic UDP et deux trafics TCP. dans les classes prévues à cet effet. Observez l'isolation obtenue. Modifiez le comportement des classes en ajoutant/supprimant les mots clés `bounded` et `isolated`.  TODO JSON et calcul débit.
 
 ## Random Early Detection
 
@@ -365,4 +365,3 @@ tc filter add dev $DEV parent 1:0 protocol ip prio 1 u32 match ip dport 5003 0xf
 
 
 
- 
