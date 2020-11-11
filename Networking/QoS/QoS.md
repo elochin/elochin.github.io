@@ -176,7 +176,7 @@ Ce qui nous permettra d'observer l'évolution du délai du `ping` en fonction de
 root@SRC:/# iperf3 -c 10.0.0.1 -u -b20K -t 20 -S 0x10
 ```
 
-Pour observer la mise en oeuvre du *priority queuing* : 
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" style="zoom:5%;" /> Pour observer la mise en oeuvre du *priority queuing* : 
 
 1. depuis SRC générez un trafic TCP standard avec : `iperf3 -c 10.0.0.1 -i1 -t500`; 
 2. ensuite dans une autre console lancez un *ping* **sans marquage** conjointement avec ce trafic : `ping 10.0.0.1`
@@ -186,7 +186,9 @@ Pour observer la mise en oeuvre du *priority queuing* :
 
 ### Fair Queuing
 
-Nous allons illustrer le principe de partage équitable avec l'ordonnanceur Stochastic Fair Queuing. Dérivé de WFQ que nous avons vu en cours, SFQ limite le nombre de file d'attente en agrègeant les flots grâce à un processus aléatoire. SFQ est une solution au problème de passage à l'échelle de WFQ. Réalisez l'expérimentation suivante :
+Nous allons illustrer le principe de partage équitable avec l'ordonnanceur Stochastic Fair Queuing. Dérivé de WFQ que nous avons vu en cours, SFQ limite le nombre de file d'attente en agrègeant les flots grâce à un processus aléatoire. SFQ est une solution au problème de passage à l'échelle de WFQ. 
+
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" style="zoom:5%;" />Réalisez l'expérimentation suivante :
 
 1. consultez la page de manuel de SFQ : `man tc-sfq` et lire uniquement la section ALGORITHM pour comprendre son fonctionnement;
 2. nous n'utiliserons pas de paramètre optionnel pour ce test, regardez simplement comment metttre en oeuvre SFQ dans la section EXAMPLE;
@@ -219,14 +221,14 @@ Supposons que l'on génère un trafic avec un simple *ping* en faisant varier la
 * taille du paquet (`-s`) : 1500 octets, inter-espacement (`-i`) : 0.1 sec => 1500*8/0.1 = 120Kbit/s (plus proche de 114Kbit/s)
 * taille du paquet (`-s`) : 1500 octets, inter-espacement (`-i`) : 0.01 sec => 1500*8/0.01 = 1.2Mbit/s (plus proche de 0.94Mbit/s)
 
-Expérimentons :
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" style="zoom:5%;" />Expérimentons avec un TBF :
 
 1. paramétrez un TBF sur l'interface de sortie du routeur avec :`tc qdisc add dev eth1 root handle 1: tbf rate 1mbit burst 1500b limit 1500b`;
 2. lancez `tc -s qdisc show` pour obtenir les statistiques de la file. Réalisez un ping depuis SRC avec : `ping -s 1500 10.0.0.1` et consultez de nouveau `tc -s qdisc show` qu'observez-vous ? Quelle taille maximale devez-vous utiliser pour votre `ping` et pourquoi ?
 
 Le retour de `tc -s qdisc show` renvoit la limite sous forme de latence, celle affichée avec la configuration précédente est nulle (`lat 0us`).  En changeant la valeur de la limite avec `limit 5000b` par exemple, la valeur de la latence retournée par `tc -s qdisc show` passe à 28ms sur ma machine. Cette valeur se calcule par la multiplication du débit et du tampon soit soit 1Mbit * 5000B = 25ms, les 3ms de différence proviennent de la taille du *burst* qui lui est envoyé à la vitesse maximale de l'interface.
 
-Reparamètrez votre TBF avec le débit et la limite suivant : `tc qdisc add dev h1-eth0 root tbf rate 100kbit burst 1500b limit 5000b`. Quelles valeurs sont retournées par `tc -s qdisc show` lorsque vous faites un :
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" style="zoom:5%;" />Reparamètrez votre TBF avec le débit et la limite suivant : `tc qdisc add dev h1-eth0 root tbf rate 100kbit burst 1500b limit 5000b`. Quelles valeurs sont retournées par `tc -s qdisc show` lorsque vous faites un :
 
 1. `ping 10.0.0.2 -s1458`
 2. `ping 10.0.0.2 -s1458 -i 0.1`
@@ -270,13 +272,96 @@ Le partage peut également être hierarchisé, entre diverses organisations par 
 
 <img src="lsb.png" alt="Partage hiérarchisé d'un lien." style="zoom:70%;" />
 
-Une part de la bande passante est donc attribuée à chaque niveau. La gestion des files met en oeuvre les différentes variantes de gestion des listes de processus : priorité, temps partagé. En fait, pour les cas extrêmes il est utile de pouvoir considérer qu'un certain type de trafic peut-être éliminé. Les mécanismes de partage dans CBQ ne tentent pas de fournir un contrôle de congestion au niveau des feuilles de l’arbre (correspondant à une classe de trafic). Ces mécanismes étant à implémenter par l'ordonnanceur général à l’entrée du réseau. Le classement des trafics se fait selon différents critères : champs TOS, adresses IP source et/ou émetteurs, numéros de ports UDP ou TCP qui permettent d'identifier les flux. On distingue les applications à trafic temps réel ou les applications du type messagerie au trafic moins urgent. Ces modes de gestion sont plus ou moins extensibles à des réseaux importants. Le trafic est géré par une étiquette de TOS pour les datagrammes qui circulent de façon indépendante. Suivant la le [[RFC2309]](https://tools.ietf.org/html/rfc2309), la notification et la prise en compte de la régulation par IP sont à recommander.
+Une part de la bande passante est donc attribuée à chaque niveau. La gestion des files met en oeuvre les différentes variantes de gestion des listes de processus : priorité, temps partagé. En fait, pour les cas extrêmes il est utile de pouvoir considérer qu'un certain type de trafic peut-être éliminé. Les mécanismes de partage dans CBQ ne tentent pas de fournir un contrôle de congestion au niveau des feuilles de l’arbre (correspondant à une classe de trafic); ces mécanismes étant à implémenter par l'ordonnanceur général à l’entrée du réseau. La classification des trafics se fait selon différents critères : champs TOS, adresses IP source et/ou émetteurs, numéros de ports UDP ou TCP qui permettent d'identifier les flux. On distingue les applications à trafic temps réel ou les applications du type messagerie au trafic moins urgent. Ces modes de gestion sont plus ou moins extensibles à des réseaux importants. Le trafic est géré par une étiquette de TOS pour les datagrammes qui circulent de façon indépendante. Suivant la le [[RFC2309]](https://tools.ietf.org/html/rfc2309), la notification et la prise en compte de la régulation par IP sont à recommander.
+
+### La classe CBQ
+
+Les paramètres de la classe CBQ sont détaillés ci-après : 
+```bash
+tc class ... cbq bandwidth BPS rate BPS maxburst PKTS [ avpkt BYTES ] 
+[minburst PKTS ] [ bounded ] [ isolated ] [ allot BYTES ] [ mpu BYTES ]
+[weight RATE ] [ prio NUMBER ] [ cell BYTES ] [ ewma LOG ]
+[estimator INTERVAL TIME CONSTANT ] [ split CLASSID ]
+[defmap MASK/CHANGE ]
+```
+Les paramètres importants à considérer sont :
+
+* `bandwidth BPS` : capacité maximum disposant la discipline de file d’attente parente de cette classe (i.e., la capacité de sortie du lien);
+* `rate BPS` : capacité allouée à cette classe; 
+* `maxburst PKTS` : représente le nombre de paquets maximum pouvant être envoyé par la plus grande rafale possible;
+* `[ avpkt BYTES ]` : paramètre obligatoire afin que l'algorithme puisse calculer les pourcentages de capacité pour chaque classe; 
+* `[ bounded ]` : indique que la classe ne peut pas emprunté de la bande passante non utilisée par son parent ou par toutes autres classes;
+* `[ isolated ]` : indique que cette classe n’autorise pas le partage de sa bande passante avec d’autres classes;
+* `[ weight RATE ]` : doit être proportionnel ou égal (c’est le cas par défaut) au paramètre rate;
+*  `[ allot BYTES ]` : est un paramètre qu’il convient de laisser au MTU de 1514 octets d’IPv4 (valeur par défaut).
+
+#### Explication des mots clés `bounded` et `isolated`
+
+Comme déjà souligné précédemment, un lien doit pouvoir en cas de congestion recevoir la capacité minimum qui lui est alloué. Ce qui donne le change à cette hypothèse c'est justement ces deux mots clés. Si nous reprenons la répartition du premier schéma d'illustration du CBQ nous avons :
+
+| Protocole | Pourcentage de bande passante allouée |
+| :-------: | :-----------------------------------: |
+|    UDP    |                  50%                  |
+|    TCP    |                  50%                  |
+|  Telnet   |                  25%                  |
+|    FTP    |                  25%                  |
+
+Pour réaliser cette réparation je dois donc créér comme il l'est montré sur le schéma suivant deux disciplines CBQ et quatre classes. 
+
+![](cbqc.png)
+
+Supposons que pour les deux classes TCP et UDP le trafic respectif des deux protocoles soit 20% et 60%. Si j'utilise le mot clé `bounded` au niveau d'UDP, celui-ci n’ira pas chercher la capacité non utilisée par TCP et CBQ limitera son débit de 60% à 50%. Dans le cas où je n'ai pas utilisé `bounded` sur UDP, celui ci pourra plafonner à 60% à condition que TCP n’augmente pas son trafic. En effet, si celui-ci passe à 50%, cela nous positionnerait dans un cas de congestion et dans ce cas, CBQ partagerait équitablement le lien en 50/50.
+
+Prenons les mêmes hypothèses que précédement mais supposons que nous ayons utilisé le mot clé `isolated` pour TCP. UDP ayant un débit supérieur et n’étant pas "borné, il va de façon opportuniste occuper toute la capacité disponible. Or TCP lui est "isolé"", UDP ne pourra donc pas utiliser la capacité libre de TCP. Son trafic est donc réduit à 50%.
+
+On peut facilement voir quelles applications les fournisseurs d'accès Internet peuvent fournir grâce à ce système. En conclusion, si l'on désire avoir un "vrai" CBQ qui entre en action dans le cas de congestion, il est nécessaire de ne pas utiliser le mot clé `bounded`.
+
+Nous allons experimenter CBQ avec ce [script](cbq-script.sh) également affiché ci-dessous : 
+
+```bash
+#!/bin/sh
+DEV=eth1
+
+# Initialisation
+tc qdisc del root dev $DEV
+
+#Attache un CBQ à $DEV
+tc qdisc add dev $DEV root handle 1: cbq bandwidth 10Mbit allot 1514 cell 8 \
+avpkt 1000 mpu 64
+
+# Création de la classe racine
+tc class add dev $DEV parent 1:0 classid 1:1 cbq bandwidth 10Mbit rate 10Mbit \
+allot 1514 cell 8 weight 1Mbit prio 8 maxburst 20 avpkt 1000 \
+bounded isolated
+
+# Création d'une classe CBQ à un taux de 8Mbit/s et de deux autres classes à 1Mbit/s
+tc class add dev $DEV parent 1:1 classid 1:2 cbq bandwidth 10Mbit rate 8Mbit \
+allot 1514 cell 8 weight 800Kbit prio 1 maxburst 20 avpkt 1000 \
+bounded isolated
+
+tc class add dev $DEV parent 1:1 classid 1:3 cbq bandwidth 10Mbit rate 1Mbit \
+allot 1514 cell 8 weight 100Kbit prio 2 maxburst 20 avpkt 1000 \
+bounded isolated
+
+tc class add dev $DEV parent 1:1 classid 1:4 cbq bandwidth 10Mbit rate 1Mbit \
+allot 1514 cell 8 weight 100Kbit prio 2 maxburst 20 avpkt 1000 \
+bounded isolated
+
+# Création des filtres
+# Filtre sur DPORT 5001 FLOWID 1:2
+tc filter add dev $DEV parent 1:0 protocol ip prio 1 u32 match ip dport 5001 0xffff flowid 1:2
+# Filtre sur DPORT 5002 FLOWID 1:3
+tc filter add dev $DEV parent 1:0 protocol ip prio 1 u32 match ip dport 5002 0xffff flowid 1:3
+# Filtre sur DPORT 5003 FLOWID 1:4
+tc filter add dev $DEV parent 1:0 protocol ip prio 1 u32 match ip dport 5003 0xffff flowid 1:4
+```
+
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" style="zoom:5%;" />Analyser ce script afin de trouver quelles sont les règles qui permettent de filtrer le trafic puis tester le en générant un trafic UDP et deux trafics TCP. dans les classes prévues à cet effet. Observez l'isolation obtenue. Modifiez le comportement des classes en ajoutant/supprimant les mots clés `bounded` et `isolated`.  TODO JSON et calcul débit.
+
+## Random Early Detection
 
 
 
-## Mise en oeuvre d'une architecture à QoS
-
-Fort de votre expertise, vous allez maintenant mettre en oeuvre 
 
 
 
