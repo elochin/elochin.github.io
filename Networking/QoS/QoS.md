@@ -252,7 +252,31 @@ Représentation des paquets hors-profil :
 
 <img src="tbfb.png" alt="Policing du trafic" style="zoom:70%;" />
 
+## Discipline de partage de lien le Class Based Queuing 
 
+Le CBQ est une architecture de partage de lien tout en restant une variation de WFQ. CBQ utilise également un tourniquet sur plusieurs files mais un *classifier* en amont de la batterie de file va s’intéresser à classifier chaque paquet en fonction de sa classe dans sa file correspondante. Il n'y a donc plus de classification sur le flot. Grâce au *round robin* en sortie des files, on évite qu’une seule classe de trafic ne monopolise toutes les ressources.
+
+Dans leur article [[CBQ]](https://www.icir.org/floyd/cbq.html), Sally Floyd et Van Jacobson proposent une architecture de partage de lien (*link sharing*) où le découpage de la bande passante peut être faite en prenant en compte :
+
+* la famille de protocoles utilisés sur le lien;
+* les types de trafics applicatifs (telnet, ftp, mail, ...);
+* les différentes organisations partageant le lien.
+
+Le but du *link sharing* est la classification de ces différents types de trafic afin d'opérer à un partage de la bande passante entre ces trafics comme illustré par la figure suivante :
+
+<img src="lsa.png" alt="Partage de lien entre plusieurs classes de services." style="zoom:70%;" />
+
+Le partage peut également être hierarchisé, entre diverses organisations par exemple, comme le montre la figure ci-dessous :
+
+<img src="lsb.png" alt="Partage hiérarchisé d'un lien." style="zoom:70%;" />
+
+Une part de la bande passante est donc attribuée à chaque niveau. La gestion des files met en oeuvre les différentes variantes de gestion des listes de processus : priorité, temps partagé. En fait, pour les cas extrêmes il est utile de pouvoir considérer qu'un certain type de trafic peut-être éliminé. Les mécanismes de partage dans CBQ ne tentent pas de fournir un contrôle de congestion au niveau des feuilles de l’arbre (correspondant à une classe de trafic). Ces mécanismes étant à implémenter par l'ordonnanceur général à l’entrée du réseau. Le classement des trafics se fait selon différents critères : champs TOS, adresses IP source et/ou émetteurs, numéros de ports UDP ou TCP qui permettent d'identifier les flux. On distingue les applications à trafic temps réel ou les applications du type messagerie au trafic moins urgent. Ces modes de gestion sont plus ou moins extensibles à des réseaux importants. Le trafic est géré par une étiquette de TOS pour les datagrammes qui circulent de façon indépendante. Suivant la le [[RFC2309]](https://tools.ietf.org/html/rfc2309), la notification et la prise en compte de la régulation par IP sont à recommander.
+
+
+
+## Mise en oeuvre d'une architecture à QoS
+
+Fort de votre expertise, vous allez maintenant mettre en oeuvre 
 
 
 
