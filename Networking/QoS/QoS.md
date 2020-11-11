@@ -39,6 +39,18 @@ Link layer                   |                                       |
                                        +-------------+        +-----------------+
 ```
 
+Les paquets entrant sont examinés afin de déterminer si il sont destinés au noeud où ils se trouvent. Si c'est le cas, ils sont envoyés à la couche supérieure sinon, ils passent par la table de routage afin de déterminer quel est le prochain noeud à atteindre. Une fois l'opération faite, le routeur envoie les paquets vers une file d'attente sur l'interface de transmission. C'est sur cette interface que vont se jouer la QoS et le contrôle de trafic du noyau Linux.  Le contrôle de trafic étant implémenté juste avant que le paquet soit mis dans la file d'attente maintenue par le périphérique de sortie.
+
+Le contrôle de trafic peut, entre autre décider si le paquet est mis dans une file d'attente ou si il est jeté (ce cas peut survenir lorsque la file a atteint une taille limite ou si le trafic excède un débit seuil). Il peut également décider dans quel ordre les paquets vont être envoyés (afin de donner la priorité à certain flots) ou retarder l'envoi de paquets dans le but de limiter le trafic en sortie.
+
+Les éléments nécessaires au LTC sont les suivants :
+* La *queuing discipline* (*qdisc*) : ce sont les gestionnaires de file d'attente et les ordonnanceurs que nous allons détailler plus bas;
+* Les *classes* : elles sont gérées par la discipline de file d'attente du périphérique. Une classe correspond à un ensemble de règles marquant les données propres à une classe. On pourrait, par exemple, avoir une classe limitant le taux des paquets à 1 Mbps pendant la journée et qui passe ce taux à 5 Mbps durant la nuit. Plusieurs queuing discipline peuvent être liées à des classes, c'est le cas pour les disciplines RED, SFQ et TBF. Par défaut, si aucune discipline n'est stipulée, on utilise FIFO; 
+* Les filtres (*classifiers*) : ils décrivent les paquets afin de les organiser dans des classes gérées par des disciplines de file d'attente. Plusieurs filtres sont disponibles comme le *route-based classifier*, *RSVP Classifier* (un pour IPv4 et
+un pour IPv6), et le *u32 classifier*. Les filtres de firewalling peuvent
+être également utilisés, on pourrait donc utiliser une règle `iptables` comme *classifier*. Les *route classifiers* classent les paquets en fonction de la table de routage. Les *u32 classifier* sont utilisés pour faire de la classification basée sur l'adresse IP de destination, l'adresse IP source, le port TCP/UDP de destination, le port TCP/UDP source, le champ TOS et Protocol. 
+* Le *policing* : Le but de la politique de trafic est de s'assurer que le trafic n'excède pas certaines bornes. 
+
 Le composant de base du Linux Traffic Control est la gestion de file d'attente *qdisc* pour *queuing discipline*. L'implémentation la plus simple d'un *qdisc* est la discipline FIFO. Parmi les autres disciplines, nous commencerons par explorer le filtre TBF (*Token Bucket Filter*), qui met en forme le trafic ou, lisse le trafic, afin de se conformer à la fois à un débit de sortie et à une taille de rafale donnée.
 
 La commande `tc` offre de multiples fonctionnalités dont nous allons détailler certaines d'entre-elles plus bas. Consultez la page de manuel de `tc` (en faisant `man tc`) pour avoir un aperçu des options qui vous seront utiles. Vous trouverez tout en bas de cette page l'index des pages de chaque *qdisc* disponible par exemple pour RED : `tc-red`. 
@@ -68,7 +80,7 @@ qdisc pfifo_fast 0: root refcnt 2 bands 3 priomap  1 2 2 2 1 2 0 0 1 1 1 1 1 1 1
 ```
 La sortie ci-dessus se lit comme suit (lisez la page de manuel correspondante `man tc-pfifo_fast` et `man tc-prio`: 
 
-> l'interface `enp0s3` a une discipline de mise en file d'attente `pfifo_fast` avec l'étiquette `0:` attachée à la racine (`root`) de son arbre de *qdisc*. Ce qdisc classe et donne la priorité de tous les paquets sortants de cette interface en mappant leurs valeurs IP ToS 4 bits (c'est-à-dire les 16 valeurs répertoriées) aux bandes de priorité natives 0, 1 ou 2. Le trafic dans la bande 0 est toujours servi en premier, puis la bande 1 est serviee, enfin la bande 2. Dans une bande, tous les paquets sont envoyés de manière FIFO.
+> l'interface `enp0s3` a une discipline de mise en file d'attente `pfifo_fast` avec l'étiquette `0:` attachée à la racine (`root`) de son arbre de *qdisc*. Cette qdisc classe et donne la priorité de tous les paquets sortants de cette interface en mappant leurs valeurs IP ToS 4 bits (c'est-à-dire les 16 valeurs répertoriées) aux bandes de priorité natives 0, 1 ou 2. Le trafic dans la bande 0 est toujours servi en premier, puis la bande 1, enfin la bande 2. Dans une bande, tous les paquets sont envoyés de manière FIFO.
 
 Sur d'autres noyaux le choix a été porté sur l'ordonnanceur FQ_Codel comme le montre cette sortie :
 ```bash
@@ -89,20 +101,20 @@ Classful qdiscs :	root ---> qdisc myclassfull_qdisc 1: -+--> myclass 1.1 ---> qd
                                                                \-> myclass 1.2 ---> qdisc myqdisc_b 20:
 ```
 
-L'ajout d'une *qdisc* à la racine d'une interface se fait par `tc qdisc add` tandis qu'en utilisant `tc qdisc replace`, on remplace la configuration par défaut indiquée ci-dessus. Un `tc qdisc del` supprimela hiérarchie complète et la remplace par la valeur par défaut. A noter que certaines *qdisc* sont dites *classless* et d'autre *classfull*. Dans le premier cas, ces dernières ne peuvent être attachée qu'à la racine. Il n'est pas possible de les chaîner.
+L'ajout d'une *qdisc* à la racine d'une interface se fait par `tc qdisc add` tandis qu'en utilisant `tc qdisc replace`, on remplace la configuration par défaut indiquée ci-dessus. Un `tc qdisc del` supprimera la hiérarchie complète et la remplacera par la valeur par défaut. A noter que certaines *qdisc* sont dites *classless* et d'autre *classfull*. Dans le premier cas, ces dernières ne peuvent être attachée qu'à la racine. Il n'est pas possible de les chaîner.
 
 ```
 $ tc qdisc add dev eth0 root handle 1: my_qdisc <args>
 ```
 
-Les disciplines de mise en file d'attente peuvent être enchaînées, le  trafic passant par les deux *qdisc*, en spécifiant l'étiquette de leur prédécesseur comme parent.
+Les disciplines de mise en file d'attente *classfull* peuvent être enchaînées, le  trafic passant alors par les *qdisc* configurées en spécifiant l'étiquette de leur prédécesseur comme parent.
 
 ```
 $ tc qdisc add dev eth0 root handle 1: myqdisc_a <args> 
 $ tc qdisc add dev eth0 parent 1: handle 2: myqdisc_b <args>
 ```
 
-Des disciplines permettent de classer le trafic. Chacune des classes de trafic peut être gérée d'une manière spécifique, via un *qdisc* enfant spécifique.
+Des disciplines permettent de classer et marquer le trafic, nous les aborderons pas dans ce TP et utiliserons le marquage applicatif proposé par `ping` et `iperf3`. Chacune des classes de trafic peut être gérée d'une manière spécifique, via un *qdisc* enfant spécifique comme illustré ci-dessous :
 
 ```
 $ tc qdisc add dev eth0 root handle 1: myclassful_qdisc <args>
@@ -114,7 +126,7 @@ $ tc qdisc add dev eth0 parent 1:2 handle 20: myqdisc_b <args>
 
 ### Changer la taille de la file d'attente
 
-La précédente commande renvoit également une information sur la taille de la file d'attente `qlen 1000`. Cette taille n'est pas modifiable via l'interface `tc` mais via l'interface `ip`. En utilisant, par exemple : `ip link set dev enp0s3 txqueuelen 100`, vous changerez cette taille de 1000 à 100 paquets (plus de détails avec `man ip-link`). Nécessaire par la suite pour le dimensionnement de vos *buffers* si vous utilisez certaines *qdisc* non paramétrables par `tc` comme c'est le cas pour `pfifo_fast`. Certaines *qdisc* permettent cependant de changer la taille logique de la file grâce au mot clé `limit` voir par exemple `man tc-red` ou man `tc-bfifo`.
+La précédente commande renvoit également une information sur la taille de la file d'attente `qlen 1000`. Cette taille n'est pas modifiable via l'interface `tc` mais via l'interface `ip`. En utilisant, par exemple : `ip link set dev enp0s3 txqueuelen 100`, vous changerez cette taille de 1000 à 100 paquets (plus de détails avec `man ip-link`). Cette opération s'avérera nécessaire pour le dimensionnement de vos *buffers* si vous utilisez certaines *qdisc* non paramétrables par `tc` comme c'est le cas avec `pfifo_fast`. Les autres *qdisc* permettent de changer la taille logique de la file grâce aux mots clé `limit` ou `latency` voir par exemple `man tc-red` ou man `tc-bfifo`.
 
 ## Comprendre et mettre en oeuvre la QoS avec TC
 
@@ -124,17 +136,26 @@ Nous allons maintenant ...
 
 Experimentons un gestionnaire de priorité comme pour l'exemple du cours du partage entre BitTorrent et Skype.
 
-```bash
-root@RTR:/# tc qdisc del dev eth1 root
-root@RTR:/# tc qdisc change dev eth1 root handle 1: tbf rate 1mbit burst 32kbit latency 50ms
-root@RTR:/# tc qdisc add dev eth1 parent 1: handle 2: prio
-```
+Nous allons pour cela utiliser la discipline  `sch_prio ` qui est un ordonnanceur de priorité à 3 bandes et la version configurable de `pfifo_fast`. Il s'emploit de la façon suivante :
 
 ```bash
-root@SRC:/# iperf3 -c 10.0.0.1 -i1 -t500
-ping 10.0.0.1 -Q 0x10
-iperf3 -c 10.0.0.1 -u -b20K -p10000 -t 20 -S 0x10
+tc qdisc ... prio bands NUMBER priomap P1 P2...
 ```
+
+Par défaut le nombres de bandes (files d’attentes) est de 3 et la *priomap* a pour forme :
+`1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1`
+Regardez la page de manuel de `tc-prio` pour comprendre à quoi correspond cette *priomap*. A l'intérieur de chacune de ces bandes, les règles FIFO (premier entré, premier sortie) sont
+appliquées. Cependant, tant qu’il y a un paquet en attente dans la bande 0, la bande 1 ne sera
+pas traitée. Il en va de même pour la bande 1 et la bande 2. Cet ordonnaceur possède implicitement 3 classes par défaut qui sont prédéclarées et il n’est donc pas nécessaire d’instancier des classes. Ce n'est pas le cas pour d'autres ordonnanceurs que nous verrons plus bas tels CBQ, qui lui nécessite la déclaration de classes. La classe 1 correspond à la file 0, la classe 2 à la file 1 et la classe 3 à la file 2.
+Il est impossible de vérifier grâce à une commande de traçage de type : `tc -s class show dev <intf>` le chemin emprunté par les paquets au travers des files. Combiné à la commande `watch` par exemple : `watch -n1 tc -s class show dev <intf>` vous permettra d'obtenir des statistiques toutes les secondes.
+
+Pour illustrer l'exemple du cours, nous allons tout d'abord limiter le débit en sortie  de l'interface `eth1` du routeur RTR et y ajouter la discipline prio ainsi :
+```bash
+root@RTR:/# tc qdisc del dev eth1 root
+root@RTR:/# tc qdisc add dev eth1 root handle 1: tbf rate 1mbit burst 32kbit latency 50ms
+root@RTR:/# tc qdisc add dev eth1 parent 1: handle 2: prio
+```
+La première commande permet de s'assurer qu'aucune *qdisc* résiduelle n'est présente sur l'interface.
 
 Vérifiez que votre configuration a bien été prise en compte avec `tc -d qdisc show` : 
 ```bash
@@ -144,24 +165,95 @@ qdisc noqueue 0: dev eth0 root refcnt 2
 qdisc tbf 1: dev eth1 root refcnt 2 rate 1Mbit burst 4Kb/1 mpu 0b lat 50.0ms linklayer ethernet 
 qdisc prio 2: dev eth1 parent 1: bands 3 priomap  1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1
 ```
+Nous n'utiliserons pas de marquage, ni de classification. Le marquage sera réalisé par l'application. Certains outils, comme `ping`, possède des options de marquage qui sont donc réalisés via l'API socket (i.e., `setsockopt(sockfd, IPPROTO_TCP, IP_TOS, ...)`) .
+
+Notre trafic `ping` simulera notre trafic Skype prioritaire. Suivant la documentation de `tc-prio` un marquage correspondant à nos attentes pourrait être `0x10`. Nous utiliserons la commande suivante : 
+```bash
+root@SRC:/# ping 10.0.0.1 -Q 0x10
+```
+Ce qui nous permettra d'observer l'évolution du délai du `ping` en fonction de l'application de cette valeur. Il est également possible de marquer une génration de trafic IPERF de la même façon. Vous trouverez ci-dessous la syntaxe de génération d'un flot UDP de 20KB/s qui pourrait représenter un trafic audio  :
+```bash
+root@SRC:/# iperf3 -c 10.0.0.1 -u -b20K -t 20 -S 0x10
+```
+
+Pour observer la mise en oeuvre du *priority queuing* : 
+
+1. depuis SRC générez un trafic TCP standard avec : `iperf3 -c 10.0.0.1 -i1 -t500`; 
+2. ensuite dans une autre console lancez un *ping* **sans marquage** conjointement avec ce trafic : `ping 10.0.0.1`
+3. observez l'évolution du délai du RTT; stoppez le ping et marquez le trafic avec `-Q 0x10`. Quelle est maintenant le RTT mesuré ? Expliquez pourquoi et vérifier la classification du trafic avec `tc class`;
+4. stoppez le ping et lancez la génération d'un trafic UDP sur un autre port avec `iperf3` sans (i.e.,  `iperf3 -c 10.0.0.1 -u -b20K -p10000 -t 20`), puis avec marquage en ajoutant `-S 0x10`;
+5. répondez aux mêmes questions que ci-dessus et reportez vos conclusions dans votre cahier de laboratoire.
 
 ### Fair Queuing
+
+Nous allons illustrer le principe de partage équitable avec l'ordonnanceur Stochastic Fair Queuing. Dérivé de WFQ que nous avons vu en cours, SFQ limite le nombre de file d'attente en agrègeant les flots grâce à un processus aléatoire. SFQ est une solution au problème de passage à l'échelle de WFQ. Réalisez l'expérimentation suivante :
+
+1. consultez la page de manuel de SFQ : `man tc-sfq` et lire uniquement la section ALGORITHM pour comprendre son fonctionnement;
+2. nous n'utiliserons pas de paramètre optionnel pour ce test, regardez simplement comment metttre en oeuvre SFQ dans la section EXAMPLE;
+3. de la même manière que pour le *priority queuing*, instancier un TBF avec les mêmes paramètres que précédemment. Ne rien ajouter d'autre pour l'instant;
+4. générez un trafic TCP de 5 flots en parallèle depuis  SRC pendant 30 secondes et notez les débits moyens finaux obtenus. Calculez la moyenne et l'écart-type pour ces 5 flots, répétez l'expérimentation une fois et refaite le calcul;
+5. attachez un SFQ au TBF précédemment configuré comme "fils";
+6. générez de nouveau un trafic TCP de 5 flots en parallèle depuis  SRC pendant 30 secondes et notez les débits moyens finaux obtenus. Calculez la moyenne et l'écart-type pour ces 5 flots, répétez l'expérimentation une fois et refaite le calcul;
+7. comparez vos résultats avec et sans SFQ. Qu'en concluez-vous, notez vos constatations dans votre cahier de laboratoire.
 
 ### Traffic Shaping
 
 Comme vu en cours, le TBF consiste en un tampon, ou seau, constamment rempli par des éléments virtuels appelés jetons à un débit spécifique. La taille du seau correspond au nombre de jetons pouvant être stockés. L'émission d'un paquet consomme un jeton qui est alors supprimé du seau. On observe trois cas de figure :
 
-* Les données arrivent dans le TBF avec un débit égal au débit de génération des jetons. Chaque paquet entrant consomme un jeton et sort de la file sans délai;
-* Les données arrivent dans le TBF avec un débit plus petit que le débit des jetons. Seule une partie des jetons est supprimée au moment où les paquets de données sortent de la file d'attente, de sorte que les jetons s'accumulent jusqu'à atteindre la taille du tampon. Les jetons libres peuvent être utilisés pour envoyer des données avec un débit supérieur au débit des jetons standard, si de courtes rafales de données arrivent;
-* Les données arrivent dans le TBF avec un débit plus grand que celui des jetons. Ceci signifie que le seau sera bientôt dépourvu de jetons, ce qui provoque l’arrêt du TBF pendant un moment : on est en situation de « dépassement de limite » (overlimit). Si les paquets continuent à arriver, ils commenceront à être éliminés.
+* les données arrivent dans le TBF avec un débit égal au débit de génération des jetons. Chaque paquet entrant consomme un jeton et sort de la file sans délai;
+* les données arrivent dans le TBF avec un débit plus petit que le débit des jetons. Seule une partie des jetons est supprimée au moment où les paquets de données sortent de la file d'attente, de sorte que les jetons s'accumulent jusqu'à atteindre la taille du tampon. Les jetons libres peuvent être utilisés pour envoyer des données avec un débit supérieur au débit des jetons standard, si de courtes rafales de données arrivent;
+* les données arrivent dans le TBF avec un débit plus grand que celui des jetons. Ceci signifie que le seau sera bientôt dépourvu de jetons, ce qui provoque l’arrêt du TBF pendant un moment : on est en situation de « dépassement de limite » (*overlimit* reporté dans les statistiques de la *qdisc*). Si les paquets continuent à arriver, ils commenceront à être éliminés.
 
 L'accumulation de jetons autorise l’émission de courtes rafales de données sans perte en situation de dépassement de limite. Cependant, toute surcharge prolongée entraînera systématiquement le retard des paquets, puis leur rejet.
 
-Les paramètres du TBF sont :
+Les paramètres importants du TBF sont :
 
-* limit ou latency : LIMIT est le nombre d’octets qui peu être mis en file d’attente en attendant la disponibilité de jetons. LATENCY spécifie le temps maximal pendant lequel un paquet peut rester dans TBF;
-* burst/buffer/maxburst : taille du seau en octets; 
-* mpu : l’unité minimale de paquet (Minimu Packet Unit) détermine le nombre minimal de jetons à utiliser pour un paquet ;
-* rate : paramètre de la vitesse ;
-* peakrate : débit crête, utilisé pour spécifier la vitesse à laquelle la seau est autorisé à se vider ;
-* mtu : Maximal Transfert Unit.
+* `limit` ou `latency` : LIMIT est le nombre d'octets qui peut être mis en file d’attente en attendant la disponibilité de jetons. LATENCY spécifie le temps maximal (c'est la même chose on change juste la métrique utilisée) pendant lequel un paquet peut rester dans TBF en attendant la disponibilité de jetons;
+* `burst` : taille du seau en octets (ne peut-être inférieur au MTU soit `1500b` ou `12Kbit`); 
+* `rate` : paramètre de la vitesse de génération des jetons;
+* `peakrate` : débit crête, utilisé pour spécifier la vitesse à laquelle la seau est autorisé à se vider. Nous n'utiliserons pas ce dernier paramètre dans nos expérimentations.
+
+Supposons que l'on génère un trafic avec un simple *ping* en faisant varier la taille et la fréquence d'émission de paquets ICMP et considérons négligeable la transmission du paquet (i.e., L/C=0), nous pouvons calculer le débit d'émission :
+
+* taille du paquet (`-s`) : 1500 octets, inter-espacement (`-i`) : 1 sec => 1500*8 = 12Kbit/s
+* taille du paquet (`-s`) : 1500 octets, inter-espacement (`-i`) : 0.1 sec => 1500*8/0.1 = 120Kbit/s (plus proche de 114Kbit/s)
+* taille du paquet (`-s`) : 1500 octets, inter-espacement (`-i`) : 0.01 sec => 1500*8/0.01 = 1.2Mbit/s (plus proche de 0.94Mbit/s)
+
+Expérimentons :
+
+1. paramétrez un TBF sur l'interface de sortie du routeur avec :`tc qdisc add dev eth1 root handle 1: tbf rate 1mbit burst 1500b limit 1500b`;
+2. lancez `tc -s qdisc show` pour obtenir les statistiques de la file. Réalisez un ping depuis SRC avec : `ping -s 1500 10.0.0.1` et consultez de nouveau `tc -s qdisc show` qu'observez-vous ? Quelle taille maximale devez-vous utiliser pour votre `ping` et pourquoi ?
+
+Le retour de `tc -s qdisc show` renvoit la limite sous forme de latence, celle affichée avec la configuration précédente est nulle (`lat 0us`).  En changeant la valeur de la limite avec `limit 5000b` par exemple, la valeur de la latence retournée par `tc -s qdisc show` passe à 28ms sur ma machine. Cette valeur se calcule par la multiplication du débit et du tampon soit soit 1Mbit * 5000B = 25ms, les 3ms de différence proviennent de la taille du *burst* qui lui est envoyé à la vitesse maximale de l'interface.
+
+Reparamètrez votre TBF avec le débit et la limite suivant : `tc qdisc add dev h1-eth0 root tbf rate 100kbit burst 1500b limit 5000b`. Quelles valeurs sont retournées par `tc -s qdisc show` lorsque vous faites un :
+
+1. `ping 10.0.0.2 -s1458`
+2. `ping 10.0.0.2 -s1458 -i 0.1`
+3. `ping 10.0.0.2 -s1458 -i 0.01`
+
+Il ne sera pas nécessaire de plonger plus en amont dans le fonctionnement de cette *qdisc* que vous utiliserez majoritairement pour limiter le trafic à un débit donné.
+
+#### Pour aller plus loin
+
+Pour ceux qui le souhaite et pour compléter le cours, voici trois schémas représentant l'action de l'ensemble des paramètres du TBF.
+
+Principe général ou R est soit le *peakrate* soit la capacité en sortie de l'interface :
+
+
+
+<img src="tbf.png" alt="Principe de base" style="zoom:50%;" />
+
+Courbe d'arrivée A(t) en fonction de l'ensemble des paramètres :
+
+<img src="tbfa.png" style="zoom:70%;" />
+
+Représentation des paquets hors-profil :
+
+<img src="tbfb.png" alt="Policing du trafic" style="zoom:70%;" />
+
+
+
+
+
+ 
