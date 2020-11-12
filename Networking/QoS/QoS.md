@@ -192,7 +192,7 @@ root@SRC:/# iperf3 -c 10.0.0.1 -u -b20K -t 20 -S 0x10
 
 Nous allons illustrer le principe de partage équitable avec l'ordonnanceur Stochastic Fair Queuing. Dérivé de WFQ que nous avons vu en cours, SFQ limite le nombre de file d'attente en agrégeant les flots grâce à un processus aléatoire. SFQ est une solution au problème de passage à l'échelle de WFQ. 
 
-<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 />Réalisez l'expérimentation suivante :
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> Réalisez l'expérimentation suivante :
 
 1. consultez la page de manuel de SFQ : `man tc-sfq` et lire uniquement la section ALGORITHM pour comprendre son fonctionnement;
 2. nous n'utiliserons pas de paramètre optionnel pour ce test, regardez simplement comment mettre en oeuvre SFQ dans la section EXAMPLE de cette page de manuel;
@@ -225,14 +225,14 @@ Supposons que l'on génère un trafic avec un simple *ping* en faisant varier la
 * taille du paquet (`-s`) : 1500 octets, inter-espacement (`-i`) : 0.1 sec => 1500 * 8/0.1 = 120Kbit/s;
 * taille du paquet (`-s`) : 1500 octets, inter-espacement (`-i`) : 0.01 sec => 1500 * 8/0.01 = 1.2Mbit/s (plus proche de 0.94Mbit/s).
 
-<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30/>Expérimentons avec un TBF :
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> Expérimentons avec un TBF :
 
 1. paramétrez un TBF sur l'interface de sortie du routeur avec :`tc qdisc add dev eth1 root handle 1: tbf rate 1mbit burst 1500b limit 1500b`;
 2. lancez `tc -s qdisc show` pour obtenir les statistiques de la file. Réalisez un ping depuis SRC avec : `ping -s 1500 10.0.0.1` et consultez de nouveau `tc -s qdisc show` qu'observez-vous ? Quelle taille maximale devez-vous utiliser pour que votre `ping` fonctionne et pourquoi ?
 
 Le retour de `tc -s qdisc show` renvoie la limite sous forme de latence, celle affichée avec la configuration précédente est nulle (`lat 0us`). En changeant la valeur de la limite avec `limit 5000b` par exemple, la valeur de la latence retournée par `tc -s qdisc show` passe à 28ms sur ma machine. Cette valeur se calcule par la multiplication du débit et du tampon soit soit 1Mbit * 5000B = 25ms, les 3ms de différence proviennent de la taille du *burst* qui lui est envoyé à la vitesse maximale de l'interface.
 
-<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 />Reparamétrez votre TBF avec le débit et la limite suivant : `tc qdisc add dev h1-eth0 root tbf rate 100kbit burst 1500b limit 5000b`. Quelles valeurs sont retournées par `tc -s qdisc show` lorsque vous faites un :
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> Reparamétrez votre TBF avec le débit et la limite suivant : `tc qdisc add dev h1-eth0 root tbf rate 100kbit burst 1500b limit 5000b`. Quelles valeurs sont retournées par `tc -s qdisc show` lorsque vous faites un :
 
 1. `ping 10.0.0.2 -s1458`
 2. `ping 10.0.0.2 -s1458 -i 0.1`
@@ -246,15 +246,15 @@ Pour ceux qui le souhaite et pour compléter le cours, voici trois schémas repr
 
 Principe général ou R est soit le *peakrate* soit la capacité en sortie de l'interface :
 
-<img src="tbf.png" alt="Principe de base" style="zoom:50%;" />
+<img src="tbf.png" alt="Principe de base" width=600 />
 
 Courbe d'arrivée A(t) en fonction de l'ensemble des paramètres :
 
-<img src="tbfa.png" style="zoom:70%;" />
+<img src="tbfa.png" width=600 />
 
 Représentation des paquets hors-profil :
 
-<img src="tbfb.png" alt="Policing du trafic" style="zoom:70%;" />
+<img src="tbfb.png" alt="Policing du trafic" width=600 />
 
 ## Discipline de partage de lien le Class Based Queuing 
 
@@ -268,11 +268,11 @@ Le CBQ est une architecture de partage de lien tout en restant une variation de 
 
 Le but du *link sharing* est la classification de ces différents types de trafic afin d'opérer à un partage de la bande passante entre ces trafics comme illustré par la figure suivante :
 
-<img src="lsa.png" alt="Partage de lien entre plusieurs classes de services." style="zoom:70%;" />
+<img src="lsa.png" alt="Partage de lien entre plusieurs classes de services." width=400 />
 
 Le partage peut également être hiérarchisé, entre diverses organisations par exemple, comme le montre la figure ci-dessous :
 
-<img src="lsb.png" alt="Partage hiérarchisé d'un lien." style="zoom:70%;" />
+<img src="lsb.png" alt="Partage hiérarchisé d'un lien." width=400 />
 
 Une part de la bande passante est donc attribuée à chaque niveau. La gestion des files met en oeuvre les différentes variantes de gestion des listes de processus : priorité, temps partagé. En fait, pour les cas extrêmes il est utile de pouvoir considérer qu'un certain type de trafic peut-être éliminé. Les mécanismes de partage dans CBQ ne tentent pas de fournir un contrôle de congestion au niveau des feuilles de l'arbre (correspondant à une classe de trafic); ces mécanismes étant à implémenter par l'ordonnanceur général à l'entrée du réseau. La classification des trafics se fait selon différents critères : champs TOS, adresses IP source et/ou émetteurs, numéros de ports UDP ou TCP qui permettent d'identifier les flux. On distingue les applications à trafic temps réel ou les applications du type messagerie au trafic moins urgent. Ces modes de gestion sont plus ou moins extensibles à des réseaux importants. Le trafic est géré par une étiquette de TOS pour les datagrammes qui circulent de façon indépendante.
 
@@ -310,7 +310,7 @@ Comme déjà souligné précédemment, un lien doit pouvoir en cas de congestion
 
 Pour réaliser cette réparation je dois donc créer, comme il l'est montré sur le schéma suivant, deux disciplines CBQ et quatre classes. 
 
-![](cbqc.png)
+<img src="cbqc.png" alt="Partage hiérarchisé d'un lien." width=300 />
 
 Supposons que pour les deux classes TCP et UDP le trafic respectif des deux protocoles soit 20% et 60%. Si j'utilise le mot clé `bounded` au niveau d'UDP, celui-ci n'ira pas chercher la capacité non utilisée par TCP et CBQ limitera son débit de 60% à 50%. Dans le cas où je n'ai pas utilisé `bounded` sur UDP, celui ci pourra plafonner à 60% à condition que TCP n'augmente pas son trafic. En effet, si celui-ci passe à 50%, cela nous positionnerait dans un cas de congestion et dans ce cas, CBQ partagerait équitablement le lien en 50/50.
 
@@ -360,7 +360,7 @@ tc filter add dev $DEV parent 1:0 protocol ip prio 1 u32 match ip dport 5003 0xf
 
 Les filtres sont très facilement paramétrables, il est par exemple possible de s'intéresser à l'adresse IP destination avec `match ip dst A.B.C.D` ou le protocole avec `match ip protocol 17 0xff` pour UDP.
 
-<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30/>A la lecture et analyse de ce script :
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> A la lecture et analyse de ce script :
 1. quelles sont les règles qui permettent de filtrer le trafic ?
 1. tester le en générant du trafic TCP dans chacune des classes, tout d'abord dans la classe 1, puis 10 secondes après la classe 2, puis encore 10 secondes après la classe 3. Observez l'isolation obtenue, quels débit obtenez-vous dans chaque classe ? 
 1. modifiez le comportement des classes en ajoutant/supprimant les mots clés `bounded` et `isolated` afin d'en analyser leur impact;
