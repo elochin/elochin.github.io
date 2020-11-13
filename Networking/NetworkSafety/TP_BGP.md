@@ -1,3 +1,9 @@
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Cc-by-nc-sa_icon.svg/1920px-Cc-by-nc-sa_icon.svg.png" width=100/>
+
+Ce document est sous licence Creative Creative Commons <br>
+Attribution - Pas d’Utilisation Commerciale - Partage dans les Mêmes Conditions 3.0 France <br>
+Merci de prendre connaissance de vos droits ici : [CC BY-NC-SA 3.0 FR](https://creativecommons.org/licenses/by-nc-sa/3.0/fr/)
+
 # Objectifs du TP
 1. Comprendre le fonctionnement de BGP
 2. Comprendre une configuration simple de BGP pour un AS de transit
