@@ -176,7 +176,7 @@ Que remarquez-vous concernant le débit du ping ? Comment expliquez-vous cette v
 
 ## TCP et l'équité
 
-Ajouter deux machines PC2 en `10.0.0.2/24` et PC3 en `10.1.1.2/24` et ajoutez les routes par défaut correspondantes. Ouvrez une console sur R1 et tapez la commande suivante : `tc qdisc add dev eth1 root netem rate 10M delay 10ms limit 10`. N'oubliez pas si vous n'avez pas supprimer la précédente configurations avec `tc qdisc del dev eth1 root`, vous devez utiliser `tc qdisc change ...`.
+Ajouter deux machines PC2 en `10.0.0.2/24` et PC3 en `10.1.1.2/24` et ajoutez les routes par défaut correspondantes. Ouvrez une console sur R1 et tapez la commande suivante : `tc qdisc add dev eth1 root netem rate 10M delay 10ms limit 10`. N'oubliez pas : si vous n'avez pas supprimé la précédente configuration avec `tc qdisc del dev eth1 root`, vous devez utiliser `tc qdisc change ...`.
 
 Nous allons illustrer le principe de partage équitable de la capacité d'un lien partagé par deux flots TCP. Voici les commandes à lancer :
 
