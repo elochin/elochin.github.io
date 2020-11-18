@@ -43,7 +43,8 @@ Comme vous pouvez le constater, l'évolution est bien différente et se compose 
 ### Exercice
 
 Toujours en utilisant votre topologie de tests avec une limitation du débit au niveau de R1 (i.e. `tc qdisc add dev eth1 root netem rate 10mbit delay 10ms limit 10`), générez un trafic TCP/Newreno (un trafic CUBIC) avec la commande suivante depuis PC0 vers PC1 : `iperf3 -J --logfile reno.json -c 10.1.1.1 -t 60 -C reno` (et `--logfile cubic.json -C cubic` pour CUBIC). 
-Analysez les fenêtres grâce au script [cwnd.awk](cwnd.awk).
+Analysez les fenêtres grâce au script [cwnd.awk](cwnd.awk) en lançant la commande suivante `awk -f cwnd.awk reno.json | tee data.txt` pour TCP Newreno par exemple. Tracez ensuite l'évolution de la fenêtre TCP grâce au script gnuplot [graph.gp](graph.gp) en lançant la commande `gnuplot graph.gp`.
+
 Créez un tracé de la taille de la fenêtre de congestion et du seuil de démarrage lent pour chaque flux TCP pendant la durée de l'expérience. Annotez votre graphique pour montrer:
 
 * les périodes de "démarrage lent";
