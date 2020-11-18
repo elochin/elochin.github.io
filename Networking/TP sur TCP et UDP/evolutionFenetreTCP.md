@@ -1,3 +1,9 @@
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Cc-by-nc-sa_icon.svg/1920px-Cc-by-nc-sa_icon.svg.png" width=100/>
+
+Ce document est sous licence Creative Creative Commons <br>
+Attribution - Pas d’Utilisation Commerciale - Partage dans les Mêmes Conditions 3.0 France <br>
+Merci de prendre connaissance de vos droits ici : [CC BY-NC-SA 3.0 FR](https://creativecommons.org/licenses/by-nc-sa/3.0/fr/)
+
 # Evolution de la fenêtre TCP - CUBIC vs NewReno
 
 L'objectif de cette expérience est d'illustrer le comportement de base du contrôle de congestion TCP. Vous pourrez observer le modèle classique dit en "dents de scie" (*sawtooth behavior*) de la fenêtre de congestion d'un flux TCP et comment un flux TCP répond aux indications de congestion.
@@ -36,7 +42,7 @@ Comme vous pouvez le constater, l'évolution est bien différente et se compose 
 
 ### Exercice
 
-Toujours en utilisant votre topologie de tests avec une limitation du débit au niveau de R1 (i.e. `tc qdisc add dev eth1 root netem rate 10M delay 10ms limit 10`), générez un trafic TCP/Newreno (un trafic CUBIC) avec la commande suivante depuis PC0 vers PC1 : `iperf3 -J reno.json -c 10.1.1.1 -t 60 -C reno` (et `-J cubic.json -C cubic` pour CUBIC). 
+Toujours en utilisant votre topologie de tests avec une limitation du débit au niveau de R1 (i.e. `tc qdisc add dev eth1 root netem rate 10mbit delay 10ms limit 10`), générez un trafic TCP/Newreno (un trafic CUBIC) avec la commande suivante depuis PC0 vers PC1 : `iperf3 -J --logfile reno.json -c 10.1.1.1 -t 60 -C reno` (et `--logfile cubic.json -C cubic` pour CUBIC). 
 Analysez les fenêtres grâce au script [cwnd.awk](cwnd.awk).
 Créez un tracé de la taille de la fenêtre de congestion et du seuil de démarrage lent pour chaque flux TCP pendant la durée de l'expérience. Annotez votre graphique pour montrer:
 

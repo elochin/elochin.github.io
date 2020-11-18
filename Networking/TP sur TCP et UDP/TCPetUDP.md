@@ -1,3 +1,9 @@
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Cc-by-nc-sa_icon.svg/1920px-Cc-by-nc-sa_icon.svg.png" width=100/>
+
+Ce document est sous licence Creative Creative Commons <br>
+Attribution - Pas d’Utilisation Commerciale - Partage dans les Mêmes Conditions 3.0 France <br>
+Merci de prendre connaissance de vos droits ici : [CC BY-NC-SA 3.0 FR](https://creativecommons.org/licenses/by-nc-sa/3.0/fr/)
+
 ## Déroulement du TP
 
 Ce TP a pour objectif de vous illustrer certaines propriétés de la couche transport vues en cours ainsi que d'illustrer le comportement et la performance des protocoles TCP et UDP. Nous travaillerons avec un **cahier de laboratoire** qui consiste en un fichier de collecte des résultats de vos expérimentations et qui contiendra vos notes et vos éventuelles captures d'écrans. Vous pouvez choisir l'éditeur de votre choix (LibreOffice, Word, Latex, ...) pour réaliser ce cahier qui devra être soumis au format PDF. 
@@ -170,7 +176,7 @@ Que remarquez-vous concernant le débit du ping ? Comment expliquez-vous cette v
 
 ## TCP et l'équité
 
-Ajouter deux machines PC2 en `10.0.0.2/24` et PC3 en `10.1.1.2/24` et ajoutez les routes par défaut correspondantes. Ouvrez une console sur R1 et tapez la commande suivante : `tc qdisc add dev eth1 root netem rate 10M delay 10ms limit 10`. N'oubliez pas si vous n'avez pas supprimer la précédente configurations avec `tc qdisc del dev eth1 root`, vous devez utiliser `tc qdisc change ...`.
+Ajouter deux machines PC2 en `10.0.0.2/24` et PC3 en `10.1.1.2/24` et ajoutez les routes par défaut correspondantes. Ouvrez une console sur R1 et tapez la commande suivante : `tc qdisc add dev eth1 root netem rate 10M delay 10ms limit 10`. N'oubliez pas : si vous n'avez pas supprimé la précédente configuration avec `tc qdisc del dev eth1 root`, vous devez utiliser `tc qdisc change ...`.
 
 Nous allons illustrer le principe de partage équitable de la capacité d'un lien partagé par deux flots TCP. Voici les commandes à lancer :
 
