@@ -19,8 +19,8 @@ Dans la suite, lorsqu'il sera question de :
 Nous utiliserons la topologie de test suivante disponible [*ici*](qos.pnet).
 ```bash
 SRC ------------------------------ RTR ------------------------------ DST
-eth0:192.168.1.1/24               eth0: 10.0.0.254/8                  eth0:10.0.0.1/8
-								  eth1: 192.168.1.254/24
+eth0:192.168.1.1/24               eth1: 10.0.0.254/8                  eth0:10.0.0.1/8
+								  eth0: 192.168.1.254/24
 ```
 
 
@@ -238,7 +238,7 @@ Supposons que l'on génère un trafic avec un simple *ping* en faisant varier la
 
 Le retour de `tc -s qdisc show` renvoie la limite sous forme de latence, celle affichée avec la configuration précédente est nulle (`lat 0us`). En changeant la valeur de la limite avec `limit 5000b` par exemple, la valeur de la latence retournée par `tc -s qdisc show` passe à 28ms sur ma machine. Cette valeur se calcule par la multiplication du débit et du tampon soit soit 1Mbit * 5000B = 25ms, les 3ms de différence proviennent de la taille du *burst* qui lui est envoyé à la vitesse maximale de l'interface.
 
-<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> Reparamétrez votre TBF avec le débit et la limite suivant : `tc qdisc add dev h1-eth0 root tbf rate 100kbit burst 1500b limit 5000b`. Quelles valeurs sont retournées par `tc -s qdisc show` lorsque vous faites un :
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> Reparamétrez votre TBF avec le débit et la limite suivant : `tc qdisc add dev eth1 root tbf rate 100kbit burst 1500b limit 5000b`. Quelles valeurs sont retournées par `tc -s qdisc show` lorsque vous faites un :
 
 1. `ping 10.0.0.2 -s1458`
 2. `ping 10.0.0.2 -s1458 -i 0.1`
