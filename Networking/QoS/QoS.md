@@ -203,7 +203,7 @@ Nous allons illustrer le principe de partage équitable avec l'ordonnanceur Stoc
 1. consultez la page de manuel de SFQ : `man tc-sfq` et lire uniquement la section ALGORITHM pour comprendre son fonctionnement;
 2. nous n'utiliserons pas de paramètre optionnel pour ce test, regardez simplement comment mettre en oeuvre SFQ dans la section EXAMPLE de cette page de manuel;
 3. de la même manière que pour le *priority queuing*, configurez un TBF avec les mêmes paramètres que précédemment. Ne rien ajouter d'autre pour l'instant;
-4. générez un trafic TCP de 5 flots en parallèle depuis SRC pendant 30 secondes et notez les débits moyens finaux obtenus. Calculez la moyenne et l'écart-type pour ces 5 flots, répétez l'expérimentation une fois et refaite le calcul;
+4. générez un trafic TCP de en parallèle (option `-P` de `iperf3`) depuis SRC pendant 30 secondes et notez les débits moyens finaux obtenus. Calculez la moyenne et l'écart-type pour ces 5 flots, répétez l'expérimentation une fois et refaite le calcul;
 5. attachez un SFQ au TBF précédemment configuré comme "fils" du TBF;
 6. générez de nouveau un trafic TCP de 5 flots en parallèle depuis SRC pendant 30 secondes et notez les débits moyens finaux obtenus. Calculez la moyenne et l'écart-type pour ces 5 flots, répétez l'expérimentation une fois et refaite le calcul;
 7. comparez vos résultats avec et sans SFQ. Qu'en concluez-vous, notez vos constatations dans votre cahier de laboratoire.
