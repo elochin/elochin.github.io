@@ -240,9 +240,9 @@ Le retour de `tc -s qdisc show` renvoie la limite sous forme de latence, celle a
 
 <img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> Reparamétrez votre TBF avec le débit et la limite suivant : `tc qdisc add dev eth1 root tbf rate 100kbit burst 1500b limit 5000b`. Quelles valeurs sont retournées par `tc -s qdisc show` lorsque vous faites un :
 
-1. `ping 10.0.0.2 -s1458`
-2. `ping 10.0.0.2 -s1458 -i 0.1`
-3. `ping 10.0.0.2 -s1458 -i 0.01`
+1. `ping 10.0.0.1 -s1458`
+2. `ping 10.0.0.1 -s1458 -i 0.1`
+3. `ping 10.0.0.1 -s1458 -i 0.01`
 
 Il ne sera pas nécessaire de plonger plus en amont dans le fonctionnement de cette *qdisc* que vous utiliserez majoritairement pour limiter le trafic à un débit donné.
 
