@@ -10,7 +10,7 @@ L'objectif de cette expérience est d'illustrer le comportement de base du contr
 
 La figure ci-dessous présente une évaluation classique d'une fenêtre de congestion de la version NewReno de TCP qui est la version historique la plus usitée :
 
-<center><img src="https://www.researchgate.net/profile/Ali_Talpur/publication/313851520/figure/fig1/AS:463860089004032@1487604271851/A-typical-TCP-sawtooth-behaviour_W640.jpg" width="600"></img></center>
+<center><img src="https://camo.githubusercontent.com/eea2c507b4d1931880d2e94a491a9f76123ad3cac47b2a5311d6e6a948e49066/68747470733a2f2f7777772e7265736561726368676174652e6e65742f70726f66696c652f416c695f54616c7075722f7075626c69636174696f6e2f3331333835313532302f6669677572652f666967312f41533a34363338363030383930303430333240313438373630343237313835312f412d7479706963616c2d5443502d736177746f6f74682d6265686176696f75725f573634302e6a7067" width="600"></img></center>
 
 La figure qui suit présente une version commentée des phases de cette évolution.
 Le seuil de démarrage lent (*ssthresh*) est représenté par une ligne en pointillés.
