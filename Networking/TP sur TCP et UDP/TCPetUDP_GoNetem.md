@@ -17,7 +17,7 @@ Dans la suite, lorsqu'il sera question de :
 
 Nous allons illustrer le concept de mode (ou service) connecté et non-connecté au travers d'une expérimentation très simple avec GoNetem.
 
-Pour cela, vous allez utiliser la topologie de test suivante (téléchargez fichier [*TP_UDP_TCP.gnet*](TP_UDP_TCP.gnet) pour cela) et configurez correctement les routes des deux PC afin qu'ils puissent mutuellement s'atteindre :
+Pour cela, vous allez utiliser la topologie de test suivante (téléchargez fichier [TP_UDP_TCP.gnet](TP_UDP_TCP.gnet) pour cela) et configurez correctement les routes des deux PC afin qu'ils puissent mutuellement s'atteindre :
 ```bash
 PC1 ------------------------------ R1 ------------------------------ PC2
 eth0:10.0.0.1/24                  eth0: 10.0.0.254/24                eth0:10.1.1.1/24
@@ -40,7 +40,7 @@ Dans cette première partie nous allons utiliser un programme très simple **tso
 
 **tsock** est ce que l'on appelle communément une application client/serveur de génération de trafic. Auparavant, vous avez déjà utilisé un client avec la commande `telnet` ou `ssh`. Le serveur, quant à lui, n'était pas sous votre contrôle. Ici, vous contrôlez les deux parties. Pour générer ce trafic, nous allons utiliser tour à tour les deux protocoles de transport que vous avez vu en cours : UDP et TCP. Votre objectif est de déterminer (ou d'illustrer si vous connaissez déjà la réponse) lequel travaille en mode connecté et lequel travaille en mode non connecté. Il vous faudra donc lancer dans chacun des terminaux uniquement un client en TCP puis en UDP et observer lequel émet du trafic sans que le serveur soit lancé. Faire de même avec un serveur UDP et TCP, croiser les protocoles et expérimenter les combinaisons possibles afin de bien comprendre ce qui se passe.
 
-Téléchargez l'application **tsock** dans votre terminal maître en suivant ce [*lien*](https://github.com/elochin/elochin.github.io/raw/master/Networking/Service%20(mode)%20connect%C3%A9%20et%20non%20connect%C3%A9/tsock). Puis copiez ce programme sur PC1 et PC2. Pour cela depuis la console (en supposant que vous avez téléchargé **tsock**  dans le répertoire Téléchargements par défaut) :
+Téléchargez l'application **tsock** dans votre terminal maître en suivant ce [*lien*](https://github.com/elochin/elochin.github.io/blob/master/Networking/Service%20(mode)%20connect%C3%A9%20et%20non%20connect%C3%A9/tsock). Puis copiez ce programme sur PC1 et PC2. Pour cela depuis la console (en supposant que vous avez téléchargé **tsock**  dans le répertoire Téléchargements par défaut) :
 ```
 [TP_UDP_TCP]> copy /home/eleve/Téléchargements/tsock PC1:/root/tsock
 ```
