@@ -15,7 +15,7 @@ Dans la suite, lorsqu'il sera question de :
 
 ## Mise en place du banc de test pour le TP
 
-Nous utiliserons la même topologie que pour le TP sur UDP et TCP. Vous pouvez retélécharger le fichier [TP_UDP_TCP.gnet](TP_UDP_TCP.gnet) pour cela. Une fois téléchargé, renommez-le en `NAT.gnet`, lancez `gonetem-console` et configurez correctement les routes des deux PC afin qu'ils puissent mutuellement s'atteindre en suivant la configuration donnée ci-dessous :
+Nous utiliserons la même topologie que pour le TP sur UDP et TCP. Vous pouvez retélécharger le fichier [TP_UDP_TCP.gnet](https://github.com/elochin/elochin.github.io/blob/master/Networking/TP%20sur%20TCP%20et%20UDP/TP_UDP_TCP.gnet) pour cela. Une fois téléchargé, renommez-le en `NAT.gnet`, lancez `gonetem-console` et configurez correctement les routes des deux PC afin qu'ils puissent mutuellement s'atteindre en suivant la configuration donnée ci-dessous :
 ```bash
 PC1 ------------------------------ R1 ------------------------------ PC2
 eth0:192.168.1.1/24               eth0: 192.168.1.254/24             eth0:193.50.45.1/24
