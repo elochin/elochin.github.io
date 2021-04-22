@@ -102,4 +102,4 @@ Il peut-être intéressant de donner l'accès depuis l'exterieur à un service s
 
 1. Passez la commande suivant sur le NAT : `iptables -t nat -A PREROUTING -p tcp --dport 5201 -j DNAT --to 192.168.1.1:5201`. Consultez la page de manuel `iptables` pour l'explication des champs utilisés;
 2. De façon similaire à la précédente configuration, il nous faut autoriser l'accès dans la chaîne `FORWARD` avec : `iptables -A FORWARD -p tcp --dport 5201 -d 192.168.1.1 -j ACCEPT`;
-3. Lancez un serveur `iperf3 -s` sur PC1 puis un client depuis PC2 avec pour paramètres : `iperf3 -c 193.50.45.254`. Faites une capture depuis PC2 et PC1 afin d'observez la mise en oeuvre de la translation.
+3. Lancez un serveur `iperf3 -s` sur PC1 puis un client depuis PC2 avec pour paramètres : `iperf3 -c 193.50.45.254`. Faites une capture depuis PC2 et PC1 afin d'observer la mise en oeuvre de la translation.
