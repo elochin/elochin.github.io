@@ -126,7 +126,7 @@ Enfin depuis PC1, lancez un client en tapant `tsock -c 10.1.1.1 10000`. En vous 
 1. Identifiez la procédure d'établissement de connexion TCP autrement appelée *three-way handshake*. Reproduisez cette phase avec les *flags* TCP correspondants sur votre cahier de laboratoire;
 1. Identifiez la procédure de fermeture de connexion TCP. Reproduisez cette phase avec les *flags* correspondants sur votre cahier de laboratoire. Pourquoi observez-vous deux *flags* FIN ?
 1. Lancez uniquement le client sans lancer le serveur, qu'observez-vous durant la capture ? Quelles sont les *flags* activés ?
-1. Lancez maintenant un serveur UDP sur PC1 en ajoutant l'option `-u` comme suit `tsock -s 10000 -u`. Faire de même côté client avec PC1 : `tsock -c 10.1.1.1 10000 -u`. Quelles différences observez-vous avec TCP ?
+1. Lancez maintenant un serveur UDP sur PC1 en ajoutant l'option `-u` comme suit `tsock -s 10000 -u`. Faire de même côté client avec PC0 : `tsock -c 10.1.1.1 10000 -u`. Quelles différences observez-vous avec TCP ?
 1. Arrêtez le serveur UDP avec un [CTRL C], contrairement à TCP, celui-ci reste actif à la fin de la génération du trafic. Relancez le client UDP, qu'obtenez-vous sur la capture ? A quoi correspondent les messages ICMP qui apparaissent dans ce contexte ?
 
 N'oubliez pas de compléter votre cahier de laboratoire avec le résultat de chacune de vos expérimentations.
