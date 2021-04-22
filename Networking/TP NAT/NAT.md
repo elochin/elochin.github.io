@@ -36,7 +36,7 @@ Faites un `save` depuis la console GoNetem sinon vos configurations IP seront pe
 
 **De manière générale : n'oubliez jamais de faire un `save` dans la console GoNetem pour sauvegarder toutes vos modifications.**
 
-## Mise en oeuvre d'un NAT
+## Mise en oeuvre d'un SNAT
 
 La commande permettant de mettre en oeuvre un NAT est la même que celle que vous utiliserez plus tard pour mettre en place un pare-feu sous Linux : `iptables`. Comme vu en cours
 
@@ -84,7 +84,7 @@ Comme présenté en cours les `Chains` définissent le cadre d'application des r
 2. Utilisez la commande suivante : `iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE` sur le routeur NAT afin de translater les adresses du réseau privé avec celle de l'interface de sortie `eth1`. Refaites le ping ci-dessus et la capture. Quels changements observez-vous dans les champs du paquet IP du ping ? 
 3. La commande ci-dessus permet de masquer le réseau privé et activer un NAT. Comme expliqué plus haut dans ce TP, celle-ci est un équivalent de SNAT. En effet, il est également possible de spécifier l'adresse de translation dans le cas où l'interface externe possèderait plusieurs IPs. Une commande équivalente serait : `iptables -t nat -A POSTROUTING -o eth1 -j SNAT --to 193.50.45.254`. Testez cette commande, pour cela, il vous faut tout d'abord supprimer la règle précédente. Deux choix s'offrent à vous : soit la répéter à l'identique en changeant `-A` par `-D` : `iptables -t nat -D POSTROUTING -o eth1 -j MASQUERADE`; soit la supprimer avec le numéro de la règle que vous pouvez connaître en tapant : `iptables -t nat -L --line-number`, puis `iptables -t nat -D POSTROUTING <num>`. Vu qu'il n'y a qu'une seule règle la commande sera : `iptables -t nat -D POSTROUTING 1`. 
 
-## Intéraction avec le pare-feu
+## Interaction avec le pare-feu
 
 Nous avons une simple translation d'adresse opérationnelle. Mais le fonctionnement n'est pas satisfaisant. En effet, bien que masqué, le réseau privé est toujours accessible (vous pouvez le vérifier avec un `ping 192.168.1.1` depuis PC2). Nous allons donc utiliser quelques règles de filtrages inhérentes au pare-feu afin de parfaire notre configuration. Pour cela, nous allons interdire l'accès de l'extérieur vers l'intérieur.
 
@@ -100,8 +100,8 @@ Nous avons une simple translation d'adresse opérationnelle. Mais le fonctionnem
 
 Il peut-être intéressant de donner l'accès depuis l'exterieur à un service se trouvant à l'intérieur du réseau privé. Dans ce cas, nous avons besoin de mettre en oeuvre un DNAT. Pour illustrer le fonctionnement d'un DNAT, nous allons donner l'accès depuis l'exterieur à un serveur `iperf3` tournant sur le réseau privé. Pour cela, nous allons autoriser la translation du port `5201` (port d'écoute par défaut de `iperf3`) depuis l'interface externe `193.45.50.254` du routeur NAT vers PC1 sur lequel le serveur `iperf3` sera lancé.
 
-<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 />Accès à un serveur iperf via DNAT :
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> Accès à un serveur iperf via DNAT :
 
-1. Passez la commande suivant sur le NAT : `iptables -t nat -A PREROUTING -p tcp -dport 5201 -j DNAT --to 192.168.1.1:5201`. Consultez la page de manuel `iptables` pour l'explication des champs;
+1. Passez la commande suivant sur le NAT : `iptables -t nat -A PREROUTING -p tcp --dport 5201 -j DNAT --to 192.168.1.1:5201`. Consultez la page de manuel `iptables` pour l'explication des champs;
 2. De façon similaire, il nous faut autoriser l'accès dans la chaîne `FORWARD` avec : `iptables -A FORWARD -p tcp --dport 5201 -d 192.168.1.1 -j ACCEPT`;
 3. Lancez un serveur `iperf3 -s` sur PC1 puis un client depuis PC2 avec pour paramètres : `iperf3 -c 193.50.45.254`. Faites une capture depuis PC2 et PC1 afin d'observez la mise en oeuvre de la translation.
