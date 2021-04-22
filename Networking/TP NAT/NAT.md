@@ -78,7 +78,7 @@ target     prot opt source               destination
 
 Comme présenté en cours les `Chains` définissent le cadre d'application des règles : `INPUT, OUTPUT, FORWARD, PRE/POSTROUTING` qui peuvent comporter plusieurs règles listées alors sous `target` et une politique par défaut (`policy`) ici `ACCEPT`.
 
-<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 />Ajoutons la règles permettant de faire de la translation d'adresse :
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> Ajoutons la règles permettant de faire de la translation d'adresse :
 
 1. Faites un ping de PC1 vers P2 et lancez une capture de trafic sur PC2 pour observer les IPs source et destination du ping. Observez que l'en-tête est constitué de l'adresse de PC1 en source et de PC2 en destination;
 2. Utilisez la commande suivante : `iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE` sur le routeur NAT afin de translater les adresses du réseau privé avec celle de l'interface de sortie `eth1`. Refaites le ping ci-dessus et la capture. Quels changements observez-vous dans les champs du paquet IP du ping ? 
@@ -88,7 +88,7 @@ Comme présenté en cours les `Chains` définissent le cadre d'application des r
 
 Nous avons une simple translation d'adresse opérationnelle. Mais le fonctionnement n'est pas satisfaisant. En effet, bien que masqué, le réseau privé est toujours accessible (vous pouvez le vérifier avec un `ping 192.168.1.1` depuis PC2). Nous allons donc utiliser quelques règles de filtrages inhérentes au pare-feu afin de parfaire notre configuration. Pour cela, nous allons interdire l'accès de l'extérieur vers l'intérieur.
 
-<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 />Ajoutons quelques règles de filtrage :
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> Ajoutons quelques règles de filtrage :
 
 1. Généralement lors de la mise en place d'un pare-feu, il est préférable de tout interdire et d'ouvrir ensuite ce qui doit l'être. Pour cela nous allons changer la politique par défaut qui est en `ACCEPT` en `DROP` sur la chaîne `FORWARD` qui gère le routage entre les interfaces : `iptables -P FORWARD DROP`. Vérifiez l'application de cette règle avec `iptables -L` puis faites un ping de PC1 vers PC2, puis de PC1 vers sa passerelle et de PC2 vers PC1 puis de PC2 vers sa passerelle, qu'observez-vous ? Changez maintenant la politique par défaut de la chaîne `INPUT` de la même manière et refaites les 4 pings, qu'observez-vous ? Qu'en déduisez-vous sur l'utilisation des chaînes `INPUT` et `FORWARD` ?
 
