@@ -19,7 +19,7 @@ Nous utiliserons la même topologie que pour le TP sur UDP et TCP. Vous pouvez r
 ```bash
 PC1 ------------------------------ R1 ------------------------------ PC2
 eth0:192.168.1.1/24               eth0: 192.168.1.254/24             eth0:193.50.45.1/24
-								  eth1: 193.50.45.254/24
+				  eth1: 193.50.45.254/24
 ```
 ### Rappels sur GoNetem ! 
 
@@ -92,7 +92,7 @@ Nous avons une simple translation d'adresse opérationnelle. Mais le fonctionnem
 
 1. Généralement lors de la mise en place d'un pare-feu, il est préférable de tout interdire et d'ouvrir ensuite ce qui doit l'être. Pour cela nous allons changer la politique par défaut qui est en `ACCEPT` en `DROP` sur la chaîne `FORWARD` qui gère le routage entre les interfaces : `iptables -P FORWARD DROP`. Vérifiez l'application de cette règle avec `iptables -L` puis faites un ping de PC1 vers PC2, puis de PC1 vers sa passerelle et de PC2 vers PC1 puis de PC2 vers sa passerelle, qu'observez-vous ? Changez maintenant la politique par défaut de la chaîne `INPUT` de la même manière et refaites les 4 pings, qu'observez-vous ? Qu'en déduisez-vous sur l'utilisation des chaînes `INPUT` et `FORWARD` ?
 
-2. Notre NAT est maintenant bloqué : il nous faut autoriser la sortie du réseau privé vers l'extérieur.  Pour cela il suffit d'ajouter la règle suivante :  `iptables -A FORWARD -s 192.168.1.0/24 -j ACCEPT` qui autorise le routage des paquets sources (`-s`) provenant du réseau privé; puis autoriser la rentrée des réponses par : `iptables -A FORWARD -m state -- state ESTABLISHED, RELATED -j ACCEPT`, qui permet de spécifier que si une connexion a été établie (`ESTABLISHED`) ou est liée à une entrée de la table du NAT (`RELATED`), celle-ci est autorisée à rentrée. Refaites un ping de PC1 vers PC2 pour vérifier que tout fonctionne.
+2. Notre NAT est maintenant bloqué : il nous faut autoriser la sortie du réseau privé vers l'extérieur.  Pour cela il suffit d'ajouter la règle suivante :  `iptables -A FORWARD -s 192.168.1.0/24 -j ACCEPT` qui autorise le routage des paquets sources (`-s`) provenant du réseau privé; puis autoriser la rentrée des réponses par : `iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT`, qui permet de spécifier que si une connexion a été établie (`ESTABLISHED`) ou est liée à une entrée de la table du NAT (`RELATED`), celle-ci est autorisée à rentrée. Refaites un ping de PC1 vers PC2 pour vérifier que tout fonctionne.
 
    Nous ne rentrerons pas dans les détails des fonctionnalités de filtrage qui seront abordées plus tard dans votre cours de sécurité. Cependant n'hésitez pas à consulter la page de manuel `iptables` pour en apprécier toutes les possibilités.
 
