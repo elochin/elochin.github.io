@@ -38,9 +38,7 @@ Faites un `save` depuis la console GoNetem sinon vos configurations IP seront pe
 
 ## Mise en oeuvre d'un SNAT
 
-La commande permettant de mettre en oeuvre un NAT est la même que celle que vous utiliserez plus tard pour mettre en place un pare-feu sous Linux : `iptables`. Comme vu en cours
-
-Le noyau Linux propose deux types de NAT : le NAT source (SNAT) et le NAT destination (DNAT).
+La commande permettant de mettre en oeuvre un NAT est la même que celle que vous utiliserez plus tard pour mettre en place un pare-feu sous Linux : `iptables`. Comme vu en cours, le noyau Linux propose deux types de NAT : le NAT source (SNAT) et le NAT destination (DNAT).
 
 Le NAT source modifie l'adresse source des paquets. En d'autres termes vous changez la provenance la connexion. Il est toujours effectué après le routage (i.e. politique `POSTROUTING`), juste avant que le paquet ne soit envoyé. Le masquage (i.e. `MASQUERADE`) est une forme spécialisée de SNAT très utile lorsque votre adresse externe change dynamiquement. Dans le cas du SNAT il n'est pas nécessaire de spécifier l'adresse IP qui sera utilisé pour la translation.
 
