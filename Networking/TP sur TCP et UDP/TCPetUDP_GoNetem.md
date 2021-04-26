@@ -171,7 +171,7 @@ Rappel : n'oubliez pas de faire un `save` dans la console GoNetem pour sauvegard
 
 Lisez la section suivante du manuel de GoNetem pour voir comment procéder [GoNetem Full Example](https://gonetem.readthedocs.io/en/latest/topology.html#full-example). Le fichier de la topologie est modifiable en tapant `edit` dans la console. L'éditeur utilisé est `vim` donc taper `i` pour passer en mode insertion puis `[ESC]:wq` pour quitter et sauvegarder vos modifications.
 
-Suite à l'ajout des deux switches, Ajoutez deux machines PC3 en `10.0.0.2/24` et PC4 en `10.1.1.2/24` et ajoutez les routes par défaut correspondantes. Ouvrez une console sur R1 et tapez la commande suivante : `tc qdisc add dev eth1 root netem rate 10M delay 10ms limit 10`. N'oubliez pas si vous n'avez pas supprimer la précédente configurations avec `tc qdisc del dev eth1 root`, vous devez utiliser `tc qdisc change ...`.
+Suite à l'ajout des deux switches, Ajoutez deux machines PC3 en `10.0.0.2/24` et PC4 en `10.1.1.2/24` et ajoutez les routes par défaut correspondantes. Ouvrez une console sur R1 et tapez la commande suivante : `tc qdisc add dev eth1 root netem rate 10mbit delay 10ms limit 10`. N'oubliez pas si vous n'avez pas supprimer la précédente configurations avec `tc qdisc del dev eth1 root`, vous devez utiliser `tc qdisc change ...`.
 
 Nous allons illustrer le principe de partage équitable de la capacité d'un lien partagé par deux flots TCP. Voici les commandes à lancer :
 
