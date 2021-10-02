@@ -20,7 +20,7 @@ Ce TP sera réalisé avec Gonetem. Avant de rentrer dans la configuration d'une 
 
 ## Premiers pas avec OSPF
 
-Avant de commencer le TP nous allons apprendre à configurer OSPF sur une topologie très simple composée de deux routeurs interconnectant deux hôtes. Cette topologie est disponible [ici](topo_simple.gnet). Pour la lancer, dans un terminal taper `gonetem-emulator topo_simple.gnet`.
+Avant de commencer le TP nous allons apprendre à configurer OSPF sur une topologie très simple composée de deux routeurs interconnectant deux hôtes. Cette topologie est disponible [ici](topo_simple.gnet). Pour la lancer, dans un terminal taper `gonetem-console topo_simple.gnet`.
 
 **Première étape - adressage**
 
