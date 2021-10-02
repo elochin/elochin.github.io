@@ -16,11 +16,11 @@ Merci de prendre connaissance de vos droits ici : [CC BY-NC-SA 3.0 FR](https://c
 
 Ce TP a pour but de vous faire découvrir le protocole de routage dynamique OSPF. L'utilisation d'un tel protocole n'ayant d'intérêt que dans le cas d'un réseau suffisamment complexe, il est nécessaire d'expérimenter ce protocole sur une topologie comprenant un nombre conséquent de routeurs. Dans ce TP, vous prendrez le rôle de l'administrateur réseau d'un (petit) AS. A ce titre, vous devrez décider du plan d'adressage de votre AS (en accord avec les adresses qui vous seront attribuées) et de la configuration des routeurs. De plus, pour tester la fonctionnalité du système, vous pourrez être amenés à configurer les adresses et les routes sur les machines hôtes de test.
 
-Ce TP sera réalisé avec Pynetem. Avant de rentrer dans la configuration d'une topologie complexe, nous débuterons celui-ci en configurant un petit réseau composé de deux routeurs. Notez que l'ensemble des commandes nécessaires à ce TP vous sont récapitulées en annexe.
+Ce TP sera réalisé avec Gonetem. Avant de rentrer dans la configuration d'une topologie complexe, nous débuterons celui-ci en configurant un petit réseau composé de deux routeurs. Notez que l'ensemble des commandes nécessaires à ce TP vous sont récapitulées en annexe.
 
 ## Premiers pas avec OSPF
 
-Avant de commencer le TP nous allons apprendre à configurer OSPF sur une topologie très simple composée de deux routeurs interconnectant deux hôtes. Cette topologie est disponible [ici](topo_simple.pnet). Pour la lancer, dans un terminal taper `pynetem-emulator topo_simple.pnet`.
+Avant de commencer le TP nous allons apprendre à configurer OSPF sur une topologie très simple composée de deux routeurs interconnectant deux hôtes. Cette topologie est disponible [ici](topo_simple.gnet). Pour la lancer, dans un terminal taper `gonetem-emulator topo_simple.gnet`.
 
 **Première étape - adressage**
 
@@ -63,7 +63,7 @@ R1(config)# router ospf
 ```
 Si vous ajoutez un `?` à la fin de cette commande, vous verrez qu'elle prend notamment en argument une valeur d'instance (`Instance ID`) optionnelle. Nous omettrons cette valeur qui est un identifiant de processus OSPF local permettant l'exécution de plusieurs processus OSPF sur le même routeur. Cette opération n'est pas recommandée car elle crée plusieurs instances qui ajoutent une surcharge supplémentaire au routeur [[CISCO OSPF]](https://www.cisco.com/c/fr_ca/support/docs/ip/open-shortest-path-first-ospf/7039-1.html). L'autre option notée `vrf` (*virtual routing and forwarding*) est une fonctionnalité permettant à plusieurs instances d'une table de routage de coexister sur le même routeur en même temps. C'est un peu comme faire du VLAN mais au niveau IP [[CISCO VRF]](https://www.cisco.com/c/en/us/td/docs/routers/connectedgrid/cgr1000/ios/software/15_4_1_cg/vrf_cgr1000.html), cette fonctionnalité sort du cadre de ce TP et ne sera pas abordée.
 
-Une fois cette commande saisie, un processus OSPF est lancé sur le routeur mais aucune annonce n'est encore effectuée. En effet, il faut spécifiquement déclarer les interfaces qui vont entrer en jeu. Pour cela, nous allons utiliser la commande `network` qui prendra en argument l'adresse du réseau et son aire (cf. cours). Notez que sur CISCO la notation diffère un peu et que le *wildcard mask* (inverse du *netmask*) est utilisé en lieu et place de la notation CIDR `A.B.C.D/M` comme cela est le cas avec le router FRR sous Pynetem. 
+Une fois cette commande saisie, un processus OSPF est lancé sur le routeur mais aucune annonce n'est encore effectuée. En effet, il faut spécifiquement déclarer les interfaces qui vont entrer en jeu. Pour cela, nous allons utiliser la commande `network` qui prendra en argument l'adresse du réseau et son aire (cf. cours). Notez que sur CISCO la notation diffère un peu et que le *wildcard mask* (inverse du *netmask*) est utilisé en lieu et place de la notation CIDR `A.B.C.D/M` comme cela est le cas avec le router FRR sous Gonetem. 
 
 Pour les interfaces du router R1 cela donne :
 
@@ -197,7 +197,7 @@ Suite à cette première partie d'introduction, je vous propose de mettre en oeu
 
 ### Topologie
 
-La topologie du réseau utilisé dans ce TP est décrite sur la Fig. 1.
+La topologie du réseau utilisé dans ce TP est décrite sur la Fig. 1 et disponible [ici](ospf.gnet).
 
 
 |  ![Topologie du réseau.](topoOSPF.png) |
@@ -244,11 +244,11 @@ Pour prendre en main le protocole OSPF, vous commencerez par configurer la liais
 
 *Note : dans le cas où votre topologie serait connectée à un autre AS (de l'un de vos camarades par exemple) il vous faudrait ajouter des routes à votre routeur R1 de façon à ce qu'il puisse atteindre les autres AS (une route par AS distant). Ensuite il vous faudrait redistribuer les routes externes à l'AS depuis le routeur R1 et à configurer la liaison comme une liaison "point-to-point".*
 
-Une fois les deux routeurs configurés, vérifiez le bon fonctionnement d'OSPF avec `show ip ospf database` (R3 doit pouvoir atteindre les autres AS et R1 doit pouvoir atteindre une machine du LAN1). Une fois fait, savegarder la configuration en faisant un `save` dans l'interface de l'émulateur Pynetem.
+Une fois les deux routeurs configurés, vérifiez le bon fonctionnement d'OSPF avec `show ip ospf database` (R3 doit pouvoir atteindre les autres AS et R1 doit pouvoir atteindre une machine du LAN1). Une fois fait, savegarder la configuration en faisant un `save` dans l'interface de l'émulateur Gonetem.
 
 #### Observation des mécanismes OSPF
 
-Lancez une capture sur l'un des routeurs via Pynetem et la commande `capture R1.0`. 
+Lancez une capture sur l'un des routeurs via Gonetem et la commande `capture R1.0`. 
 
 <font color=blue>**Question 2** - Quels paquets capturez-vous et à quelle fréquence ?</font>
 
@@ -274,13 +274,13 @@ OSPF debugging status:
   OSPF packet Link State Update debugging is on
   OSPF packet Link State Acknowledgment debugging is on
 ```
-afin que celui-ci soit bien activé. Enfin n'oubliez pas de faire un `save` dans la console Pynetem si vous souhaitez conserver cette configuration. Il vous suffit de lancer un `debug R1` depuis la console Pynetem et de consulter le fichier de log via, par exemple, `tail -f /var/log/frr/ospfd.log`.
+afin que celui-ci soit bien activé. Enfin n'oubliez pas de faire un `save` dans la console Gonetem si vous souhaitez conserver cette configuration. Il vous suffit de lancer un `debug R1` depuis la console Gonetem et de consulter le fichier de log via, par exemple, `tail -f /var/log/frr/ospfd.log`.
 
 #### Configuration sur tous les routeurs
 
-Configurez tous les routeurs OSPF et LAN restant. Pensez à désactiver l'émission de message OSPF sur les réseaux terminaux (LAN 2 à 5) et à configurer le type de réseau OSPF sur chaque interface. Les interfaces sur N1 seront configurées en mode NBMA ce qui vous obligera à déclarer R4 et R5 comme voisins via la commande `neighbor`. Vérifiez le fonctionnement, puis sauvegardez les configuration des routeurs (`save` dans Pynetem).
+Configurez tous les routeurs OSPF et LAN restant. Pensez à désactiver l'émission de message OSPF sur les réseaux terminaux (LAN 2 à 5) et à configurer le type de réseau OSPF sur chaque interface. Les interfaces sur N1 seront configurées en mode NBMA ce qui vous obligera à déclarer R4 et R5 comme voisins via la commande `neighbor`. Vérifiez le fonctionnement, puis sauvegardez les configuration des routeurs (`save` dans Gonetem).
 
-Relancez les démons de routage FRR sur les routeurs R3, R6 et R7 en faisant un `restart <router_name>` via Pynetem. Ou alors, vous connectant via l'interface Pynetem sur la console de debug (par exemple `debug R3`) faire `service frr restart` depuis la console. Préparez une capture sur l'un de ces routeurs puis lancez un à un les daemons OSPF en observant un temps de pause entre chaque.
+Relancez les démons de routage FRR sur les routeurs R3, R6 et R7 en faisant un `restart <router_name>` via Gonetem. Ou alors, vous connectant via l'interface Gonetem sur la console de debug (par exemple `debug R3`) faire `service frr restart` depuis la console. Préparez une capture sur l'un de ces routeurs puis lancez un à un les daemons OSPF en observant un temps de pause entre chaque.
 
 <font color=blue>**Question 4** - Dans les échanges entre vos routeurs, observez l'élection du routeur désigné (DR) et du routeur désigné de secours (BDR).</font>
 
@@ -302,7 +302,7 @@ Les sections suivantes présentent les différentes commandes regroupées par me
 #### Commandes du menu racine
 
 Vous disposez dans le menu racine (le menu dans lequel vous êtes au démarrage) des mêmes commandes `show` que sur les routeurs Cisco.
-Pou sauvegarder la configuration actuelle de votre routeur, n'oubliez pas de faire un `save` dans l'émulateur Pynetem.
+Pou sauvegarder la configuration actuelle de votre routeur, n'oubliez pas de faire un `save` dans l'émulateur Gonetem.
 
 Pour rappel, les commandes les plus utiles pour ce TP sont :
 
