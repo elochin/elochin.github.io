@@ -1,9 +1,15 @@
 ## Experimentons le protocole QUIC
 
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Cc-by-nc-sa_icon.svg/1920px-Cc-by-nc-sa_icon.svg.png" width=100/>
+
+Ce document est sous licence Creative Creative Commons <br>
+Attribution - Pas d’Utilisation Commerciale - Partage dans les Mêmes Conditions 3.0 France <br>
+Merci de prendre connaissance de vos droits ici : [CC BY-NC-SA 3.0 FR](https://creativecommons.org/licenses/by-nc-sa/3.0/fr/)
+
 #### Avant de démarrer
 
 Ce TP a pour objectif d'illustrer le fonctionnement du protocole QUIC.
-Nous travaillerons avec un *cahier de laboratoire* qui consiste en un fichier de collecte des résultats de vos expérimentations et qui contiendra vos notes et vos éventuelles captures d'écrans. Vous pouvez choisir l'éditeur de votre choix (LibreOffice, Word, Latex, ...) pour réaliser ce cahier qui devra être soumis au format PDF. Veillez à bien répondre à toutes les questions se trouvant après le sigle <img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" alt="img" style="zoom:5%;" />
+Nous travaillerons avec un *cahier de laboratoire* qui consiste en un fichier de collecte des résultats de vos expérimentations et qui contiendra vos notes et vos éventuelles captures d'écrans. Vous pouvez choisir l'éditeur de votre choix (LibreOffice, Word, Latex, ...) pour réaliser ce cahier qui devra être soumis au format PDF. Veillez à bien répondre à toutes les questions se trouvant après le sigle <img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 />
 Dans la suite, lorsqu'il sera question de :
 
 - machine hôte ou terminal maître, nous parlerons d'un terminal ou de la machine qui aura été lancée en dehors de Gonetem;
@@ -48,7 +54,7 @@ Tout d'abord nous allons limiter la capacité du lien de sortie grâce à TC et 
 
 Une fois fait, revenez sur les consoles SRC et DST. Dans la première faites un ping vers DST : `ping 10.0.0.1` et laissez le tourner. Noter la valeur du RTT de celui-ci. Dans la console DST, lancez un serveur iPerf3 : `iperf3 -s`. Enfin dans la seconde console SRC, lancez une génération de trafic UDP en tapant : `iperf3 -c 10.1.1.1 -u -b 2M`. Vous observerez alors une génération de débit de 2Mb/s depuis SRC et une réception de ~1Mb/s coté DST à cause de la limitation sur RTR.
 
-<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" alt="img" style="zoom:5%;" />  Que remarquez-vous concernant le débit du ping ? Comment expliquez-vous cette variation ?
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 />  Que remarquez-vous concernant le débit du ping ? Comment expliquez-vous cette variation ?
 
 
 
@@ -63,7 +69,7 @@ Nous allons illustrer le principe de partage équitable de la capacité d'un lie
 3. sur la seconde console SRC lancez `iperf3 -c 10.0.0.1 -t 1000 -p6000`. Quel débit est obtenu par les deux flots ?
 4. sur la premiere console SRC générant le trafic vers le port par défaut, arrêtez la génération de trafic et lancez la commande suivante : `iperf3 -c 10.1.1.2 -t 1000 -P2` qui va générer deux flots en parallèle.
 
-<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" alt="img" style="zoom:5%;" /> Vers quel débit converge le flot TCP sur le port 6000 ? Même question avec `-P3.`
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> Vers quel débit converge le flot TCP sur le port 6000 ? Même question avec `-P3.`
 
 
 
@@ -77,7 +83,7 @@ Toujours en utilisant la même topologie précédente, nous allons illustrer l�
 4. sur PC2 `iperf3 -c 10.1.1.2 -t 1000 -u -b 5M`. Quel débit est obtenu par les deux flots ?
 5. sur PC2 `iperf3 -c 10.1.1.2 -t 1000 -u -b 8M`. Quel débit est obtenu par les deux flots ?
 
-<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" alt="img" style="zoom:5%;" /> Expliquez vos observations dans votre cahier de laboratoire.
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> Expliquez vos observations dans votre cahier de laboratoire.
 
 
 
@@ -147,7 +153,7 @@ Les fichiers qlogs (lire la doc plus haut) permettent d'avoir des statistiques p
 
 
 
-#### <img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" alt="img" style="zoom:5%;" /> Proposition de campagne de mesures
+#### <img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> Proposition de campagne de mesures
 
 Une fois l'ensemble des opérations ci-dessus réalisées :
 
