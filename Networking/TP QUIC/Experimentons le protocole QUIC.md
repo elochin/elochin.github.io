@@ -27,7 +27,7 @@ Nous utiliserons pour ce TP l'emulateur réseau Gonetem. Sa documentation est ac
 
 #### Lancement de l'émulateur et de la topologie de test
 
-Vous allez utiliser la topologie de test suivante (téléchargez fichier [topology.gnet](https://moodle-central.univ-reunion.fr/mod/resource/view.php?id=258771) pour cela). L'adressage IP de cette topologie a déjà été effectué. Elle se compose d'un client (SRC), d'un routeur (RTR) et d'une destination
+Vous allez utiliser la topologie de test suivante (téléchargez fichier [topology.gnet](topology.gnet). L'adressage IP de cette topologie a déjà été effectué. Elle se compose d'un client (SRC), d'un routeur (RTR) et d'une destination
 
 ```
 SRC ------------------------------ RTR ------------------------------ DST
@@ -35,7 +35,7 @@ eth0:192.168.1.1/24               eth0: 192.168.1.254/24              eth0:10.0.
                                   eth1: 10.0.0.254/24
 ```
 
-Lancez GoNetem et votre scénario d'émulation depuis une console en tapant : `gonetem-console open topologie.gnet`. Vous obtenez alors le prompt suivant :
+Lancez GoNetem et votre scénario d'émulation depuis une console en tapant : `gonetem-console open topology.gnet`. Vous obtenez alors le prompt suivant :
 
 ```
 eleve@gonetem:~$ gonetem-console open topologie.gnet 
