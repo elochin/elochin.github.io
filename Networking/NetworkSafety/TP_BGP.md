@@ -11,7 +11,7 @@ Merci de prendre connaissance de vos droits ici : [CC BY-NC-SA 3.0 FR](https://c
 
 # Présentation du TP
 
-Ce TP a pour but d'illustrer le fonctionnement de BGP dans un cas simple mais néanmoins réaliste. Afin de créer un topologie intéressante et de permettre à chacun de manipuler et d'obtenir la maitrise de la configuration du protocole, nous avons fait le choix d'utiliser des machines virtuelles pour ce TP. Nous utiliserons donc comme pour le TP sur OSPF l'émulateur Pynetem. 
+Ce TP a pour but d'illustrer le fonctionnement de BGP dans un cas simple mais néanmoins réaliste. Afin de créer un topologie intéressante et de permettre à chacun de manipuler et d'obtenir la maitrise de la configuration du protocole, nous avons fait le choix d'utiliser des machines virtuelles pour ce TP. Nous utiliserons donc comme pour le TP sur OSPF l'émulateur Gonetem. 
 
 # 1 Topologie
 
@@ -23,7 +23,7 @@ Chaque binôme administrera deux AS, l'un sera un AS de transit offrant une conn
 
 # 2 Mise en place
 
-Avant de commencer la configuration des routeurs, vous devrez mettre en place l’environnement d'émulation puis réaliser un plan d'adressage et configurer la topologie Pynetem disponible [ici](bgp.pnet).
+Avant de commencer la configuration des routeurs, vous devrez mettre en place l’environnement d'émulation puis réaliser un plan d'adressage et configurer la topologie Gonetem disponible [ici](bgp.gnet).
 
 ## 2.1 Adressage
 
@@ -41,7 +41,7 @@ Configurez ensuite les adresses de vos machines. Dans le cas des routeurs R1 qui
 
 ## 2.2 Lancement des machines
 
-Vous pouvez maintenant démarrer toutes vos machines en faisant un `save` puis `reload` dans l'interface Pynetem. Pensez à laisser le temps au système de démarrer avant de continuer.
+Vous pouvez maintenant démarrer toutes vos machines en faisant un `save` puis `reload` dans l'interface Gonetem. Pensez à laisser le temps au système de démarrer avant de continuer.
 
 # 3 Manipulations
 
