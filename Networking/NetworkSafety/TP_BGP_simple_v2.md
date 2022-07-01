@@ -1,6 +1,6 @@
 ## Premiers pas avec BGP
 
-Avant de commencer le TP et de façon similaire au TP OSPF, nous allons apprendre à configurer BGP sur une topologie très simple comme celle qui vous a été présentée en cours. Cette topologie est disponible [ici](bgp_topo_simple_v2.pnet). Pour la lancer, dans un terminal taper `pynetem-emulator bgp_topo_simple.pnet`.
+Avant de commencer le TP et de façon similaire au TP OSPF, nous allons apprendre à configurer BGP sur une topologie très simple comme celle qui vous a été présentée en cours. Cette topologie est disponible [ici](bgp_topo_simple_v2.gnet). Pour la lancer, dans un terminal taper `gonetem-emulator bgp_topo_simple.gnet`.
 
 La configuration IP ayant déjà été effectuée, vous pouvez vous concentrer sur la configuration du routage uniquement. Le schéma de cette topologie vous est présenté ci-dessous :
 
@@ -15,7 +15,7 @@ Comme vous pouvez le voir, trois AS seront interconnectés grâce à BGP.
 
 Nous allons tout d'abord réaliser les opérations de voisinage entre les AS. Cela concerne donc les couples de routeurs (R1, R2) et (R3, R4).  Afin d'observer les messages d'échanges BGP, réalisez une capture wireshark sur R1 avec `capture R1.1` qui vous retournera l'intégralité des échanges protocolaires. Retrouvez-vous les messages présentés en cours ?
 
-Notez qu'un `debug bgp updates` a été activé sur R1 et R2. Les logs étant sauvés dans `/var/log/frr/bgpd.log`. Vous pouvez donc également lancer une console de debug depuis l'interface Pynetem sur R1 : `debug R1` et tapez `tail -f  /var/log/frr/bgpd.log | grep BGP` et laissez cette console de debug active durant votre configuration afin d'observer uniquement les échanges BGP.
+Notez qu'un `debug bgp updates` a été activé sur R1 et R2. Les logs étant sauvés dans `/var/log/frr/bgpd.log`. Vous pouvez donc également lancer une console de debug depuis l'interface Gonetem sur R1 : `debug R1` et tapez `tail -f  /var/log/frr/bgpd.log | grep BGP` et laissez cette console de debug active durant votre configuration afin d'observer uniquement les échanges BGP.
 
 Configurez BGP sur R1. Nous déclarerons R1 et R2 voisins comme suit :
 ```
