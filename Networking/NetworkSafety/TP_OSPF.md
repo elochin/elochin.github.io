@@ -88,7 +88,8 @@ Il est préférable de ne pas diffuser les annonces OSPF sur les réseaux d'extr
 Par exemple la commande suivante sur R1 :
 
 ```
-R1(config-router)# passive-interface eth0
+R1(config-router)# interface eth0
+R1(config-if)# ip ospf passive
 ```
 permet de stopper les annonces OSPF vers PC1. Notez que la commande `show ip ospf interface eth0` vous permettra de vérifier la mise en oeuvre de cette option :
 ```
