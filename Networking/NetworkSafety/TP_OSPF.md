@@ -35,7 +35,7 @@ Configurons cette topologie avec l'adressage suivant :
 
 Par exemple, les commandes à utiliser sur PC1 sont :
 ```bash
-root@PC1:/# ip addr add 192.168.1.1/24
+root@PC1:/# ip addr add 192.168.1.1/24 dev eth0
 root@PC1:/# ip route add default via 192.168.1.254
 ```
 et les commandes sur R1 sont :
