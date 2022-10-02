@@ -30,7 +30,7 @@ Comme il y a 2 accès à redonder, nous utiliserons une redondance de type HSRP 
 Nous imposons que le routeur haut soit maître pour le LAN 0 et le routeur bas maître pour le LAN 1. 
 De plus, nous imposerons la préemption dans les réglages pour forcer la reprise de la position maître.
 (La préemption est désactivée par défaut sur HSRP)
-Pour ce TP, vous adresserez les équipement en ulisant les réseaux suivants:
+Pour ce TP, vous adresserez les équipements en utilisant les réseaux suivants:
 LAN 0 : **10.*i*.100.0/24** avec adresse IP routeur virtuel **10.i.100.250**
 LAN 1 : **10.*i*.101.0/24** avec adresse IP routeur virtuel **10.i.101.250**
 avec *i* = numéro ilot 
