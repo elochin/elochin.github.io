@@ -275,13 +275,13 @@ OSPF debugging status:
   OSPF packet Link State Update debugging is on
   OSPF packet Link State Acknowledgment debugging is on
 ```
-afin que celui-ci soit bien activé. Enfin n'oubliez pas de faire un `save` dans la console Gonetem si vous souhaitez conserver cette configuration. Il vous suffit de lancer un `debug R1` depuis la console Gonetem et de consulter le fichier de log via, par exemple, `tail -f /var/log/frr/ospfd.log`.
+afin que celui-ci soit bien activé. Enfin n'oubliez pas de faire un `save` dans la console Gonetem si vous souhaitez conserver cette configuration. Il vous suffit de lancer un `shell R1` depuis la console Gonetem et de consulter le fichier de log via, par exemple, `tail -f /var/log/frr/ospfd.log`.
 
 #### Configuration sur tous les routeurs
 
 Configurez tous les routeurs OSPF et LAN restant. Pensez à désactiver l'émission de message OSPF sur les réseaux terminaux (LAN 2 à 5) et à configurer le type de réseau OSPF sur chaque interface. Les interfaces sur N1 seront configurées en mode NBMA ce qui vous obligera à déclarer R4 et R5 comme voisins via la commande `neighbor`. Vérifiez le fonctionnement, puis sauvegardez les configuration des routeurs (`save` dans Gonetem).
 
-Relancez les démons de routage FRR sur les routeurs R3, R6 et R7 en faisant un `restart <router_name>` via Gonetem. Ou alors, vous connectant via l'interface Gonetem sur la console de debug (par exemple `debug R3`) faire `service frr restart` depuis la console. Préparez une capture sur l'un de ces routeurs puis lancez un à un les daemons OSPF en observant un temps de pause entre chaque.
+Relancez les démons de routage FRR sur les routeurs R3, R6 et R7 en faisant un `restart <router_name>` via Gonetem. Ou alors, vous connectant via l'interface Gonetem sur la console de debug (par exemple `shell R3`) faire `service frr restart` depuis la console. Préparez une capture sur l'un de ces routeurs puis lancez un à un les daemons OSPF en observant un temps de pause entre chaque.
 
 <font color=blue>**Question 4** - Dans les échanges entre vos routeurs, observez l'élection du routeur désigné (DR) et du routeur désigné de secours (BDR).</font>
 
@@ -293,7 +293,7 @@ Validez le routage par des `traceroute` ou `traceptath` vers plusieurs réseaux.
 
 Nous allons maintenant observer le comportement d'OSPF en cas de perte de lien. Nous travaillerons sur le lien R1-R3. Préparez plusieurs captures à des endroits choisis du réseau afin de voir ce qu’il se passe lors de la perte du lien. Validez le nouveau routage par des `traceroute` vers plusieurs réseaux (dans et hors de votre AS).
 
-<font color=blue>**Question 7** - Observez les échanges entre les routeurs qui permettent de palier à la route manquante.</font>
+<font color=blue>**Question 6** - Observez les échanges entre les routeurs qui permettent de palier à la route manquante.</font>
 
 ## Annexe : OSPF sur les routeurs FRR
 
