@@ -293,7 +293,7 @@ Validez le routage par des `traceroute` ou `traceptath` vers plusieurs réseaux.
 
 Nous allons maintenant observer le comportement d'OSPF en cas de perte de lien. Nous travaillerons sur le lien R1-R3. Préparez plusieurs captures à des endroits choisis du réseau afin de voir ce qu’il se passe lors de la perte du lien. Validez le nouveau routage par des `traceroute` vers plusieurs réseaux (dans et hors de votre AS).
 
-<font color=blue>**Question 6** - Observez les échanges entre les routeurs qui permettent de palier à la route manquante.</font>
+<font color=blue>**Question 6** - Observez le changement de route grâce au traceroute.</font>
 
 ## Annexe : OSPF sur les routeurs FRR
 
