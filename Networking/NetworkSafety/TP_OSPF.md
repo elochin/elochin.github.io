@@ -155,7 +155,6 @@ La configuration OSPF de R1 devient :
 !
 router ospf
  redistribute static
- passive-interface eth0
  network 10.0.0.0/8 area 0
  network 192.168.1.0/24 area 0
  default-information originate
