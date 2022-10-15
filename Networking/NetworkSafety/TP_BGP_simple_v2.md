@@ -51,6 +51,7 @@ Total number of neighbors 1
 ```
 La signification des champs est disponible sur la page de manuel CISCO de [ip bgp summary](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/iproute_bgp/command/iproute_bgp-xe-3se-3850-cr-book/iproute_bgp-xe-3se-3850-cr-book_chapter_0100.html#wp1583714062). Les champs ont pour signification :
 
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------- |
 | Neighbor | IP address of the neighbor |
 | V | BGP version number spoken to the neighbor |
 | AS | Autonomous system number |
