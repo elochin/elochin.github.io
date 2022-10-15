@@ -49,6 +49,18 @@ Neighbor        V         AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down State/P
 
 Total number of neighbors 1
 ```
+La signification des champs est disponible sur la page de manuel CISCO de [ip bgp summary](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/iproute_bgp/command/iproute_bgp-xe-3se-3850-cr-book/iproute_bgp-xe-3se-3850-cr-book_chapter_0100.html#wp1583714062). Les champs ont pour signification :
+
+| Neighbor | IP address of the neighbor |
+| V | BGP version number spoken to the neighbor |
+| AS | Autonomous system number |
+| MsgRcvd | Number of messages received from the neighbor |
+| MsgSent | Number of messages sent to the neighbor |
+| TblVer | Last version of the BGP database that was sent to the neighbor |
+| InQ | Number of messages queued to be processed from the neighbor |
+| OutQ | Number of messages queued to be sent to the neighbor |
+| Up/Down | The length of time that the BGP session has been in the Established state, or the current status if not in the Established state |
+| State/PfxRcd | Current state of the BGP session, and the number of prefixes that have been received from a neighbor or peer group. When the maximum number (as set by the neighbor maximum-prefix command) is reached, the string “PfxRcd” appears in the entry, the neighbor is shut down, and the connection is set to Idle |
 
 De la même manière que pour OSPF, on utilisera la commande `network` pour annoncer les réseaux de notre AS. 
 
