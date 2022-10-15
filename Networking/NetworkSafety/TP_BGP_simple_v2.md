@@ -118,7 +118,7 @@ Neighbor        V         AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down State/P
 Total number of neighbors 2
 ```
 
-Cependant, en faisant un `show ip route` sur R1 et R2, vous verrez que la route 150.0.0.0/8 n'est pas connue. Or un `show ip bgp neighbors 200.0.0.1 advertised-route` vous indique bien que R3 communique la route  à R2 comme montré ci-dessous :
+Cependant, en faisant un `show ip route` sur R1 et R2, vous verrez que la route 150.0.0.0/8 n'est pas connue. Or un `show ip bgp neighbors 200.0.0.1 advertised-route` sur R3 vous indique bien que R3 communique la route à R2 comme montré ci-dessous :
 ```
 BGP table version is 6, local router ID is 200.0.0.2, vrf id 0
 Default local pref 100, local AS 200
