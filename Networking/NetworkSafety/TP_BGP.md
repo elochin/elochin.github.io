@@ -57,30 +57,31 @@ Vous pouvez maintenant passer à la configuration de BGP. Les commandes utiles s
 * `neighbor <adresse ip du voisin> remote-as <numéro d’as du voisin>` permet de déclarer un voisin BGP du routeur, à répéter pour chaque voisin;
 * `network <préfixe à annoncer en notation CIDR>` permet de déclarer un réseau via BGP.
 
-Configurez vos routeurs de façon à ce qu'ils connaissent leurs voisins et qu'ils annoncent leur réseau (le /16 de votre AS de transit). Chaque routeur du réseau de transit sera voisin de tous les routeurs auxquels il est directement rattaché (y compris en interne). Le routeur R1 sera notamment voisin des deux routeurs internes (R2 et R3) et des routeurs R1 des AS voisins.
+Configurez vos routeurs de façon à ce qu'ils connaissent leurs voisins et qu'ils annoncent leur réseau global et pas tous les sous-réseaux (i.e. <font color=red><b>uniquement le /16 de votre AS de transit</b></font>). Chaque routeur du réseau de transit sera voisin de tous les routeurs auxquels il est directement rattaché (y compris en interne). Le routeur R1 sera notamment voisin des deux routeurs internes (R2 et R3) et des routeurs R1 des AS voisins.
 
-## 3.2 Vérification de la configuration BGP
+### 3.2 Vérification de la configuration BGP
 
 Afin de vérifier que la configuration est correcte, vous utiliserez les commandes `show ip route`, `show ip bgp`, `show ip bgp neighbors` et `show ip bgp <préfixe CIDR>`.  Lisez la page très bien faite du site CISCO [Troubleshooting When BGP Routes Are Not Advertised](https://www.cisco.com/c/en/us/support/docs/ip/border-gateway-protocol-bgp/19345-bgp-noad.html) qui vous guide pas à pas dans plusieurs processus de résolution de problèmes.
 
 Ensuite répondrez ensuite aux questions suivantes :
 
+Quels sont les prefixes BGP annoncés par les autres routeurs au routeur R1 ? 
 
-Quels sont les prefixes BGP annoncés par les autres routeurs au routeur R1 ?
+Remarques : 
+* pour connaitre le(s) préfixe(s) annoncé(s) utilisez `show ip bgp neighbors A.B.C.D advertised-routes`
+* pour afficher le Next-Hop du préfixe, utilisez :  `show ip bgp neighbors A.B.C.D routes`
 
 <font color=blue><b>Point de vérification 2</b></font>
 
 Pour un préfixe annoncé par plusieurs voisins, expliquez le choix fait par BGP pour sélectionner la route à placer dans la Loc-RIB.
 
+Pour afficher la Loc-RIB, utilisez :  `show ip bgp`
+
 <font color=blue><b>Point de vérification 3</b></font>
 
-Notez vous un problème dans la diffusion des préfixes vers les routeurs R2/R3 ? Décrivez-le et expliquez sa cause.
+### 3.3 Distribution des routes par un IGP
 
-<font color=blue><b>Point de vérification 4</b></font>
-
-## 3.3 Distribution des routes par un IGP
-
-Afin de résoudre le problème précédent, nous allons déployer le protocole OSPF dans le réseau de transit. Les routeurs utiliseront OSPF pour annoncer les routes directement rattachées sur chacun des réseaux internes.
+Nous allons maintenant déployer le protocole OSPF dans le réseau de transit afin que tous les sous-réseaux soient maintenant accessibles.
 La configuration d'OSPF dans les routeurs de l'AS de transit se fera en recopiant et modifiant suivant votre topologie les lignes suivantes (i.e. remplacerez les réseaux par les réseaux internes rattachés à votre routeur) :
 
 ```
@@ -92,7 +93,7 @@ La configuration d'OSPF dans les routeurs de l'AS de transit se fera en recopian
 
 Vérifiez à nouveau la configuration de BGP sur tous les routeurs. Le problème est il résolu?
 
-<font color=blue><b>Point de vérification 5</b></font>
+<font color=blue><b>Point de vérification 4</b></font>
 
 ## 3.4 Configuration de l’AS client
 
@@ -102,16 +103,16 @@ Pour alimenter R5 des routes vers les autres AS, vous instancierez OSPF entre R4
 
 Est-il nécessaire d'activer OSPF dans cet AS? Pourquoi?
 
-<font color=blue><b>Point de vérification 6</b></font>
+<font color=blue><b>Point de vérification 5</b></font>
 
 De quelles pannes BGP protège-t-il l'AS client?
 
-<font color=blue><b>Point de vérification 7</b></font>
+<font color=blue><b>Point de vérification 6</b></font>
 
 Testez maintenant la connectivité de bout en bout avec les commandes `ping` et `traceroute` executées depuis les machines terminales.
 Cela fonctionne-t-il ? Pourquoi ?
 
-<font color=blue><b>Point de vérification 8</b></font>
+<font color=blue><b>Point de vérification 7</b></font>
 
 Résolvez éventuellement le problème puis vérifiez le bon fonctionnement.
 Tester la robustesse de votre réseau.
