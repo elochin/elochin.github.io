@@ -16,7 +16,7 @@ Dans la suite, lorsqu'il sera question de :
 
 ## Mise en place du banc de test pour le TP
 
-Nous utiliserons la topologie de test suivante disponible [*ici*](qos.pnet).
+Nous utiliserons la topologie de test suivante disponible [*ici*](qos.gnet).
 ```bash
 SRC ------------------------------ RTR ------------------------------ DST
 eth0:192.168.1.1/24               eth1: 10.0.0.254/8                  eth0:10.0.0.1/8
