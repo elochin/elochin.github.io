@@ -45,6 +45,12 @@ Vous pouvez maintenant démarrer toutes vos machines, les adresser et leur affec
 Pour observer les échanges protocolaire vous mettrez en place un port miroring sur les switch.
 Vous adresserez également les routeurs et ensuitre vous mettrez en place une redondance.
 
+En cas de problème sur les routeurs CISCO, pour réinitialiser la configuration par défaut :
+```
+erase startup-config
+reload
+no
+```
 
 ## 4.  Test de la configuration
 
