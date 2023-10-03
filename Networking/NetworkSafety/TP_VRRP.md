@@ -59,17 +59,17 @@ de convergence.
 Pour ce faire, nous utiliserons simplement un **ping entre les 2 machines**. 
 Pour simuler les pannes, nous débrancherons simplement les câbles des interfaces.
 
-Sur wireshark observez:
+Sur wireshark, observez :
 * les échanges protocolaires
     * adresse multicast utilisée 
     * adresse MAC virtuelle
     * adresse IP virtuelle, priorité, id du groupe, etc. 
 * les échanges après un changement de priorité
 
-Sur les routeurs observez:
-* les différents etats de redondance des routeurs
-* la bonnne prise en compte d'un changement de priorité
-* la bonne prise en compte de la perte d'un interface
+Sur les routeurs, observez :
+* les différents états de redondance des routeurs
+* la bonne prise en compte d'un changement de priorité
+* la bonne prise en compte de la perte d'une interface
 
 Dans l'état actuel, la redondance nous protège de la perte de quelle·s interface·s ?
 
