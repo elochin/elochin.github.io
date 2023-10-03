@@ -125,7 +125,7 @@ Nous utiliserons la vérification sur un plan routage IP dans ce TP.
 
 Ensuite, se placer en mode de configuration de l'interface du groupe en question et lier la priorité de l'interface au résultat du tracking
 La commande HSRP est : `standby <N° groupe> track <N° objet tracked> [decrement <priorité>]`
-Par défaut, la priorité est décrémenté de 10. On peut régler la valeur qu'il faut à cette priorité.
+Par défaut, la priorité est décrémentée de 10. On peut régler la valeur qu'il faut à cette priorité.
 La commande VRRP est : `vrrp <N° groupe> track <N° objet tracked> [decrement <priorité>] `
 
 
