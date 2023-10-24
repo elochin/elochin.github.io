@@ -214,7 +214,7 @@ La première étape de ce TP consistera en la définition du plan d'adressage du
 
 * les liaisons point-à-point ne doivent pas avoir plus de 2 routeurs;
 
-* chaque routeur doit avoir une loopback de configurée qui sera son `router-id`.
+* chaque routeur doit avoir une loopback de configurée qui sera son `router-id`. En effet, l'ID de routeur est soit l’adresse IP la plus élevée ou, si configurée, la plus élevée des adresses de loopback. Dans votre cas, c'est donc cette dernière qui sera prise en compte. Dans le cas où celle-ci ne serait pas prise en compte, redemarrer le routeur avec la commande `restart` depuis la console Gonetem.
 
 Pour ce denier point, configurez pour chaque routeur une adresse de loopback sur un réseau indépendant. Vous pouvez, par exemple, utiliser votre numéro de groupe ou le numéro d'hôte de votre machine suivi du numéro de routeur dupliqué 3 fois. Dans ce cas l'adresse de loopback pour R1 sera 22.1.1.1, pour R2 : 22.2.2.2, ... pour le groupe 22 à condition que vous n'ayez pas déjà un réseau 22 sur votre topologie. Une adresse loopback se configure ainsi :
 ```
@@ -234,59 +234,41 @@ Pour l'adressage, n'hésitez pas à vous aider d'un calculateur d'adresses IP co
 
 *Note : dans l'éventualité où tous les AS de la salle seraient interconnectés, il est indispensable de s'assurer que leurs adressages soient distincts. Aussi, vous utiliserez votre numéro de groupe (unique) comme identifiant de votre réseau. Les enseignants feront donc office d'autorité de distribution d'adresses, adressez-vous à eux pour récupérer votre préfixe. Notez que l'adresse externe du routeur R1 vous sera donnée en même temps que le préfixe d'adresse à utiliser pour votre AS.*
 
-<font color=blue>**Question 1** - Dessinez la topologie de votre AS et son plan d'adressage.</font>
-
-### OSPF avec aire unique
-
-#### Prise en main d’OSPF
-
-Pour prendre en main le protocole OSPF, vous commencerez par configurer la liaison R1-R3. N'oubliez pas de tester la connectivité entre R1 et R3 avec un `ping`. Puis configurez OSPF entre ces deux routeurs. 
-
-*Note : dans le cas où votre topologie serait connectée à un autre AS (de l'un de vos camarades par exemple) il vous faudrait ajouter des routes à votre routeur R1 de façon à ce qu'il puisse atteindre les autres AS (une route par AS distant). Ensuite il vous faudrait redistribuer les routes externes à l'AS depuis le routeur R1 et à configurer la liaison comme une liaison "point-to-point".*
-
-Une fois les deux routeurs configurés, vérifiez le bon fonctionnement d'OSPF avec `show ip ospf database` (R3 doit pouvoir atteindre les autres AS et R1 doit pouvoir atteindre une machine du LAN1). Une fois fait, savegarder la configuration en faisant un `save` dans l'interface de l'émulateur Gonetem.
+<font color=blue>**Etape 1** - Dessinez la topologie de votre AS et son plan d'adressage.</font>
 
 #### Observation des mécanismes OSPF
 
-Lancez une capture sur l'un des routeurs via Gonetem et la commande `capture R1.0`. 
+Dans cet ordre précis :
 
-<font color=blue>**Question 2** - Quels paquets capturez-vous et à quelle fréquence ?</font>
+1. Connectez-vous sur R3 et faites un `shutdown` sur l'interface se connectant à R1 (`int eth3`)
+2. Dans la console Gonetem redémarrez R1 via `restart R1`
+3. Lancez immédiatement après le redémarrage une capture sur R1 toujours dans la console Gonetem avec la commande `capture R1.0`. 
+
+<font color=blue>**Etape 2** - On s'intéresse aux messages Hello, complétez le texte ci-dessous :</font>
+
+*Lorsqu'un routeur entame un processus de routage OSPF sur une interface, il envoie un paquet Hello à intervalles réguliers. La valeur par défaut observée est de ........................... Elle se retrouve dans le champs ...........................  du paquet Hello OSPF. Les messages sont envoyés entre les routeurs ........................... sur des adresses IP de type ...........................
+Le message Hello contient entre-autre, dans son en-tête OSPF l'aire et le routeur source qui correspondent respectivement aux champs ........................... Ils ont pour valeur dans le cadre de ma topologie ......................... Enfin le paquet Hello OSPF renseigne sur la désignation du routeur maître, esclave et voisin via les champs .........................*
 
 Faites un `shutdown` puis juste après un `no shutdown` depuis l'interface connectée à R3 tout en poursuivant la capture.
 
-<font color=blue>**Question 3** - Quels sont les échanges réalisés entre vos deux routeurs ?</font>
+<font color=blue>**Etape 3** - Quels sont les nouveaux échanges réalisés entre vos deux routeurs (lignes en noir sous Wireshark) ?</font>
 
-Le lancement d'une capture peut être consommateur en ressource surtout lorsque vous travaillerez sur la topologie complexe. Aussi, il est possible de capturer les messages OSPF de la façon suivante :
-```
-R1# conf t
-R1(config)# debug ospf packet all
-R1(config)# log file /var/log/frr/ospfd.log
-R1(config)# exit
-```
-Faites ensuite un :
-```
-R1# show debugging
+Aidez-vous des slides du cours, notamment 38 et 39, pour analyser la séquence des échanges.
 
-OSPF debugging status:
-  OSPF packet Hello debugging is on
-  OSPF packet Database Description debugging is on
-  OSPF packet Link State Request debugging is on
-  OSPF packet Link State Update debugging is on
-  OSPF packet Link State Acknowledgment debugging is on
-```
-afin que celui-ci soit bien activé. Enfin n'oubliez pas de faire un `save` dans la console Gonetem si vous souhaitez conserver cette configuration. Il vous suffit de lancer un `shell R1` depuis la console Gonetem et de consulter le fichier de log via, par exemple, `tail -f /var/log/frr/ospfd.log`.
+Dans les DB messages, le MS-bit signifie maître/esclave ; le routeur qui débute l'échange des paquets DB est le maître. Cependant, le routeur avec l'ID de routeur le plus grand deviendra le routeur maître.
+Le maître mène l’esclave à un échange de paquets Database Description (DBDs) qui décrivent la base de données de liens de chaque routeur dans les détails. Ces descriptions comportent le type d’état de lien, l’adresse du routeur qui fait l’annonce, le coût du lien et un numéro de séquence. Ces DBDs résultent en un paquet de plus grande taille. Observez l'échange résultant sur votre trace.
 
-#### Configuration sur tous les routeurs
+Chacun des routeurs compare les informations qu’il reçoit avec ce qu’il sait déjà. Si des DBDs annoncent des nouveaux états de lien ou des mises à jour d’état de lien, le routeur qui les reçoit entre alors en état `Loading` et envoie des paquets LSR (Type 3) à propos des nouvelles informations. En réponse aux paquets LSR, l’autre routeur enverra des informations complètes d’état de lien des paquets LSUs (Type 4). Les LSUs transportent des états de lien, des LSAs.
+Enfin, les routeurs confirment la réception des LSAs en envoyant des paquets LSAck (Type 5), qui contiennent une correspondance aux numéros de séquences envoyés dans les LSAs.
+Quand l’état `Loading` est terminé, les routeurs entrent en `Full Adjacency`. Il est nécessaire d'entrer dans cet état avant de créer la table de routage et de router le trafic. À ce moment, les routeurs d’une même zone ont une base de données d’état de lien identique.
 
-Configurez tous les routeurs OSPF et LAN restant. Pensez à désactiver l'émission de message OSPF sur les réseaux terminaux (LAN 2 à 5) et à configurer le type de réseau OSPF sur chaque interface. Les interfaces sur N1 seront configurées en mode NBMA ce qui vous obligera à déclarer R4 et R5 comme voisins via la commande `neighbor`. Vérifiez le fonctionnement, puis sauvegardez les configuration des routeurs (`save` dans Gonetem).
+Relancez les démons de routage FRR sur les routeurs R3, R6 et R7 en faisant un `restart <router_name>` via Gonetem. Préparez une capture sur l'un de ces routeurs puis lancez un à un les daemons OSPF en observant un temps de pause entre chaque.
 
-Relancez les démons de routage FRR sur les routeurs R3, R6 et R7 en faisant un `restart <router_name>` via Gonetem. Ou alors, vous connectant via l'interface Gonetem sur la console de debug (par exemple `shell R3`) faire `service frr restart` depuis la console. Préparez une capture sur l'un de ces routeurs puis lancez un à un les daemons OSPF en observant un temps de pause entre chaque.
+<font color=blue>**Etape 4** - Dans les échanges entre vos routeurs, observez l’élection du routeur désigné (DR) et du routeur désigné de secours (BDR).</font>
 
-<font color=blue>**Question 4** - Dans les échanges entre vos routeurs, observez l'élection du routeur désigné (DR) et du routeur désigné de secours (BDR).</font>
+<font color=blue>**Etape 5** - Avec les commandes `show ip ospf database [...]` regardez la RIB d'OSPF et observez l’origine des LSA observés.</font>
 
-<font color=blue>**Question 5** - Avec les commandes `show ip ospf database [...]` regardez la RIB d'OSPF et indiquez l'origine des LSA observés.</font>
-
-Validez le routage par des `traceroute` ou `traceptath` vers plusieurs réseaux.
+Validez le routage par des `traceroute` ou `tracepath` vers plusieurs réseaux.
 
 #### Re-configuration sur perte de lien
 
@@ -297,6 +279,7 @@ Nous allons maintenant observer le comportement d'OSPF en cas de perte de lien. 
 ## Annexe : OSPF sur les routeurs FRR
 
 La configuration d'un routeur FRR est très similaire à la configuration d'un routeur Cisco. Vous disposez notamment de l'auto-complétion des commandes et d'une aide en ligne via la touche `?`. Une différence notable avec les routeurs Cisco est le terminal de configuration du routeur est dès le début en mode `enable`.
+
 Les sections suivantes présentent les différentes commandes regroupées par menu.
 
 #### Commandes du menu racine
@@ -314,7 +297,8 @@ Pour rappel, les commandes les plus utiles pour ce TP sont :
 
 #### Commandes du menu `configure terminal`
 
-La seule de ce menu que vous aurez à utiliser pour ce TP est `router-id` qui permet de définir l'identifiant du routeur pour tous les protocoles de routage.  D'autre part, les sections suivantes décrivent les commandes des sous-menus de `configure terminal`.
+La seule de ce menu que vous auriez potentiellement eu à utiliser pour ce TP est `router-id` qui permet de définir l'identifiant du routeur pour tous les protocoles de routage.  
+Cependant, **vous n'avez pas à l'utiliser** : car si non spécifiée, l'ID de routeur est l’adresse IP la plus élevée ou, si configurée, la plus élevée des adresses de `loopback`. Dans votre cas, c'est donc cette dernière qui sera prise en compte.
 
 #### Commandes du menu `router ospf`
 
@@ -334,5 +318,26 @@ Ce menu est un sous menu du menu `configure terminal`.
 
 * `ip ospf network <net_type>` permet de définir le type de réseau OSPF (broadcast, NBMA, point-to-point ou point-to-multipoint);
 * `ip ospf cost <cost>` permet de définir le coût administratif associé à cette interface.
+* 
+#### A propos des captures Wireshark
 
+Le lancement d'une capture peut être consommateur en ressource surtout lorsque vous travaillerez sur la topologie complexe. Aussi, il est possible de capturer les messages OSPF de la façon suivante :
+```
+R1# conf t
+R1(config)# debug ospf packet all
+R1(config)# log file /var/log/frr/ospfd.log
+R1(config)# exit
+```
+Faites ensuite un :
+```
+R1# show debugging
+
+OSPF debugging status:
+  OSPF packet Hello debugging is on
+  OSPF packet Database Description debugging is on
+  OSPF packet Link State Request debugging is on
+  OSPF packet Link State Update debugging is on
+  OSPF packet Link State Acknowledgment debugging is on
+```
+afin que celui-ci soit bien activé. Enfin, n'oubliez pas de faire un `save` dans la console Gonetem si vous souhaitez conserver cette configuration. Il vous suffit de lancer un `shell R1` depuis la console Gonetem et de consulter le fichier de log via, par exemple, `tail -f /var/log/frr/ospfd.log`.
 
