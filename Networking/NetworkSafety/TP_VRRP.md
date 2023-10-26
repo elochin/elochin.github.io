@@ -45,6 +45,12 @@ Vous pouvez maintenant démarrer toutes vos machines, les adresser et leur affec
 Pour observer les échanges protocolaire vous mettrez en place un port miroring sur les switch.
 Vous adresserez également les routeurs et ensuitre vous mettrez en place une redondance.
 
+En cas de problème sur les routeurs CISCO, pour réinitialiser la configuration par défaut :
+```
+erase startup-config
+reload
+no
+```
 
 ## 4.  Test de la configuration
 
@@ -53,17 +59,17 @@ de convergence.
 Pour ce faire, nous utiliserons simplement un **ping entre les 2 machines**. 
 Pour simuler les pannes, nous débrancherons simplement les câbles des interfaces.
 
-Sur wireshark observez:
+Sur wireshark, observez :
 * les échanges protocolaires
     * adresse multicast utilisée 
     * adresse MAC virtuelle
     * adresse IP virtuelle, priorité, id du groupe, etc. 
 * les échanges après un changement de priorité
 
-Sur les routeurs observez:
-* les différents etats de redondance des routeurs
-* la bonnne prise en compte d'un changement de priorité
-* la bonne prise en compte de la perte d'un interface
+Sur les routeurs, observez :
+* les différents états de redondance des routeurs
+* la bonne prise en compte d'un changement de priorité
+* la bonne prise en compte de la perte d'une interface
 
 Dans l'état actuel, la redondance nous protège de la perte de quelle·s interface·s ?
 
@@ -119,7 +125,7 @@ Nous utiliserons la vérification sur un plan routage IP dans ce TP.
 
 Ensuite, se placer en mode de configuration de l'interface du groupe en question et lier la priorité de l'interface au résultat du tracking
 La commande HSRP est : `standby <N° groupe> track <N° objet tracked> [decrement <priorité>]`
-Par défaut, la priorité est décrémenté de 10. On peut régler la valeur qu'il faut à cette priorité.
+Par défaut, la priorité est décrémentée de 10. On peut régler la valeur qu'il faut à cette priorité.
 La commande VRRP est : `vrrp <N° groupe> track <N° objet tracked> [decrement <priorité>] `
 
 
