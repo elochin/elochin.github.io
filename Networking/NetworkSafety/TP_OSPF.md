@@ -32,7 +32,7 @@ Avant de commencer le TP nous allons apprendre à configurer OSPF sur une topolo
 
 **Première étape - découverte de la topologie utilisée**
 
-La topologie utilisée pour la première partie de ce TP est disponible [ici](https://e-campus.enac.fr/moodle/mod/resource/view.php?id=187802). Pour la lancer, dans un terminal taper `gonetem-console open topo_simple.gnet`.
+La topologie utilisée pour la première partie de ce TP est disponible [ici](topo_simple.gnet). Pour la lancer, dans un terminal taper `gonetem-console open topo_simple.gnet`.
 
 Celle-ci est déjà préconfigurée avec l'adressage suivant :
 
@@ -238,7 +238,7 @@ Suite à cette première partie d'introduction, je vous propose de mettre en oeu
 
 ### Topologie
 
-La topologie du réseau utilisé dans ce TP est décrite sur la Fig. 1 et est disponible [ici](https://e-campus.enac.fr/moodle/mod/resource/view.php?id=133867).
+La topologie du réseau utilisé dans ce TP est décrite sur la Fig. 1 et est disponible [ici](ospf.gnet).
 
 
 |  ![Topologie du réseau.](topoOSPF.png) |
