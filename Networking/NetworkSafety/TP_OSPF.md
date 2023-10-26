@@ -14,42 +14,36 @@ Merci de prendre connaissance de vos droits ici : [CC BY-NC-SA 3.0 FR](https://c
 
 ## Présentation du TP
 
+## Objectifs du TP
+
+1. Comprendre le fonctionnement de OSPF
+1. Savoir utiliser OSPF comme protocole de routage dynamique
+1. Savoir réaliser une configuration simple d'OSPF
+
+## Présentation du TP
+
 Ce TP a pour but de vous faire découvrir le protocole de routage dynamique OSPF. L'utilisation d'un tel protocole n'ayant d'intérêt que dans le cas d'un réseau suffisamment complexe, il est nécessaire d'expérimenter ce protocole sur une topologie comprenant un nombre conséquent de routeurs. Dans ce TP, vous prendrez le rôle de l'administrateur réseau d'un (petit) AS. A ce titre, vous devrez décider du plan d'adressage de votre AS (en accord avec les adresses qui vous seront attribuées) et de la configuration des routeurs. De plus, pour tester la fonctionnalité du système, vous pourrez être amenés à configurer les adresses et les routes sur les machines hôtes de test.
 
 Ce TP sera réalisé avec Gonetem. Avant de rentrer dans la configuration d'une topologie complexe, nous débuterons celui-ci en configurant un petit réseau composé de deux routeurs. Notez que l'ensemble des commandes nécessaires à ce TP vous sont récapitulées en annexe.
 
 ## Premiers pas avec OSPF
 
-Avant de commencer le TP nous allons apprendre à configurer OSPF sur une topologie très simple composée de deux routeurs interconnectant deux hôtes. Cette topologie est disponible [ici](topo_simple.gnet). Pour la lancer, dans un terminal taper `gonetem-console open topo_simple.gnet`.
+Avant de commencer le TP nous allons apprendre à configurer OSPF sur une topologie très simple composée de deux routeurs interconnectant deux hôtes. 
 
-**Première étape - adressage**
+**Première étape - découverte de la topologie utilisée**
 
-Configurons cette topologie avec l'adressage suivant :
+La topologie utilisée pour la première partie de ce TP est disponible [ici](https://e-campus.enac.fr/moodle/mod/resource/view.php?id=187802). Pour la lancer, dans un terminal taper `gonetem-console open topo_simple.gnet`.
+
+Celle-ci est déjà préconfigurée avec l'adressage suivant :
 
 ```bash
        192.168.1.0/24       10.0.0.0/8        192.168.2.0/24
  PC1 ------------------ R1 ------------ R2 ------------------ PC2
-   .1               .254 .1           .2 .254                .1
+ eth0                eth0 eth1       eth0 eth1                eth0      
+  .1                 .254 .1          .2 .254                 .1
    
 ```
-
-Par exemple, les commandes à utiliser sur PC1 sont :
-```bash
-root@PC1:/# ip addr add 192.168.1.1/24 dev eth0
-root@PC1:/# ip route add default via 192.168.1.254
-```
-et les commandes sur R1 sont :
-```bash
-R1# enable
-R1# config terminal
-R1(config)# interface eth0
-R1(config-if)# no shutdown
-R1(config-if)# ip add 192.168.1.254/24
-R1(config-if)# interface eth1
-R1(config-if)# no shutdown
-R1(config-if)# ip add 10.0.0.1/8
-```
-Faire de même sur PC2 et R2 en utilisant l'adressage du plan d'adressage ci-dessus.
+Les routes par défaut sont également instanciées. Vérifiez-le avec la commande `ip r` sur PC1 et PC2. 
 
 **Deuxième étape - mise en place du routage**
 
@@ -61,7 +55,6 @@ Ces routes manquantes seront instanciées par le protocole OSPF que vous allez d
 ```bash
 R1(config)# router ospf
 ```
-Si vous ajoutez un `?` à la fin de cette commande, vous verrez qu'elle prend notamment en argument une valeur d'instance (`Instance ID`) optionnelle. Nous omettrons cette valeur qui est un identifiant de processus OSPF local permettant l'exécution de plusieurs processus OSPF sur le même routeur. Cette opération n'est pas recommandée car elle crée plusieurs instances qui ajoutent une surcharge supplémentaire au routeur [[CISCO OSPF]](https://www.cisco.com/c/fr_ca/support/docs/ip/open-shortest-path-first-ospf/7039-1.html). L'autre option notée `vrf` (*virtual routing and forwarding*) est une fonctionnalité permettant à plusieurs instances d'une table de routage de coexister sur le même routeur en même temps. C'est un peu comme faire du VLAN mais au niveau IP [[CISCO VRF]](https://www.cisco.com/c/en/us/td/docs/routers/connectedgrid/cgr1000/ios/software/15_4_1_cg/vrf_cgr1000.html), cette fonctionnalité sort du cadre de ce TP et ne sera pas abordée.
 
 Une fois cette commande saisie, un processus OSPF est lancé sur le routeur mais aucune annonce n'est encore effectuée. En effet, il faut spécifiquement déclarer les interfaces qui vont entrer en jeu. Pour cela, nous allons utiliser la commande `network` qui prendra en argument l'adresse du réseau et son aire (cf. cours). Notez que sur CISCO la notation diffère un peu et que le *wildcard mask* (inverse du *netmask*) est utilisé en lieu et place de la notation CIDR `A.B.C.D/M` comme cela est le cas avec le router FRR sous Gonetem. 
 
@@ -73,26 +66,24 @@ R1(config-router)# network 10.0.0.0/8 area 0
 ```
 Il est également possible de définir un identifiant de routeur via la commande `router-id A.B.C.D`. Si non spécifiée, l'ID de routeur est l’adresse IP la plus élevée ou, si configurée, la plus élevée des adresses de *loopback*. Bien qu'il ne soit pas nécessaire de spécifier un router ID, le choisir explicitement aidera au déboguage, par exemple lors d'un `show ip ospf neighbor`.
 
-*Note : dans l'éventualité où tous les AS de la salle seraient interconnectés, il est indispensable de s'assurer que les adresses de loopback soient distinctes. Aussi, vous utiliserez votre numéro de groupe (unique) comme identifiant final soit 1.1.1.X ou X est votre numéro de groupe.*
-
 Ici, nous déclarerons chaque routeur dans une seule aire : la zéro. Réaliser maintenant les opérations similaires sur R2 puis effectuer un `show ip ospf route` pour vérifier la bonne déclaration des routes dans chaque table. Notez les informations qui y sont listées, notamment la valeur entre crochets qui correspond à une métrique de distance. Le drapeau `N` signifie que ce sont des routes de réseaux (*Network*).
 
 <font color=blue>**Question B** - comment expliqueriez-vous la valeur de métrique choisie ?</font>
 
 Il est possible de changer cette valeur de métrique avec `ip ospf cost <val>` sur l'interface concernée. Cette valeur sera utilisé par l'algorithme SPF (*Shortest Path First*) pour recalculer le graphe en fonction.
 
-Il est également possible de consulter les routes via `show ip route` qui retourne alors toute la table d'acheminement (FIB). Nous obtenons via cette commande deux valeurs entre crochets. La seconde est celle de la métrique également retournée par `ip ospf route` tandis que la première est une distance administrative (*Administrative Distance : AD*) ou route de préférence. C'est une valeur arbitraire permettant de classer les routes obtenues (par divers protocoles de routage) où une faible valeur indique une route préférée. Chaque constructeur utilise ses propres valeurs avec 110 pour OSPF (comme vous pouvez le voir), 120 pour RIP, 20 pour BGP, ... Consultez la page [CISCO show_ip_route](https://www.cisco.com/E-Learning/bulk/public/tac/cim/cib/using_cisco_ios_software/cmdrefs/show_ip_route.htm) pour plus de détails.
+Il est également possible de consulter les routes via `show ip route` qui retourne alors toute la table d'acheminement (FIB). Nous obtenons via cette commande deux valeurs entre crochets. La seconde est celle de la métrique également retournée par `show ip ospf route` tandis que la première est une distance administrative (*Administrative Distance : AD*) ou route de préférence. C'est une valeur arbitraire permettant de classer les routes obtenues (par divers protocoles de routage) où une faible valeur indique une route préférée. Chaque constructeur utilise ses propres valeurs avec 110 pour OSPF (comme vous pouvez le voir), 120 pour RIP, 20 pour BGP, ... Consultez la page [CISCO show_ip_route](https://www.cisco.com/E-Learning/bulk/public/tac/cim/cib/using_cisco_ios_software/cmdrefs/show_ip_route.htm) pour plus de détails.
 
 Il est préférable de ne pas diffuser les annonces OSPF sur les réseaux d'extrémités (i.e. vers PC1 et PC2). L'option `ip ospf passive` permet de rendre muette une interface, ainsi le réseau attaché sera toujours annoncé mais l’interface n’émettra pas de paquets OSPF. 
 
 Par exemple la commande suivante sur R1 :
 
-```
+```bash
 R1(config-router)# interface eth0
-R1(config-if)# ip ospf passive
+R1(config-if) # ip ospf passive
 ```
 permet de stopper les annonces OSPF vers PC1. Notez que la commande `show ip ospf interface eth0` vous permettra de vérifier la mise en oeuvre de cette option :
-```
+```bash
 R1# show ip ospf interface eth0
 eth0 is up
   ifindex 19, MTU 1500 bytes, BW 1000000 Kbit <UP,BROADCAST,RUNNING,MULTICAST>
@@ -106,7 +97,7 @@ Nous allons lister dans cette troisième et dernière partie les commandes impor
 
 La commande `show ip ospf neighbor` retourne des informations sur les routeurs voisins. Regardons les informations qu'elle nous permet d'obtenir, par exemple, sur R1:
 
-```
+```bash
 R1# show ip ospf neighbor
 
 Neighbor ID        Pri State          Dead Time  Address      Interface        (...)
@@ -137,24 +128,24 @@ Ces deux dernières commandes ayant été déjà été abordées ci-dessus en se
 **Quatrième étape - ajout d'une passerelle externe**
 
 Nous allons ajouter une passerelle externe sur R1 qui sera connectée sur la 3ème interface du router (`eth2`). Cette passerelle permettra la connexion vers d'autres AS.
-Nous utiliserons pour cela les deux nouvelles commandes suivantes :
+Nous utiliserons pour cela la commande suivante : `default-information originate` qui indique à OSPF d'accepter de diffuser une route par défaut (ce qu'OSPF ne fait pas normalement). Notez qu'il existe également `redistribute static` qui indique de redistribuer dans OSPF toutes les routes statiques. Normalement, seul `default-information originate` suffit pour redistribuer une route par défaut qui est par définition statique. Cependant, la commande de redistribution statique des routes est utile lorsque vous souhaitez une route statique vers un réseau (et pas uniquement une route par défaut).
 
-* `default-information originate` qui indique à OSPF d'accepter de diffuser une route par défaut (ce qu'OSPF ne fait pas normalement);
-* `redistribute static` qui indique de redistribuer dans OSPF toutes les routes statiques (ici, il n'y en a qu'une).
 Tout d'abord configurons l'interface `eth2` :
-```
+
+```bash
 R1(config)# interface eth2
 R1(config-if)# ip address 172.16.1.1/16
 ```
+
 puis la route par défaut :
-```
+
+```bash
 R1(config)# ip route 0.0.0.0/0 172.16.1.254
 ```
 La configuration OSPF de R1 devient :
-```
+```bash
 !
 router ospf
- redistribute static
  network 10.0.0.0/8 area 0
  network 192.168.1.0/24 area 0
  default-information originate
@@ -162,7 +153,7 @@ router ospf
 ```
 Sur le routeur R2 (qui n'a pas changé de configuration), on peut voir désormais la route par défaut :
 
-```
+```bash
  R2# show ip ospf route 
  ============ OSPF network routing table ============
  N    10.0.0.0/8         [10] area: 0.0.0.0
@@ -185,11 +176,61 @@ R1 est désormais marqué comme ASBR (Autonomous System Boundary Router) car il 
 
 Pour mémoire, vous voyez le coût de chaque route entre crochets. OSPF permet d'affecter un coût à chaque interface, pour décourager l'utilisation de liens lents, qui ne sont bons qu'à servir de secours. Notre routeur a mis un coût de 10 par défaut. Sur R1 la configuration de l'interface eth0 est la suivante :
 
-```
+```bash
  ip address 192.168.1.254/24
  ip ospf cost 200
 ```
 C'est pourquoi sur R2 192.168.1.0/24 a un coût cumulé de 10+200 = 210.
+
+**Cinquième étape - ajout d'une adresse de loopback**
+
+Nous allons configurer une adresse de loopback sur R1 et R2 pour améliorer la lecture de la commande `ip ospf database`. Nous utiliserons `1.1.1.1/32` pour R1 et `2.2.2.2/32` pour R2. Cette adresse de loopback deviendra le `router-id` de chaque routeur. En effet, l'ID de routeur est soit l’adresse IP la plus élevée ou, si configurée, la plus élevée des adresses de loopback. Dans votre cas, c'est donc cette dernière qui sera prise en compte. Dans le cas où celle-ci ne serait pas prise en compte, redémarrer le routeur avec la commande `restart` depuis la console Gonetem.
+
+Exemple pour R1 :
+```bash
+R1(config)# int lo
+R1(config-if)# ip address 1.1.1.1/32
+```
+
+cette adresse doit être également diffusée par OSPF aussi :
+
+```bash
+R1(config-router)# network 1.1.1.1/32 area 0
+```
+
+Redémarrez R1 et R2 pour que ces adresses soient prises en compte et faites un `show ip ospf database` sur R1. Vous obtenez :
+
+```bash
+R1# sh ip ospf database
+
+       OSPF Router with ID (1.1.1.1)
+
+                Router Link States (Area 0.0.0.0)
+
+Link ID         ADV Router      Age  Seq#       CkSum  Link count
+1.1.1.1        1.1.1.1          173 0x8000000a 0xd4b2 3
+2.2.2.2        2.2.2.2          173 0x80000006 0xdba3 3
+
+                Net Link States (Area 0.0.0.0)
+
+Link ID         ADV Router      Age  Seq#       CkSum
+10.0.0.2       2.2.2.2          174 0x80000001 0x3505
+
+                AS External Link States
+
+Link ID         ADV Router      Age  Seq#       CkSum  Route
+0.0.0.0        1.1.1.1          217 0x80000001 0x299b E2 0.0.0.0/0 [0x0]
+```
+
+Je peux lire avec cette commande que : 
+
+* R1 a pour *router ID* 1.1.1.1
+* Deux routeurs dont R1 sont dans l'aire 0
+* Chaque routeur à 3 liens (colone Link de Router Link States). En effet, l'adresse de loopback est comptabilisée comme un lien
+* Le Network LSA m’informe qu’il y a un DR dans l’aire 0 pour le segment 10.0.0.2 et que ce DR est R2 (section Net Link States (Area 0.0.0.0))
+* Enfin, il y a un LSA pour la route par défaut (AS External Link States)
+
+Explorez également les commandes `sh ip ospf database router 1.1.1.1` et `sh ip ospf database network 2.2.2.2` pour observer les informations supplémentaires obtenues.
 
 ## Manipulations
 
@@ -197,7 +238,7 @@ Suite à cette première partie d'introduction, je vous propose de mettre en oeu
 
 ### Topologie
 
-La topologie du réseau utilisé dans ce TP est décrite sur la Fig. 1 et disponible [ici](ospf.gnet).
+La topologie du réseau utilisé dans ce TP est décrite sur la Fig. 1 et est disponible [ici](https://e-campus.enac.fr/moodle/mod/resource/view.php?id=133867).
 
 
 |  ![Topologie du réseau.](topoOSPF.png) |
@@ -209,32 +250,32 @@ La topologie du réseau utilisé dans ce TP est décrite sur la Fig. 1 et dispon
 La première étape de ce TP consistera en la définition du plan d'adressage du réseau. Vous prendrez soin d'utiliser aussi peu d'adresses que possible tout en tenant compte des contraintes suivantes :
 
 * les LAN 1 à 5 doivent pouvoir accueillir jusqu'à 254 machines;
-
-* le réseau N1 est un réseau NBMA avec au maximum 254 machines;
-
 * les liaisons point-à-point ne doivent pas avoir plus de 2 routeurs;
+* chaque routeur doit avoir une loopback de configurée qui sera son `router-id`. Rappel : l'ID de routeur est soit l’adresse IP la plus élevée ou, si configurée, la plus élevée des adresses de loopback. Dans votre cas, c'est donc cette dernière qui sera prise en compte. Dans le cas où celle-ci ne serait pas prise en compte, redemarrer le routeur avec la commande `restart` depuis la console Gonetem.
 
-* chaque routeur doit avoir une loopback de configurée qui sera son `router-id`. En effet, l'ID de routeur est soit l’adresse IP la plus élevée ou, si configurée, la plus élevée des adresses de loopback. Dans votre cas, c'est donc cette dernière qui sera prise en compte. Dans le cas où celle-ci ne serait pas prise en compte, redemarrer le routeur avec la commande `restart` depuis la console Gonetem.
+Pour ce denier point, configurez pour chaque routeur une adresse de loopback sur un réseau indépendant. Une adresse loopback se configure ainsi :
+```
+R1(config)# interface lo
+R1(config-if)# ip address a.b.c.d/32
+```
 
-Pour ce denier point, configurez pour chaque routeur une adresse de loopback sur un réseau indépendant. Vous pouvez, par exemple, utiliser votre numéro de groupe ou le numéro d'hôte de votre machine suivi du numéro de routeur dupliqué 3 fois. Dans ce cas l'adresse de loopback pour R1 sera 22.1.1.1, pour R2 : 22.2.2.2, ... pour le groupe 22 à condition que vous n'ayez pas déjà un réseau 22 sur votre topologie. Une adresse loopback se configure ainsi :
-```
-R1(config)# interface loopback
-R1(config-if)# ip address 22.1.1.1/32
-```
-Il suffit alors d'utiliser la commande `router-id` présentée plus haut comme suit :
-```bash
-R1(config)# router ospf
-R1(config-router)# router-id 22.1.1.1
-```
 Enfin, afin que chaque routeur puisse se pinguer sur leurs adresses de loopback, pensez à déclarer ces adresses dans votre configuration de router :
 ```bash
-R1(config-router)# network 22.1.1.1/32 area 0
+R1(config-router)# network a.b.c.d/32 area 0
 ```
-Pour l'adressage, n'hésitez pas à vous aider d'un calculateur d'adresses IP comme par exemple [CIDR calculator](http://www.subnet-calculator.com/cidr.php]).
+N'hésitez pas à vous aider d'un calculateur d'adresses IP comme par exemple [CIDR calculator](http://www.subnet-calculator.com/cidr.php).
 
 *Note : dans l'éventualité où tous les AS de la salle seraient interconnectés, il est indispensable de s'assurer que leurs adressages soient distincts. Aussi, vous utiliserez votre numéro de groupe (unique) comme identifiant de votre réseau. Les enseignants feront donc office d'autorité de distribution d'adresses, adressez-vous à eux pour récupérer votre préfixe. Notez que l'adresse externe du routeur R1 vous sera donnée en même temps que le préfixe d'adresse à utiliser pour votre AS.*
 
 <font color=blue>**Etape 1** - Dessinez la topologie de votre AS et son plan d'adressage.</font>
+
+### OSPF avec aire unique
+
+#### Prise en main d’OSPF
+
+Configurez tous les routeurs OSPF et LAN. Pensez à désactiver l'émission de message OSPF sur les réseaux terminaux (LAN 2 à 5). Vérifiez le fonctionnement, puis sauvegardez votre configuration (`save` dans Gonetem).
+
+*Note : dans le cas où votre topologie serait connectée à un autre AS (de l'un de vos camarades par exemple) il vous faudrait ajouter des routes à votre routeur R1 de façon à ce qu'il puisse atteindre les autres AS (une route par AS distant). Ensuite il vous faudrait redistribuer les routes externes à l'AS depuis le routeur R1 et à configurer la liaison comme une liaison "point-to-point".*
 
 #### Observation des mécanismes OSPF
 
@@ -242,14 +283,15 @@ Dans cet ordre précis :
 
 1. Connectez-vous sur R3 et faites un `shutdown` sur l'interface se connectant à R1 (`int eth3`)
 2. Dans la console Gonetem redémarrez R1 via `restart R1`
-3. Lancez immédiatement après le redémarrage une capture sur R1 toujours dans la console Gonetem avec la commande `capture R1.0`. 
+3. Lancez immédiatement après le redémarrage une capture sur R1 toujours dans la console Gonetem avec la commande `capture R1.0`
+4. Faites un `shutdown` puis juste après un `no shutdown` depuis l'interface connectée à R3 tout en poursuivant la capture
 
 <font color=blue>**Etape 2** - On s'intéresse aux messages Hello, complétez le texte ci-dessous :</font>
 
 *Lorsqu'un routeur entame un processus de routage OSPF sur une interface, il envoie un paquet Hello à intervalles réguliers. La valeur par défaut observée est de ........................... Elle se retrouve dans le champs ...........................  du paquet Hello OSPF. Les messages sont envoyés entre les routeurs ........................... sur des adresses IP de type ...........................
 Le message Hello contient entre-autre, dans son en-tête OSPF l'aire et le routeur source qui correspondent respectivement aux champs ........................... Ils ont pour valeur dans le cadre de ma topologie ......................... Enfin le paquet Hello OSPF renseigne sur la désignation du routeur maître, esclave et voisin via les champs .........................*
 
-Faites un `shutdown` puis juste après un `no shutdown` depuis l'interface connectée à R3 tout en poursuivant la capture.
+De nouveau, faites un `shutdown` puis juste après un `no shutdown` depuis l'interface connectée à R3 tout en poursuivant la capture.
 
 <font color=blue>**Etape 3** - Quels sont les nouveaux échanges réalisés entre vos deux routeurs (lignes en noir sous Wireshark) ?</font>
 
@@ -274,12 +316,25 @@ Validez le routage par des `traceroute` ou `tracepath` vers plusieurs réseaux.
 
 Nous allons maintenant observer le comportement d'OSPF en cas de perte de lien. Nous travaillerons sur le lien R1-R3. Préparez plusieurs captures à des endroits choisis du réseau afin de voir ce qu’il se passe lors de la perte du lien. Validez le nouveau routage par des `traceroute` vers plusieurs réseaux (dans et hors de votre AS).
 
-<font color=blue>**Question 6** - Observez le changement de route grâce au traceroute.</font>
+<font color=blue>**Etape 6** - Observez le changement de route grâce au traceroute.</font>
+
+#### Ajout d'une authentification OSPF afin d'échanger des informations de mise à niveau de routage d'une manière sécurisée. 
+
+L'authentification OSPF peut être de type « none » (ou null), « simple » ou « MD5 ».
+MD5 est un algorithme Message-Digest spécifié dans la RFC 1321. 
+MD5 est considéré comme le mode d'authentification OSPF le plus sécurisé.
+
+Reliez maintenant votre AS à une autre AS via le réseau de la salle et connecter vos AS via OSPF avec authentification.
+
+Utilisez la commande ‘ip ospf authentication message-digest’ sous l'interface pour configurer l'authentification MD5 ainsi que la commande ‘ip ospf message-digest-key 1 md5 M0t2P@ss’ pour spécifier la clé d’authentification choisie et partagée avec l’autre binôme.
+
+Vous prendrez soin de changer le mot de passe de la commande en exemple.
+
+<font color=blue>**Etape 7** - Via une capture wireshark, vérifier dans l'entête (header) des messages ospf que votre connexion au voisinage est bien sécurisée.</font>
 
 ## Annexe : OSPF sur les routeurs FRR
 
 La configuration d'un routeur FRR est très similaire à la configuration d'un routeur Cisco. Vous disposez notamment de l'auto-complétion des commandes et d'une aide en ligne via la touche `?`. Une différence notable avec les routeurs Cisco est le terminal de configuration du routeur est dès le début en mode `enable`.
-
 Les sections suivantes présentent les différentes commandes regroupées par menu.
 
 #### Commandes du menu racine
@@ -300,6 +355,8 @@ Pour rappel, les commandes les plus utiles pour ce TP sont :
 La seule de ce menu que vous auriez potentiellement eu à utiliser pour ce TP est `router-id` qui permet de définir l'identifiant du routeur pour tous les protocoles de routage.  
 Cependant, **vous n'avez pas à l'utiliser** : car si non spécifiée, l'ID de routeur est l’adresse IP la plus élevée ou, si configurée, la plus élevée des adresses de `loopback`. Dans votre cas, c'est donc cette dernière qui sera prise en compte.
 
+D'autre part, les sections suivantes décrivent les commandes des sous-menus de `configure terminal`.
+
 #### Commandes du menu `router ospf`
 
 Ce menu est un sous-menu du menu `configure terminal`.
@@ -316,9 +373,12 @@ Commandes du menu `interface <iface>`
 
 Ce menu est un sous menu du menu `configure terminal`.
 
-* `ip ospf network <net_type>` permet de définir le type de réseau OSPF (broadcast, NBMA, point-to-point ou point-to-multipoint);
 * `ip ospf cost <cost>` permet de définir le coût administratif associé à cette interface.
-* 
+
+Pour information :
+
+* Si vous regardez l'aide de la commande via un `router ospf ?`, vous verrez qu'elle prend notamment en argument une valeur d'instance (`Instance ID`) optionnelle. Nous omettrons cette valeur qui est un identifiant de processus OSPF local permettant l'exécution de plusieurs processus OSPF sur le même routeur. Cette opération n'est pas recommandée car elle crée plusieurs instances qui ajoutent une surcharge supplémentaire au routeur [[CISCO OSPF]](https://www.cisco.com/c/fr_ca/support/docs/ip/open-shortest-path-first-ospf/7039-1.html). L'autre option notée `vrf` (*virtual routing and forwarding*) est une fonctionnalité permettant à plusieurs instances d'une table de routage de coexister sur le même routeur en même temps. C'est un peu comme faire du VLAN mais au niveau IP [[CISCO VRF]](https://www.cisco.com/c/en/us/td/docs/routers/connectedgrid/cgr1000/ios/software/15_4_1_cg/vrf_cgr1000.html), cette fonctionnalité sort du cadre de ce TP et ne sera pas abordée.
+
 #### A propos des captures Wireshark
 
 Le lancement d'une capture peut être consommateur en ressource surtout lorsque vous travaillerez sur la topologie complexe. Aussi, il est possible de capturer les messages OSPF de la façon suivante :
