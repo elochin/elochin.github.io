@@ -240,6 +240,12 @@ Suite à cette première partie d'introduction, je vous propose de mettre en oeu
 
 La topologie du réseau utilisé dans ce TP est décrite sur la Fig. 1 et est disponible [ici](ospf.gnet).
 
+*Note : si vous souhaitez lancer cette topologie depuis vos **machines personnelles**, il vous faudra tout d'abord créer une interface virtuelle dans le terminal de la machine avant de lancer Gonetem. Pour cela faire :*
+```bash
+eleve@gonetem:~$ sudo ip tuntap add mode tap virtual
+eleve@gonetem:~$ gonetem-console open ospf-bridge.gnet
+```
+
 
 |  ![Topologie du réseau.](topoOSPF.png) |
 |:--:|
