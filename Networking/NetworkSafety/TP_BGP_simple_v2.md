@@ -18,11 +18,11 @@ Nous allons tout d'abord réaliser les opérations de voisinage entre les AS. Ce
 Notez qu'un `debug bgp updates` a été activé sur R1 et R2. Les logs étant sauvés dans `/var/log/frr/bgpd.log`. Vous pouvez donc également lancer une console de debug depuis l'interface Gonetem sur R1 : `debug R1` et tapez `tail -f  /var/log/frr/bgpd.log | grep BGP` et laissez cette console de debug active durant votre configuration afin d'observer uniquement les échanges BGP.
 
 Configurez BGP sur R1. Il est nécessaire de lancer ces 2 commandes avant la déclaration des voisins sinon ils ne coopèrent pas :
-
+```
 R1(config)# router bgp 100
 R1(config-router)# no bgp ebgp-requires-policy
 R1(config-router)# no bgp network import-check
-
+```
 Nous déclarerons R1 et R2 voisins comme suit :
 ```
 R1(config)# router bgp 100
