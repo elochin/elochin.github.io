@@ -119,7 +119,7 @@ Enfin, si vous voulez mesurer le temps de téléchargement de votre fichier, vou
 
 #### Analyse des logs
 
-Il est possible d'analyser les qlog générés par quic-go en ligne. Pour générer des qlog côtés client ou serveur, il vous suffit d'ajouter l'option `-qlog` à la ligne de commande, par exemple : `quic-client -v -q -qlog -insecure https://192.168.0.1:6121/index.html`
+Il est possible d'analyser les qlog générés par quic-go en ligne. Pour générer des qlog côtés client ou serveur, il vous suffit d'ajouter l'option `-qlog` à la ligne de commande, par exemple : `quic-client -v -q -qlog -insecure https://10.0.0.1:6121/index.html`
 
 L'analyse peut-être alors réalisée en ligne à cette adresse :[ qvis v0.1, the QUIC and HTTP/3 visualization toolsuite](https://qvis.quictools.info/#/files)
 
