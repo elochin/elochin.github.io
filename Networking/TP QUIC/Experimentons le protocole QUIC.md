@@ -63,7 +63,7 @@ Ouvrez deux consoles supplémentaires sur SRC et DST en tapant `console SRC`` et
 Nous allons illustrer le principe de partage équitable de la capacité d'un lien partagé par deux flots TCP. Voici les commandes à lancer :
 
 1. sur une des consoles DST tapez : `iperf3 -s` et sur l'autre `iperf3 -s -p 6000` afin de tourner un second processus iPerf3 sur un autre port. Le premier utilisé est 5201 (valeur par défaut), le second 6000
-2. sur une console SRC lancez `iperf3 -c 10.0.0.1 -t 1000`. Attendez que le débit se stabilise à 10Mb/s
+2. sur une console SRC lancez `iperf3 -c 10.0.0.1 -t 1000`. Attendez que le débit se stabilise à 5Mb/s
 3. sur la seconde console SRC lancez `iperf3 -c 10.0.0.1 -t 1000 -p6000`. Quel débit est obtenu par les deux flots ?
 4. sur la première console SRC générant le trafic vers le port par défaut, arrêtez la génération de trafic et lancez la commande suivante : `iperf3 -c 10.0.0.1 -t 1000 -P2` qui va générer deux flots en parallèle.
 
@@ -75,7 +75,7 @@ Toujours en utilisant la même topologie précédente, nous allons illustrer l�
 
 1. sur chacune des consoles DST ouvertes : `iperf3 -s` et `iperf3 -s -p6000` sur l'autre console DST
 2. sur une console SRC lancez `iperf3 -c 10.0.0.1 -t 1000`. Attendez que le débit se stabilise à 5Mb/s
-3. sur l'autre console SRC `iperf3 -c 10.0.0.1 -t 1000 -u -p6000 -b 1M`. Quel débit est obtenu par les deux flots ?M
+3. sur l'autre console SRC `iperf3 -c 10.0.0.1 -t 1000 -u -p6000 -b 1M`. Quel débit est obtenu par les deux flots ?
 4. puis changez avec `iperf3 -c 10.0.0.1 -t 1000 -u -p6000 -b 3M`. Quel débit est obtenu par les deux flots ?
 
 <img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> Expliquez vos observations dans votre cahier de laboratoire.
