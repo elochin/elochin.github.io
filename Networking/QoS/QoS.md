@@ -234,7 +234,7 @@ Supposons que l'on génère un trafic avec un simple *ping* en faisant varier la
 <img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> Expérimentons avec un TBF :
 
 1. paramétrez un TBF sur l'interface de sortie du routeur avec :`tc qdisc add dev eth1 root handle 1: tbf rate 1mbit burst 1500b limit 1500b`;
-2. lancez `tc -s qdisc show` pour obtenir les statistiques de la file. Réalisez un ping depuis SRC avec : `ping -s 1500 10.0.0.1` et consultez de nouveau `tc -s qdisc show` qu'observez-vous ? Quelle taille maximale devez-vous utiliser pour que votre `ping` fonctionne et pourquoi ?
+2. lancez `tc -s qdisc show` pour obtenir les statistiques de la file. Réalisez un ping depuis SRC avec : `ping -s 1500 10.0.0.1` et consultez de nouveau `tc -s qdisc show` qu'observez-vous ? Quelle taille maximale devez-vous utiliser pour que votre `ping` fonctionne et pourquoi (pensez aux tailles des entêtes ICMP, IP, Ethernet) ?
 
 Le retour de `tc -s qdisc show` renvoie la limite sous forme de latence, celle affichée avec la configuration précédente est nulle (`lat 0us`). En changeant la valeur de la limite avec `limit 5000b` par exemple, la valeur de la latence retournée par `tc -s qdisc show` passe à 28ms sur ma machine. Cette valeur se calcule de la façon suivante : 5000 bytes correspond à 3 paquets de 1500 plus 500 restant (limit = 3 * 1500 + 500). La délai de transmission d'un paquet est de L/C soit 1500b/1mbit/s soit 12ms. Si 4 paquets arrive, le premier sera servi et 2 paquets + 1/3 sera mis dans le tampon soit 7/3 * 12ms = 28ms. La formule générale (sans considérer la rafale) est donc (limit/L -1) * (L/C) ou L ici est la MTU.
 
