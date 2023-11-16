@@ -52,9 +52,9 @@ Avant de nous intéresser au protocole QUIC, nous allons faire quelques révisio
 
 Tout d'abord, nous allons limiter la capacité du lien de sortie grâce à TC et ajouter un délai toujours sur l'interface de sortie du routeur RTR vers DST. Ouvrez une console sur RTR et tapez la commande suivante : `tc qdisc add dev eth1 root netem rate 1mbit delay 10ms limit 10`. Cette commande utilise un émulateur de line Linux Netem qui permet de faire de la limitation de débit, ajouter du délai, des pertes, ... Cette commande permet de limiter notre lien à 1Mb/s et qu'il est caractérisé par un délai de transmission de 10ms. Vous pouvez vérifier le délai obtenu avec un `ping`.
 
-Une fois fait, revenez sur les consoles SRC et DST. Dans la première, faites un ping vers DST : `ping 10.0.0.1` et laissez-le tourner. Noter la valeur du RTT de celui-ci. Dans la console DST, lancez un serveur iPerf3 : `iperf3 -s`. Enfin dans la seconde console SRC, lancez une génération de trafic UDP en tapant : `iperf3 -c 10.1.1.1 -u -b 2M`. Vous observerez alors une génération de débit de 2Mb/s depuis SRC et une réception de ~1Mb/s coté DST à cause de la limitation sur RTR.
+Une fois fait, revenez sur les consoles SRC et DST. Dans la première, faites un ping vers DST : `ping 10.0.0.1` et laissez-le tourner. Noter la valeur du RTT de celui-ci. Dans la console DST, lancez un serveur iPerf3 : `iperf3 -s`. Enfin dans la seconde console SRC, lancez une génération de trafic UDP en tapant : `iperf3 -c 10.0.0.1 -u -b 2M`. Vous observerez alors une génération de débit de 2Mb/s depuis SRC et une réception de ~1Mb/s coté DST à cause de la limitation sur RTR.
 
-<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> Que remarquez-vous concernant le débit du ping ? Comment expliquez-vous cette variation ?
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> Que remarquez-vous concernant le délai du ping ? Comment expliquez-vous cette variation ?
 
 #### TCP et l'équité
 
