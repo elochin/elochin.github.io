@@ -190,7 +190,7 @@ root@SRC:/# iperf3 -c 10.0.0.1 -u -b20K -t 20 -S 0x10
 
 1. depuis SRC générez un trafic TCP standard avec : `iperf3 -c 10.0.0.1 -i1 -t500`; 
 2. ensuite dans une autre console lancez un *ping* **sans marquage** conjointement avec ce trafic : `ping 10.0.0.1`
-3. observez l'évolution du délai du RTT; stoppez le ping et marquez le trafic avec `-Q 0x10`. Quelle est maintenant le RTT mesuré ? Expliquez pourquoi et vérifier la classification du trafic avec `tc class`;
+3. observez l'évolution du délai du RTT; stoppez le ping et marquez le trafic avec `-Q 0x10`. Quelle est maintenant le RTT mesuré ? Expliquez pourquoi et vérifier la classification du trafic avec `tc -s class show dev eth1`;
 4. stoppez le ping et lancez la génération d'un trafic UDP sur un autre port avec `iperf3` sans (i.e.,  `iperf3 -c 10.0.0.1 -u -b20K -p10000 -t 20`), puis avec marquage en ajoutant `-S 0x10`;
 5. répondez aux mêmes questions que ci-dessus et reportez vos conclusions dans votre cahier de laboratoire.
 
