@@ -334,7 +334,7 @@ DEV=eth1
 tc qdisc del root dev $DEV
 
 # Limite la capacité du lien à 10Mbit/s
-# tc qdisc add root handle 1:0 dev eth1 tbf rate 10Mbit limit 3KB burst 3KB
+tc qdisc add root handle 1:0 dev eth1 tbf rate 10Mbit limit 3KB burst 3KB
 
 # Attache un CBQ à $DEV
 tc qdisc add dev $DEV parent 1:0 handle 2:0 cbq bandwidth 10Mbit allot 1514 cell 8 \
