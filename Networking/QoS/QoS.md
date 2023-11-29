@@ -373,5 +373,5 @@ Les filtres sont très facilement paramétrables, il est par exemple possible de
 1. quelles sont les règles qui permettent de filtrer le trafic ?
 1. tester le en générant du trafic TCP dans chacune des classes, tout d'abord dans la classe 1, puis 10 secondes après la classe 2, puis encore 10 secondes après la classe 3. Observez l'isolation obtenue, quels débit obtenez-vous dans chaque classe ? 
 1. modifiez le comportement des classes en ajoutant/supprimant les mots clés `bounded` et `isolated` afin d'en analyser leur impact;
-1. modifiez et adaptez ce script afin de mettre en oeuvre le premier schéma de répartition (50% UDP, 50% TCP équitablement réparti en Telnet et FTP). Complétez votre cahier de laboratoire avec les résultats obtenus.
+1. modifiez et adaptez ce script afin de mettre en oeuvre le premier schéma de répartition (50% UDP, 50% TCP équitablement réparti en Telnet et FTP). Attention : lorsque vous modifiez les débits (`rate`), il faut également adapter les poids (`weight`) de façon cohérente. Complétez votre cahier de laboratoire avec les résultats obtenus.
 
