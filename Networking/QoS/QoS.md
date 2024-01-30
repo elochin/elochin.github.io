@@ -4,6 +4,10 @@ Ce document est sous licence Creative Creative Commons <br>
 Attribution - Pas d’Utilisation Commerciale - Partage dans les Mêmes Conditions 3.0 France <br>
 Merci de prendre connaissance de vos droits ici : [CC BY-NC-SA 3.0 FR](https://creativecommons.org/licenses/by-nc-sa/3.0/fr/)
 
+## Slides du cours
+
+[Introduction à la QoS](Introduction_QoS.pdf)
+
 ## Déroulement du TP
 
 Ce TP a pour objectif de vous illustrer les principes de base des mécanismes de gestion de la QoS.
