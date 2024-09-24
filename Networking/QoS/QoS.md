@@ -15,8 +15,8 @@ Nous travaillerons avec un **cahier de laboratoire** qui consiste en un fichier 
 
 Dans la suite, lorsqu'il sera question de :
 
-* machine hôte ou terminal maître, nous parlerons d'un terminal ou de la machine qui aura été lancée en dehors de Pynetem;
-* machine virtuelle, hôte virtuel ou terminal virtuel, nous parlerons d'un hôte ou d'un terminal obtenu sous Pynetem via `console SRC` ou SRC est le nom de l'hôte virtuel par exemple.
+* machine hôte ou terminal maître, nous parlerons d'un terminal ou de la machine qui aura été lancée en dehors de Gonetem;
+* machine virtuelle, hôte virtuel ou terminal virtuel, nous parlerons d'un hôte ou d'un terminal obtenu sous Gonetem via `console SRC` ou SRC est le nom de l'hôte virtuel par exemple.
 
 ## Mise en place du banc de test pour le TP
 
@@ -66,7 +66,7 @@ La commande `tc` offre de multiples fonctionnalités dont nous allons détailler
 ### qdisc par défaut
 
 Nous pouvons vérifier les *qdisc* instanciées par défaut sur vos interfaces réseaux en tapant la commande `tc qdisc show`.
-Comme vous le constaterez, les terminaux virtuels de l'interface Pynetem n'ont aucune `qdisc` par défaut :
+Comme vous le constaterez, les terminaux virtuels de l'interface Gonetem n'ont aucune `qdisc` par défaut :
 
 ```bash
 root@SRC:/# tc qdisc show
@@ -77,14 +77,14 @@ qdisc noqueue 0: dev eth0 root refcnt 2
 Dans le terminal de la machine hôte, vous verrez que la discipline par défaut est `pfifo_fast`. Notez que vous pouvez également obtenir cette information via `ip link` (champs `qdisc` sur la seconde ligne ci-dessous) :
 
 ```bash
-eleve@pynetem:~$ ip link show dev enp0s3
+eleve@gonetem:~$ ip link show dev enp0s3
 2: enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
     link/ether 08:00:27:5f:84:a4 brd ff:ff:ff:ff:ff:ff
 ```
 La *qdisc* par défaut consiste donc en une seule discipline de mise en file d'attente `pfifo_fast` qui ne contient aucune classe de trafic définie par l'utilisateur. Cette discipline de mise en file d'attente fonctionne comme un *priority queuing* avec des files FIFO et examine le champs TOS/DSCP pour hiérarchiser certains paquets. La sortie équivalente avec `tc` donne :
 
 ```bash
-eleve@pynetem:~$ /usr/sbin/tc qdisc show dev enp0s3
+eleve@gonetem:~$ /usr/sbin/tc qdisc show dev enp0s3
 qdisc pfifo_fast 0: root refcnt 2 bands 3 priomap  1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1
 ```
 La sortie ci-dessus se lit comme suit (lisez la page de manuel correspondante `man tc-pfifo_fast` et `man tc-prio`: 
