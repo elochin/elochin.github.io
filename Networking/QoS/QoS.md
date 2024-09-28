@@ -354,3 +354,6 @@ Les filtres sont très facilement paramétrables, il est par exemple possible de
 1. modifiez le comportement des classes en changeant le paramètre `ceil` à la même valeur du `rate` afin d'en analyser l'impact;
 1. modifiez et adaptez ce script afin de mettre en oeuvre le premier schéma de répartition (50% UDP, 50% TCP équitablement réparti en Telnet et FTP). Complétez votre cahier de laboratoire avec les résultats obtenus.
 
+## Mise en oeuvre d'une architecture à QoS sur un réseau 
+
+TODO
