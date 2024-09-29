@@ -6,8 +6,8 @@ Merci de prendre connaissance de vos droits ici : [CC BY-NC-SA 3.0 FR](https://c
 
 ## Slides du cours
 
-Tout d'abord, visionner ces quelques slides d'introduction à la QoS qui introduisent votre TP.
-Cours d'introduction à la QoS en video sous-titrée :
+Tout d'abord, visionner ces quelques slides d'introduction à la QoS qui introduisent votre TP :
+
 <a href="https://drive.google.com/uc?export=download&id=1_oWPrYkPmeTrj3jU_m8JTDozinSxeE4o" title="Video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 <img width=40% height="315" src="intro.png"></a>
 
