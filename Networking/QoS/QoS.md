@@ -11,13 +11,6 @@ Cours d'introduction à la QoS en video sous-titrée :
 <a href="https://drive.google.com/uc?export=download&id=1_oWPrYkPmeTrj3jU_m8JTDozinSxeE4o" title="Video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 <img width=40% height="315" src="intro.png"></a>
 
-Test
-
-<video width="640" height="480" controls>
-	<source src="https://drive.google.com/uc?export=download&id=1_oWPrYkPmeTrj3jU_m8JTDozinSxeE4o" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
-
 Le reste des slides est disponible ci-dessous. Ils seront utilisés en partie pour introduire certains exercices et ajouter quelques compléments aux mécanismes présentés.
 
 [Introduction à la QoS](Introduction_QoS.pdf)
