@@ -10,6 +10,9 @@ Tout d'abord, visionner ces quelques slides d'introduction à la QoS qui introdu
 
 [Cours d'introduction à la QoS en video sous-titrée](https://drive.google.com/uc?export=download&id=1_oWPrYkPmeTrj3jU_m8JTDozinSxeE4o)
 
+<a href="https://drive.google.com/uc?export=download&id=1_oWPrYkPmeTrj3jU_m8JTDozinSxeE4o" title="Video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+<img width=40% height="315" src="aqm_sched.png">
+
 Le reste des slides est disponible ci-dessous. Ils seront utilisés en partie pour introduire certains exercices et ajouter quelques compléments aux mécanismes présentés.
 
 [Introduction à la QoS](Introduction_QoS.pdf)
