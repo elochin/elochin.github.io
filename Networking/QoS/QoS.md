@@ -299,7 +299,13 @@ Une part de la bande passante est donc attribuée à chaque niveau. La gestion d
 
 L'API TC propose deux algorithmes de mise en forme du trafic : `tc-cbq` et `tc-htb`. Le premier (CBQ) est le plus ancien tandis que Hierarchy Token Bucket (HTB) est une version plus rapide et plus simple à configurer. HTB consiste en un nombre arbitraire de TBF disposés hiérarchiquement. C'est celui que nous allons expérimenter.
 
+## Hierarchy Token Bucket (HTB)
+
+HTB est un algorithme qui fait presque du tout en un. En effet, il permet à la fois le lissage de trafic avec l'utilisation de TBF, l'implémentation de plusieurs classes pour faire de la répartition et équilibrage de trafic, ainsi que de la priorité entre les classes.
+
 <img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> Consulter la page de manuel du HTB en tapant `man tc-htb` dans un terminal Linux et prenez connaissance des paramètres `prio`, `rate`, `ceil` et `burst`.
+
+Les paramètres `prio`, `rate` et `burst` sont similaires à ceux que vous avez déjà rencontré. En revanche `ceil` mérite quelques explications pour bien comprendre :
 
 #### Explication de l'option`ceil`
 
