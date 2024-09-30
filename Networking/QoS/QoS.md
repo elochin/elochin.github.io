@@ -223,6 +223,20 @@ Nous allons illustrer le principe de partage équitable avec l'ordonnanceur Stoc
 6. générez de nouveau un trafic TCP de 5 flots en parallèle depuis SRC pendant 30 secondes et notez les débits moyens finaux obtenus. Calculez la moyenne et l'écart-type pour ces 5 flots, répétez l'expérimentation une fois et refaite le calcul;
 7. comparez vos résultats avec et sans SFQ. Qu'en concluez-vous, notez vos constatations dans votre cahier de laboratoire.
 
+### Maintenant combinons plusieurs files
+
+Etant donné que l'ensemble des files présentées sont *classfull*, il est donc possible de les cascader ensemble pour obtenir un arbre de classes complexe, par exemple :
+
+```
+tc qdisc add dev eth1 root handle 1: tbf rate 1mbit burst 32kbit latency 50ms
+tc qdisc add dev eth1 parent 1: handle 2: prio
+tc qdisc add dev eth1 parent 2:1 handle 10: sfq
+tc qdisc add dev eth1 parent 2:2 handle 20: sfq
+tc qdisc add dev eth1 parent 2:3 handle 30: sfq
+```
+Cela offre une grande souplesse dans la mise en oeuvre de politique de classification complexe.
+Il reste cependant à classifier différents trafics dans les trois *qdisc* SFQ. Nous verrons après le TBF avec la classe HTB comment rediriger des flots donnés dans une classe.
+
 ### Traffic Shaping
 
 Le TBF consiste en un tampon, ou seau, constamment rempli par des éléments virtuels appelés jetons à un débit spécifique. La taille du seau correspond au nombre de jetons pouvant être stockés. L'émission d'un paquet consomme un jeton qui est alors supprimé du seau. On observe trois cas de figure :
