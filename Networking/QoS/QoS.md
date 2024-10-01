@@ -72,7 +72,7 @@ Attention à ne pas confondre *queuing discipline* (file d'attente) et *schedule
 
 <img src="aqm_sched.png" alt="aqm_sched.png" width=800 />
 
-> Notez qu'en amont des deux files FIFO, un *classifier* est utilisé pour placer les paquets bleus dans la file du haut et les jaunes dans la file du bas. Comme expliqué plus, ce *classifier* peut utiliser un champs de l'en-tête IP ou une marque placée dans le champs DSCP. 
+> Notez qu'en amont des deux files FIFO, un *classifier* est utilisé pour placer les paquets bleus dans la file du haut et les jaunes dans la file du bas. Comme déjà expliqué, ce *classifier* peut utiliser un champs de l'en-tête IP ou une marque placée dans le champs DSCP. 
 
 La commande `tc` offre de multiples fonctionnalités dont nous allons détailler certaines d'entre-elles plus bas. Consultez la page de manuel de `tc` (en faisant `man tc`) pour avoir un aperçu des options qui vous seront utiles. Vous trouverez tout en bas de cette page l'index des pages de chaque *qdisc* disponible par exemple pour RED : `tc-red`. 
 
