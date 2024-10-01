@@ -63,7 +63,7 @@ Le contrôle de trafic peut, entre autre, décider si le paquet est mis dans une
 Les éléments nécessaires au LTC sont les suivants :
 * La *queuing discipline* (*qdisc*) : ce sont les gestionnaires de file d'attente et les ordonnanceurs que nous allons détailler et expérimenter plus bas;
 * Les *classes* : elles sont gérées par la discipline de file d'attente du périphérique. Une classe correspond à un ensemble de règles marquant les données propres à une classe. On pourrait, par exemple, avoir une classe limitant le taux des paquets à 1 Mbps pendant la journée et qui passe ce taux à 5 Mbps durant la nuit. Plusieurs *queuing discipline* peuvent être liées à des classes. Par défaut, si aucune discipline n'est stipulée, on utilise FIFO; 
-* Les filtres (*classifiers*) : ils filtrent les paquets afin de les organiser dans des classes gérées par des disciplines de file d'attente. Plusieurs filtres sont disponibles comme le *route-based classifier*, *RSVP Classifier* et le *u32 classifier*. Les filtres de *firewalling* peuvent être également utilisés, on pourrait donc utiliser une règle `iptables` comme *classifier*. Les *route classifiers* classent les paquets en fonction de la table de routage. Les *u32 classifier* sont utilisés pour faire de la classification basée sur l'adresse IP de destination, l'adresse IP source, le port TCP/UDP de destination, le port TCP/UDP source, le champ TOS et Protocol. 
+* Les filtres (*classifiers*) : ils filtrent les paquets afin de les organiser dans des classes gérées par des disciplines de file d'attente. Plusieurs filtres sont disponibles comme le *route-based classifier*, *RSVP Classifier* et le *u32 classifier*. Les filtres de *firewalling* peuvent être également utilisés, on pourrait donc utiliser une règle `iptables` comme *classifier*. Les *route classifiers* classent les paquets en fonction de la table de routage. Les *u32 classifier* sont utilisés pour faire de la classification basée sur l'adresse IP de destination, l'adresse IP source, le port TCP/UDP de destination, le port TCP/UDP source, le champs DSCP (anciennement champs TOS) et Protocol. 
 * Le *policing* : le but de la politique de trafic est de s'assurer que le trafic n'excède pas certaines bornes. 
 
 Le composant de base du LTC est la gestion de file d'attente *qdisc* pour *queuing discipline*. L'implémentation la plus simple d'un *qdisc* est la discipline FIFO. Parmi les autres disciplines, nous commencerons par explorer le filtre TBF (*Token Bucket Filter*), qui met en forme le trafic ou, lisse le trafic, afin de se conformer à la fois à un débit de sortie et à une taille de rafale donnée.
@@ -71,6 +71,8 @@ Le composant de base du LTC est la gestion de file d'attente *qdisc* pour *queui
 Attention à ne pas confondre *queuing discipline* (file d'attente) et *scheduler* (ordonnanceur). Une *queuing discipline* est une file d'attente dans laquelle les paquets vont être stockés pour future émission. La file FIFO est la plus simple des *queuing discipline*. Un *scheduler* va quant à lui ordonnancer la sortie des paquets stockés dans une (virtuelle) ou plusieurs files (réelles) d'attente. Sur le schéma ci-dessous nous avons deux *queuing discipline* FIFO et un *scheduler* de type *round robin* (i.e., simple tourniquet) :
 
 <img src="aqm_sched.png" alt="aqm_sched.png" width=800 />
+
+Notez qu'en amont des deux files FIFO, un *classifier* est utilisé pour placer les paquets bleus dans la file du haut et les jaunes dans la file du bas. Comme expliqué plus, ce *classifier* peut utiliser un champs de l'en-tête IP ou une marque placée dans le champs DSCP. 
 
 La commande `tc` offre de multiples fonctionnalités dont nous allons détailler certaines d'entre-elles plus bas. Consultez la page de manuel de `tc` (en faisant `man tc`) pour avoir un aperçu des options qui vous seront utiles. Vous trouverez tout en bas de cette page l'index des pages de chaque *qdisc* disponible par exemple pour RED : `tc-red`. 
 
@@ -187,9 +189,17 @@ qdisc tbf 1: dev eth1 root refcnt 2 rate 1Mbit burst 4Kb/1 mpu 0b lat 50.0ms lin
 qdisc prio 2: dev eth1 parent 1: bands 3 priomap  1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1
 ```
 
-Nous n'utiliserons ni marquage, ni classification, celui-ci sera réalisé par l'application. Certains outils, comme `ping`, possède des options de marquage qui sont donc réalisés via l'API socket (i.e., `setsockopt(sockfd, IPPROTO_TCP, IP_TOS, ...)`) .
+Nous n'utiliserons le marquage implémenté par l'application. Certains outils, comme `ping`, possède des options de marquage qui sont donc réalisés via l'API socket (i.e., `setsockopt(sockfd, IPPROTO_TCP, IP_TOS, ...)`) . La classification étant déjà implémenté par `tc-prio`, celle-ci est listée dans la page de manuel de `tc-prio` dans la section `QDISC PARAMETERS` sous-section `priomap`. Consultez le second tableau.
 
-Notre trafic `ping` simulera notre trafic WhatsApp prioritaire. Suivant la documentation de `tc-prio` un marquage correspondant à nos attentes pourrait être `0x10` (consultez la page de manuel de `tc-prio` pour comprendre pourquoi). Nous utiliserons donc la commande suivante : 
+Note : pour y accèder plus rapidement, dans un terminal de votre machine, tapez :
+
+```
+eleve@gonetem:~$ man tc-prio
+/QDISC PARAM
+/priomap
+```
+
+Notre trafic `ping` simulera notre trafic WhatsApp prioritaire. Suivant la documentation de `tc-prio` un marquage correspondant à nos attentes pourrait être `0x10` (consultez de nouveau la page de manuel de `tc-prio` pour comprendre pourquoi). Nous utiliserons donc la commande suivante : 
 
 ```bash
 root@SRC:/# ping 10.0.0.1 -Q 0x10
@@ -208,6 +218,8 @@ root@SRC:/# iperf3 -c 10.0.0.1 -u -b20K -t 20 -S 0x10
 3. observez l'évolution du délai du RTT; stoppez le ping et marquez le trafic avec `-Q 0x10`. Quelle est maintenant le RTT mesuré ? Expliquez pourquoi et vérifier la classification du trafic avec `tc -s class show dev eth1`;
 4. stoppez le ping et lancez la génération d'un trafic UDP sur un autre port avec `iperf3` sans (i.e.,  `iperf3 -c 10.0.0.1 -u -b20K -p10000 -t 20`), puis avec marquage en ajoutant `-S 0x10`;
 5. répondez aux mêmes questions que ci-dessus et reportez vos conclusions dans votre cahier de laboratoire.
+
+Note : bien évidemment dans un cas de production, nous n'irons pas demander à chaque utilisateur 
 
 ### Fair Queuing
 
