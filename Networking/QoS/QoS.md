@@ -72,7 +72,7 @@ Attention à ne pas confondre *queuing discipline* (file d'attente) et *schedule
 
 <img src="aqm_sched.png" alt="aqm_sched.png" width=800 />
 
-Notez qu'en amont des deux files FIFO, un *classifier* est utilisé pour placer les paquets bleus dans la file du haut et les jaunes dans la file du bas. Comme expliqué plus, ce *classifier* peut utiliser un champs de l'en-tête IP ou une marque placée dans le champs DSCP. 
+> Notez qu'en amont des deux files FIFO, un *classifier* est utilisé pour placer les paquets bleus dans la file du haut et les jaunes dans la file du bas. Comme expliqué plus, ce *classifier* peut utiliser un champs de l'en-tête IP ou une marque placée dans le champs DSCP. 
 
 La commande `tc` offre de multiples fonctionnalités dont nous allons détailler certaines d'entre-elles plus bas. Consultez la page de manuel de `tc` (en faisant `man tc`) pour avoir un aperçu des options qui vous seront utiles. Vous trouverez tout en bas de cette page l'index des pages de chaque *qdisc* disponible par exemple pour RED : `tc-red`. 
 
@@ -219,7 +219,7 @@ root@SRC:/# iperf3 -c 10.0.0.1 -u -b20K -t 20 -S 0x10
 4. stoppez le ping et lancez la génération d'un trafic UDP sur un autre port avec `iperf3` sans (i.e.,  `iperf3 -c 10.0.0.1 -u -b20K -p10000 -t 20`), puis avec marquage en ajoutant `-S 0x10`;
 5. répondez aux mêmes questions que ci-dessus et reportez vos conclusions dans votre cahier de laboratoire.
 
-Note : bien évidemment dans un cas de production, nous n'irons pas demander à chaque utilisateur 
+> Note : bien évidemment dans un cas de production, nous n'irons pas demander à chaque utilisateur de marquer manuellement son trafic. Cela sera réalisé par l'opérateur. Dans le cas d'un marquage (par exemple, lorsque l'utilisation d'un champs IP n'est pas envisageable), on peut utiliser la commande `iptables` pour cela. Dans le cas de cet exercice, la commande correspondante serait `iptables -t mangle -A OUTPUT -o eth0 -p icmp -j TOS --set-tos 0x20`.
 
 ### Fair Queuing
 
