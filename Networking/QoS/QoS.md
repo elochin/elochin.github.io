@@ -68,7 +68,7 @@ Les éléments nécessaires au LTC sont les suivants :
 
 Le composant de base du LTC est la gestion de file d'attente *qdisc* pour *queuing discipline*. L'implémentation la plus simple d'un *qdisc* est la discipline FIFO. Parmi les autres disciplines, nous commencerons par explorer le filtre TBF (*Token Bucket Filter*), qui met en forme le trafic ou, lisse le trafic, afin de se conformer à la fois à un débit de sortie et à une taille de rafale donnée.
 
-Attention à ne pas confondre *queuing discipline* (file d'attente) et *scheduler* (ordonnaceur). Une *queuing discipline* est une file d'attente dans laquelle les paquets vont être stockés pour future émission. La file FIFO est la plus simple des *queuing discipline*. Un *scheduler* va quant à lui ordonnancer la sortie des paquets stockés dans une (virtuelle) ou plusieurs files (réelles) d'attente. Sur le schéma ci-dessous nous avons deux *queuing discipline* FIFO et un *scheduler* de type *round robin* (i.e., simple tourniquet) :
+Attention à ne pas confondre *queuing discipline* (file d'attente) et *scheduler* (ordonnanceur). Une *queuing discipline* est une file d'attente dans laquelle les paquets vont être stockés pour future émission. La file FIFO est la plus simple des *queuing discipline*. Un *scheduler* va quant à lui ordonnancer la sortie des paquets stockés dans une (virtuelle) ou plusieurs files (réelles) d'attente. Sur le schéma ci-dessous nous avons deux *queuing discipline* FIFO et un *scheduler* de type *round robin* (i.e., simple tourniquet) :
 
 <img src="aqm_sched.png" alt="aqm_sched.png" width=800 />
 
