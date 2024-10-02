@@ -279,7 +279,7 @@ Supposons que l'on génère un trafic avec un simple *ping* en faisant varier la
 
 Le retour de `tc -s qdisc show` renvoie la limite sous forme de latence, celle affichée avec la configuration précédente est nulle (`lat 0us`). En changeant la valeur de la limite avec `limit 5000b` par exemple, la valeur de la latence retournée par `tc -s qdisc show` passe à 28ms sur ma machine. Cette valeur se calcule de la façon suivante : 5000 bytes correspond à 3 paquets de 1500 plus 500 restant (limit = 3 * 1500 + 500). Le délai de transmission d'un paquet est de L/C soit 1500 octets divisé par 1Mbit/s soit 12ms. Si 4 paquets arrivent, le premier sera servi et 2 paquets + 1/3 seront mis dans le tampon soit 7/3 * 12ms = 28ms. La formule générale (sans considérer la rafale) est donc (limit/L -1) * (L/C) ou L ici est la MTU.
 
-<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> Reparamétrez votre TBF avec le débit et la limite suivant : `tc qdisc add dev eth1 root tbf rate 100kbit burst 1500b limit 5000b`. Quelles valeurs sont retournées par `tc -s qdisc show` lorsque vous faites un :
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> Reparamétrez votre TBF avec le débit et la limite suivants : `tc qdisc add dev eth1 root tbf rate 100kbit burst 1500b limit 5000b`. Quelles valeurs sont retournées par `tc -s qdisc show` lorsque vous faites un :
 
 1. `ping 10.0.0.1 -s1458`
 2. `ping 10.0.0.1 -s1458 -i 0.1`
