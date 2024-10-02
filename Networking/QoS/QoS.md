@@ -388,7 +388,7 @@ Les filtres sont très facilement paramétrables, il est par exemple possible de
 <img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> A la lecture et analyse de ce script :
 
 1. quelles sont les règles qui permettent de filtrer le trafic ?
-1. tester le en générant du trafic TCP dans chacune des classes, tout d'abord dans la classe 1, puis 10 secondes après la classe 2, puis encore 10 secondes après la classe 3. Quels débit obtenez-vous dans chaque classe avant et après le demarrage respectif de chacune d'entre-elles ? 
+1. tester le en générant du trafic TCP dans chacune des classes, tout d'abord dans la classe 1, puis 10 secondes après la classe 2, puis encore 10 secondes après la classe 3. Quels débits obtenez-vous dans chaque classe, avant et après le demarrage respectif de chacune d'entre-elles ? 
 1. modifiez le comportement des classes en changeant le paramètre `ceil` à la même valeur du `rate` afin d'en analyser l'impact;
 1. modifiez et adaptez ce script afin de mettre en oeuvre le premier schéma de répartition (50% UDP, 50% TCP équitablement réparti en Telnet et FTP). Complétez votre cahier de laboratoire avec les résultats obtenus.
 
