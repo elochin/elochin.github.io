@@ -382,7 +382,7 @@ tc filter add dev $DEV parent 2:0 protocol ip prio 1 u32 match ip dport 5002 0xf
 tc filter add dev $DEV parent 2:0 protocol ip prio 1 u32 match ip dport 5003 0xffff flowid 2:4
 ```
 
-Les filtres sont très facilement paramétrables, il est par exemple possible de s'intéresser à l'adresse IP destination avec `match ip dst A.B.C.D` ou le protocole avec `match ip protocol 17 0xff` pour UDP ou encore `match ip protocol 1 0xff` pour ICMP. Pour mémoire, la numérotation des protocoles est donnée dans `/etc/protocols/`. Dans le cas où la classification s'opère sur le champs TOS, changer avec : `match ip tos 0x10 0xff` pour une valeur `0x10` par exemple.
+Les filtres sont très facilement paramétrables, il est par exemple possible de s'intéresser à l'adresse IP destination avec `match ip dst A.B.C.D` ou le protocole avec `match ip protocol 17 0xff` pour UDP ou encore `match ip protocol 1 0xff` pour ICMP. Pour mémoire, la numérotation des protocoles est donnée dans `/etc/protocols/`. Dans le cas où la classification s'opère sur le champs TOS, changer avec : `match ip tos 0x10 0xff` pour une valeur `0x10` par exemple. Il est aussi possible de combiner des règles exemple : `tc filter add dev $DEV protocol ip parent 1:1 prio 1 u32 match ip protocol 6 0xff match ip dport 80 0xffff flowid 1:11`.
 
 
 <img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> A la lecture et analyse de ce script :
