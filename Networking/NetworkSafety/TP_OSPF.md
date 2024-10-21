@@ -184,7 +184,7 @@ C'est pourquoi sur R2 192.168.1.0/24 a un coût cumulé de 10+200 = 210.
 
 **Cinquième étape - ajout d'une adresse de loopback**
 
-Nous allons configurer une adresse de loopback sur R1 et R2 pour améliorer la lecture de la commande `ip ospf database`. Nous utiliserons `192.168.100.1/32` pour R1 et `192.168.100.2/32` pour R2. Cette adresse de loopback deviendra le `router-id` de chaque routeur. Dans le cas où celle-ci ne serait pas prise en compte, redémarrer le routeur avec la commande `restart` depuis la console Gonetem.
+Nous allons configurer une adresse de loopback sur R1 et R2 pour améliorer la lecture de la commande `ip ospf database`. Nous utiliserons `192.168.100.1/32` pour R1 et `192.168.100.2/32` pour R2. Cette adresse de loopback deviendra le *router ID* de chaque routeur. Dans le cas où celle-ci ne serait pas prise en compte, redémarrer le routeur avec la commande `restart` depuis la console Gonetem.
 
 Exemple pour R1 :
 ```bash
@@ -257,7 +257,7 @@ La première étape de ce TP consistera en la définition du plan d'adressage du
 
 * les LAN 1 à 5 doivent pouvoir accueillir jusqu'à 254 machines;
 * les liaisons point-à-point ne doivent pas avoir plus de 2 routeurs;
-* chaque routeur doit avoir une loopback de configurée qui sera son `router-id`. Rappel : l'ID de routeur est soit l’adresse IP la plus élevée ou, si configurée, la plus élevée des adresses de loopback. Dans votre cas, c'est donc cette dernière qui sera prise en compte. Dans le cas où celle-ci ne serait pas prise en compte, redemarrer le routeur avec la commande `restart` depuis la console Gonetem.
+* chaque routeur doit avoir une loopback de configurée qui sera son *router ID*. Rappel : l'ID de routeur est soit l’adresse IP la plus élevée ou, si configurée, la plus élevée des adresses de loopback. Dans votre cas, c'est donc cette dernière qui sera prise en compte. Dans le cas où celle-ci ne serait pas prise en compte, redemarrer le routeur avec la commande `restart` depuis la console Gonetem.
 
 Pour ce denier point, configurez pour chaque routeur une adresse de loopback sur un réseau indépendant. Une adresse loopback se configure ainsi :
 ```
@@ -355,13 +355,6 @@ Pour rappel, les commandes les plus utiles pour ce TP sont :
 * `show ip ospf neighbor` qui vous donne des informations sur les voisins OSPF;
 * `show ip ospf interface <iface>` qui vous donne des informations la configuration OSPF de l'interface;
 * `show ip route` qui vous donne le contenu de la table d’acheminement (FIB).
-
-#### Commandes du menu `configure terminal`
-
-La seule de ce menu que vous auriez potentiellement eu à utiliser pour ce TP est `router-id` qui permet de définir l'identifiant du routeur pour tous les protocoles de routage.  
-Cependant, **vous n'avez pas à l'utiliser** : car si non spécifiée, l'ID de routeur est l’adresse IP la plus élevée ou, si configurée, la plus élevée des adresses de `loopback`. Dans votre cas, c'est donc cette dernière qui sera prise en compte.
-
-D'autre part, les sections suivantes décrivent les commandes des sous-menus de `configure terminal`.
 
 #### Commandes du menu `router ospf`
 
