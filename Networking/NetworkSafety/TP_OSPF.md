@@ -64,7 +64,7 @@ Pour les interfaces du router R1 cela donne :
 R1(config-router)# network 192.168.1.0/24 area 0
 R1(config-router)# network 10.0.0.0/8 area 0
 ```
-Il est également possible de définir un identifiant de routeur via la commande `router-id A.B.C.D`. Si non spécifiée, l'ID de routeur est l’adresse IP la plus élevée ou, si configurée, la plus élevée des adresses de *loopback*. Bien qu'il ne soit pas nécessaire de spécifier un router ID, le choisir explicitement aidera au déboguage, par exemple lors d'un `show ip ospf neighbor`.
+L'identifiant du routeur (le *router ID*) est l’adresse IP la plus élevée ou, si configurée, la plus élevée des adresses de *loopback*. Cet identifiant est utile pour mieux identifier les routeurs au déboguage, par exemple, lors d'un `show ip ospf neighbor`. Pour cela, nous utiliserons par la suite une adresse de *loopback* pour chaque routeur qui fera office de *router ID*.
 
 Ici, nous déclarerons chaque routeur dans une seule aire : la zéro. Réaliser maintenant les opérations similaires sur R2 puis effectuer un `show ip ospf route` pour vérifier la bonne déclaration des routes dans chaque table. Notez les informations qui y sont listées, notamment la valeur entre crochets qui correspond à une métrique de distance. Le drapeau `N` signifie que ce sont des routes de réseaux (*Network*).
 
@@ -104,7 +104,7 @@ Neighbor ID        Pri State          Dead Time  Address      Interface        (
 192.168.2.254       1 Full/DR          32.067s   10.0.0.2     eth1:10.0.0.1    (...)
 ```
 
-`Neighbor ID` est l'ID de routeur du routeur voisin. L'ID de routeur est l'adresse IP la plus élevée ou, si configurée, la plus élevée des adresses de *loopback*. Cette dernière peut-être configurée manuellement avec `router-id a.b.c.d`. Puisque R1 n'a pas d'adresse de *loopback* de configurée l'adresse IP la plus haute devient l'ID de routeur. 
+`Neighbor ID` est l'ID de routeur du routeur voisin. L'ID de routeur est l'adresse IP la plus élevée ou, si configurée, la plus élevée des adresses de *loopback*. Puisque R1 n'a pas d'adresse de *loopback* de configurée l'adresse IP la plus haute devient l'ID de routeur.
 
 `Priority` le champ `Pri` indique la priorité du routeur voisin. Le routeur avec la valeur la plus petite est le plus prioritaire et devient le maître (*Designated Router - DR*). Si les priorités sont identiques, alors le routeur avec l'ID du routeur le plus élevé devient le DR (mais parfois c'est le premier routeur lancé qui le devient). Par défaut, des priorités sont fixées à 1. Vous pouvez vérifier que R2 est bien en *backup*.
 
@@ -184,18 +184,18 @@ C'est pourquoi sur R2 192.168.1.0/24 a un coût cumulé de 10+200 = 210.
 
 **Cinquième étape - ajout d'une adresse de loopback**
 
-Nous allons configurer une adresse de loopback sur R1 et R2 pour améliorer la lecture de la commande `ip ospf database`. Nous utiliserons `1.1.1.1/32` pour R1 et `2.2.2.2/32` pour R2. Cette adresse de loopback deviendra le `router-id` de chaque routeur. En effet, l'ID de routeur est soit l’adresse IP la plus élevée ou, si configurée, la plus élevée des adresses de loopback. Dans votre cas, c'est donc cette dernière qui sera prise en compte. Dans le cas où celle-ci ne serait pas prise en compte, redémarrer le routeur avec la commande `restart` depuis la console Gonetem.
+Nous allons configurer une adresse de loopback sur R1 et R2 pour améliorer la lecture de la commande `ip ospf database`. Nous utiliserons `192.168.100.1/32` pour R1 et `192.168.100.2/32` pour R2. Cette adresse de loopback deviendra le `router-id` de chaque routeur. Dans le cas où celle-ci ne serait pas prise en compte, redémarrer le routeur avec la commande `restart` depuis la console Gonetem.
 
 Exemple pour R1 :
 ```bash
 R1(config)# int lo
-R1(config-if)# ip address 1.1.1.1/32
+R1(config-if)# ip address 192.168.100.1/32
 ```
 
 cette adresse doit être également diffusée par OSPF aussi :
 
 ```bash
-R1(config-router)# network 1.1.1.1/32 area 0
+R1(config-router)# network 192.168.100.1/32 area 0
 ```
 
 Redémarrez R1 et R2 pour que ces adresses soient prises en compte et faites un `show ip ospf database` sur R1. Vous obtenez :
@@ -203,34 +203,34 @@ Redémarrez R1 et R2 pour que ces adresses soient prises en compte et faites un 
 ```bash
 R1# sh ip ospf database
 
-       OSPF Router with ID (1.1.1.1)
+       OSPF Router with ID (192.168.100.1)
 
                 Router Link States (Area 0.0.0.0)
 
 Link ID         ADV Router      Age  Seq#       CkSum  Link count
-1.1.1.1        1.1.1.1          173 0x8000000a 0xd4b2 3
-2.2.2.2        2.2.2.2          173 0x80000006 0xdba3 3
+192.168.100.1        192.168.100.1          173 0x8000000a 0xd4b2 3
+192.168.100.2        192.168.100.2          173 0x80000006 0xdba3 3
 
                 Net Link States (Area 0.0.0.0)
 
 Link ID         ADV Router      Age  Seq#       CkSum
-10.0.0.2       2.2.2.2          174 0x80000001 0x3505
+10.0.0.2       192.168.100.2          174 0x80000001 0x3505
 
                 AS External Link States
 
 Link ID         ADV Router      Age  Seq#       CkSum  Route
-0.0.0.0        1.1.1.1          217 0x80000001 0x299b E2 0.0.0.0/0 [0x0]
+0.0.0.0        192.168.100.1          217 0x80000001 0x299b E2 0.0.0.0/0 [0x0]
 ```
 
 Je peux lire avec cette commande que : 
 
-* R1 a pour *router ID* 1.1.1.1
+* R1 a pour *router ID* 192.168.100.1
 * Deux routeurs dont R1 sont dans l'aire 0
 * Chaque routeur à 3 liens (colone Link de Router Link States). En effet, l'adresse de loopback est comptabilisée comme un lien
 * Le Network LSA m’informe qu’il y a un DR dans l’aire 0 pour le segment 10.0.0.2 et que ce DR est R2 (section Net Link States (Area 0.0.0.0))
 * Enfin, il y a un LSA pour la route par défaut (AS External Link States)
 
-Explorez également les commandes `sh ip ospf database router 1.1.1.1` et `sh ip ospf database network 2.2.2.2` pour observer les informations supplémentaires obtenues.
+Explorez également les commandes `sh ip ospf database router 192.168.100.1` et `sh ip ospf database network 192.168.100.2` pour observer les informations supplémentaires obtenues.
 
 ## Manipulations
 
