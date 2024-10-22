@@ -85,10 +85,11 @@ R1(config-if) # ip ospf passive
 permet de stopper les annonces OSPF vers PC1. Notez que la commande `show ip ospf interface eth0` vous permettra de vérifier la mise en oeuvre de cette option :
 ```bash
 R1# show ip ospf interface eth0
-eth0 is up
-  ifindex 19, MTU 1500 bytes, BW 1000000 Kbit <UP,BROADCAST,RUNNING,MULTICAST>
-  OSPF not enabled on this interface
-  (...)
+ (...)
+ Timer intervals configured, Hello 10s, Dead 40s, Wait 40s, Retransmit 5
+    No Hellos (Passive interface)
+  Neighbor Count is 0, Adjacent neighbor count is 0
+ (...)
 ```
 
 **Troisième étape - vérification du bon fonctionnement**
