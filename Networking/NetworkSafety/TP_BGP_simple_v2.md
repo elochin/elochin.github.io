@@ -93,7 +93,13 @@ Dans la console de debug R1 vous devriez voir apparaître l'ajout de la route su
 2020/10/10 09:16:39 BGP: u2:s2 send UPDATE len 51 numpfx 1
 2020/10/10 09:16:39 BGP: u2:s2 54.32.10.2 send UPDATE w/ nexthop 54.32.10.2
 ```
-Un `show ip bgp neighbors 54.32.10.2 advertised-routes` sur R1 vous permet de voir les routes annoncées par R2 et un `show ip route` l'ajout de ces dernières dans votre FIB. Vérifiez depuis R2 que vous pinguez l'adresse de PC1 (`do ping 100.0.0.1`).
+Depuis R1 : 
+
+* `show ip bgp neighbors 54.32.10.2 advertised-routes` vous permet de voir les routes annoncées vers R2;
+* `show ip bgp neighbors 54.32.10.2 routes`, les routes reçues par R1 provenant de R2;
+* `show ip route` l'ajout des routes dans votre FIB. 
+
+Vérifiez depuis R2 que vous pinguez l'adresse de PC1 (`do ping 100.0.0.1`).
 
 Il ne vous reste plus qu'à répéter ces opérations pour R3 et R4. Toutes ces des relations sont dites eBGP car elles concernent l'interconnexion de deux AS.
 
