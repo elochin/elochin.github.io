@@ -333,7 +333,7 @@ HTB est un algorithme qui fait presque du tout en un. En effet, il permet à la 
 
 Les paramètres `prio`, `rate` et `burst` sont similaires à ceux que vous avez déjà rencontré. En revanche `ceil` mérite quelques explications pour bien comprendre :
 
-#### Explication de l'option`ceil`
+#### Explication de l'option `ceil`
 
 Comme déjà souligné précédemment, un lien doit pouvoir en cas de congestion recevoir la capacité minimum qui lui est alloué. Ce sont ces deux mots clés qui permettent justement de mettre en oeuvre cette hypothèse. Prenons la répartition suivante :
 
