@@ -392,6 +392,13 @@ Les filtres sont très facilement paramétrables, il est par exemple possible de
 1. modifiez le comportement des classes en changeant le paramètre `ceil` à la même valeur du `rate` afin d'en analyser l'impact;
 1. modifiez et adaptez ce script afin de mettre en oeuvre le premier schéma de répartition (50% UDP, 50% TCP équitablement réparti en Telnet et FTP). Complétez votre cahier de laboratoire avec les résultats obtenus.
 
-## Mise en oeuvre d'une architecture à QoS sur une topologie plus complexe 
+## Mise en oeuvre d'une architecture à QoS de type "triple play"
 
-TODO
+L'objectif de cet exercice est de configurer une offre "triple play" comprenant ToIP, VoD et internet. Offre similaire à celles proposées par les fournisseurs d'accès internet (FAI) aujourd'hui. Pour ce faire, vous devez définir trois classes avec réservation de capacité en utilisant HTB. La première classe correspondra à la ToIP, elle sera simulée par un `ping -s 1000 -i 0.01`. La seconde, un flot TCP sur le port 5000 via iperf, quant au reste du trafic, celui-ci sera par défaut classé dans la troisième.
+
+1. A quel débit correspond un `ping -s 1000 -i 0.01` ? Justifiez votre calcul et définissez la classe HTB de ce trafic ToIP en arrondissant au mégabit supérieur. Le condititionnement sera strictement limité à cette valeur.
+2. La classe VoD sera conditionnée par un lissage de 3Mb/s strict. Configurez cette seconde classe HTB en conséquence.
+3. Définissez la dernière classe de trafic suivant la somme des deux précédentes, cependant, cette dernière pourra occuper la capacité maximale en cas de non utilisation des deux classes précédentes.
+4. Définissez les filtres pour les classes 1 et 2 en vous inspirant du précédent exercice.
+5. Savoir lire une page de manuel est une étape importante dans la vie d'un ingénieur réseau. En consultant `man tc` et les options `filter`, quelle commande utiliseriez-vous pour filtrer tout le trafic par défaut dans cette classe ?
+6. Mettez en oeuvre cette architecture et vérifier son bon fonctionnement. 
