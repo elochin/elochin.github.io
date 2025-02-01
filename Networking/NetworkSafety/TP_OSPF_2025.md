@@ -344,7 +344,8 @@ Pour rappel, les commandes les plus utiles pour ce TP sont :
 * `show ip ospf route` qui vous donne le contenu de la FIB issue d'OSPF;
 * `show ip ospf neighbor` qui vous donne des informations sur les voisins OSPF;
 * `show ip ospf interface <iface>` qui vous donne des informations la configuration OSPF de l'interface;
-* `show ip route` qui vous donne le contenu de la table d’acheminement (FIB).
+* `show ip route` qui vous donne le contenu de la table d’acheminement (FIB);
+* `clear ip process ospf` commande qui vous est parfois conseillée après une saisie, et qui permet de relancer le processus OSPF sur un routeur. Utile lors de modifications de votre configuration.
 
 #### Commandes du menu `router ospf`
 
