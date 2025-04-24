@@ -192,7 +192,7 @@ Nous allons illustrer le principe de partage équitable de la capacité d'un lie
 <img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 />
 
 1. sur PC2 et PC4 : `iperf3 -s`
-1. sur PC1 lancez `iperf3 -c 10.1.1.1 -t 1000`. Attendez que le débit se stabilise à 10Mb/s
+1. sur PC1 lancez `iperf3 -c 10.1.1.1 -t 1000`. Attendez que le débit se stabilise (autour des 8Mb/s environ)
 1. sur PC3 `iperf3 -c 10.1.1.2 -t 1000`. Quel débit est obtenu par les deux flots ?
 1. sur PC3, arrêtez la génération de trafic et lancez la commande suivante : `iperf3 -c 10.1.1.2 -t 1000 -P2` qui va générer deux flots en parallèle depuis PC3 vers PC4. Vers quel débit converge le flot TCP entre PC1 et PC2 ?
 1. même question avec `-P3`
@@ -204,7 +204,7 @@ Toujours en utilisant la même topologie précédente, nous allons illustrer l�
 <img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 />
 
 1. sur PC2 et PC4 : `iperf3 -s`
-1. sur PC1 lancez `iperf3 -c 10.1.1.1 -t 1000`. Attendez que le débit se stabilise à 10Mb/s
+1. sur PC1 lancez `iperf3 -c 10.1.1.1 -t 1000`. Attendez que le débit se stabilise (autour des 8Mb/s environ)
 1. sur PC3 `iperf3 -c 10.1.1.2 -t 1000 -u -b 2M`. Quel débit est obtenu par les deux flots ?
 1. sur PC3 `iperf3 -c 10.1.1.2 -t 1000 -u -b 5M`. Quel débit est obtenu par les deux flots ?
 1. sur PC3 `iperf3 -c 10.1.1.2 -t 1000 -u -b 8M`. Quel débit est obtenu par les deux flots ?
