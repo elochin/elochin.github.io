@@ -23,7 +23,7 @@ Pour cela, vous allez utiliser la topologie de test suivante (téléchargez fich
 ```bash
 PC1 ------------------------------ R1 ------------------------------ PC2
 eth0:10.0.0.1/24                  eth0: 10.0.0.254/24                eth0:10.1.1.1/24
-								  eth1: 10.1.1.254/24
+                                  eth1: 10.1.1.254/24
 ```
 Lancez GoNetem et votre scénario d'émulation depuis une console en tapant : `gonetem-console open TP_UDP_TCP.gnet`. Vous obtenez alors le prompt suivant :
 ```
@@ -181,7 +181,16 @@ Que remarquez-vous concernant le délai du ping ? Comment expliquez-vous cette v
 
 Nous allons modifier notre topologie afin d'y ajouter deux machines, pour cela nous allons ajouter deux switches comme montré sur l'image suivante :
 
-<center><img src="https://gonetem.readthedocs.io/en/latest/_images/topology.png"></img></center>
+```bash
+PC1 ---------------+                                        +--------------- PC2
+eth0:10.0.0.1/24   |                                        |                eth0:10.1.1.1/24
+                   |                                        |
+                   +------- SW1 ------ R1 ------- SW2 ------+
+                   |                                        |
+                   |                                        |
+PC3 ---------------+                                        +--------------- PC4
+eth0:10.0.0.2/24                                                             eth0:10.1.1.2/24
+```
 
 Rappel : n'oubliez pas de faire un `save` dans la console GoNetem pour sauvegarder vos configurations IP.
 
