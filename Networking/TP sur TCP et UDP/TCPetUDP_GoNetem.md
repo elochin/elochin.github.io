@@ -135,13 +135,19 @@ N'oubliez pas de compléter votre cahier de laboratoire avec le résultat de cha
 
 ### Mode flot et mode datagramme/paquet
 
-Lors de votre première expérience, vous avez certainement remarqué que le nombre de paquets générés durant le transfert était différent entre TCP et UDP. Regardez les données qui ont été transportées sur vos captures et comment celles-ci sont organisées lors du transfert TCP et du transfert UDP. 
-<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> Quelle différence remarquez-vous ?
+Lors de votre première expérience, vous avez certainement remarqué que le nombre de paquets générés durant le transfert était différent entre TCP et UDP. Regardez les données qui ont été transportées sur vos captures et comment celles-ci sont organisées lors du transfert TCP et du transfert UDP.
+
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> 
+
+Quelle différence remarquez-vous ?
 
 Vous venez d'observer une différence fondamentale entre le mode connecté et non connecté qui fonctionne pour le premier par transfert de flot de données et par transfert de message pour le second. Lorsque vous aborderez la programmation socket en C (ou Python) vous verrez que le mode identifiant un socket TCP est SOCK_STREAM (*stream* signifiant flot en anglais) et SOCK_DGRAM (DGRAM pour datagramme) pour UDP.
 
-Dans certains cas, notamment pour garantir une certaine interactivité, il est possible de transmettre les données sans délai. Cette option correspond à l'activation de l'option socket TCP_NODELAY et est relative à l'algorithme de Nagle. Une explication correcte de cet algorithme est donnée sur [*Wikipedia - Algorithme de Nagle*](https://fr.wikipedia.org/wiki/Algorithme_de_Nagle). Après avoir lu cette page, relancez l'expérimentation du transfert TCP en activant l'option spécifique au client `-d`. 
-<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> Quelle différence observez-vous durant le transfert et quel *flag* est alors utilisé par TCP ?
+Dans certains cas, notamment pour garantir une certaine interactivité, il est possible de transmettre les données sans délai. Cette option correspond à l'activation de l'option socket TCP_NODELAY et est relative à l'algorithme de Nagle. Une explication correcte de cet algorithme est donnée sur [*Wikipedia - Algorithme de Nagle*](https://fr.wikipedia.org/wiki/Algorithme_de_Nagle). Après avoir lu cette page, relancez l'expérimentation du transfert TCP en activant l'option spécifique au client `-d`.
+
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 />
+
+Quelle différence observez-vous durant le transfert et quel *flag* est alors utilisé par TCP ?
 
 ## Fiabilité et retransmission
 
@@ -151,7 +157,9 @@ NetEm est une amélioration des fonctionnalités de contrôle du trafic Linux (v
 
 Ouvrez une console sur R1. Saisissez la commande suivante : `tc qdisc add dev eth1 root netem delay 100ms loss 5%` qui permet d'ajouter un délai de traversée de 100ms et un taux de perte de 1% en sortie du routeur R1 (c'est à dire vers PC2). Ces 5% suivent une loi de Bernoulli, la distribution des pertes est donc uniforme, il n'y a pas de rafales de pertes avec ce modèle (pertes en séquence). Pour vérifier le délai mis en oeuvre et les pertes, faites plusieurs `ping -c 100 -i 0.01 10.1.1.1` depuis PC1.
 
-<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> Relancez votre trafic TCP avec l'option `-d et -n 100` afin d'augmenter le nombre de transferts côté client et capturez l'ensemble des paquets. Identifiez les retransmissions des paquets perdus. Comment les paquets perdus sont-ils récupérés ?
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> 
+
+Relancez votre trafic TCP avec l'option `-d et -n 100` afin d'augmenter le nombre de transferts côté client et capturez l'ensemble des paquets. Identifiez les retransmissions des paquets perdus. Comment les paquets perdus sont-ils récupérés ?
 
 Dans le cas où vous n'observriez pas de paquets perdus (tout dépend du tirage aléatoire) avec `-n 100`, vous pouvez augmenter cette valeur afin de travailler avec un échantillon statistique plus grand ou changez la valeur du taux de perte. Pour cela, ne pas faire  `tc qdisc add ...` mais `tc qdisc change ...` avec les nouvelles valeurs. Enfin pour supprimer NetEm : `tc qdisc del dev eth1 root`.
 
@@ -163,7 +171,9 @@ Tout d'abord nous allons limiter la capacité du lien de sortie grâce à TC et 
 
 Une fois fait, ouvrez deux consoles PC1 et une console PC2. Dans la première faites un ping vers PC2 : `ping 10.1.1.1` et laissez le tourner. Noter la valeur du RTT de celui-ci. Dans la console PC2, lancez un serveur iPerf3 : `iperf3 -s`. Enfin dans la seconde console PC1, lancer une génération de trafic UDP en tapant : `iperf3 -c 10.1.1.1 -u -b 2M`. Vous observerez une génération de débit de 2Mb/s depuis PC1 et une réception de ~1Mb/s coté PC2 à cause de la limitation sur R1.
 
-<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> Que remarquez-vous concernant le délai du ping ? Comment expliquez-vous cette variation ?
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 />
+
+Que remarquez-vous concernant le délai du ping ? Comment expliquez-vous cette variation ?
 
 ## TCP et l'équité
 
