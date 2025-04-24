@@ -6,7 +6,9 @@ Merci de prendre connaissance de vos droits ici : [CC BY-NC-SA 3.0 FR](https://c
 
 ## Déroulement du TP
 
-Ce TP a pour objectif de vous illustrer certaines propriétés de la couche transport vues en cours ainsi que d'illustrer le comportement et la performance des protocoles TCP et UDP. Nous travaillerons avec un **cahier de laboratoire** qui consiste en un fichier de collecte des résultats de vos expérimentations et qui contiendra vos notes et vos éventuelles captures d'écrans. Vous pouvez choisir l'éditeur de votre choix (LibreOffice, Word, Latex, ...) pour réaliser ce cahier qui devra être soumis au format PDF. 
+Ce TP a pour objectif de vous illustrer certaines propriétés de la couche transport vues en cours ainsi que d'illustrer le comportement et la performance des protocoles TCP et UDP. Nous travaillerons avec un **cahier de laboratoire** qui consiste en un fichier de collecte des résultats de vos expérimentations et qui contiendra vos notes et vos éventuelles captures d'écrans. Vous pouvez choisir l'éditeur de votre choix (LibreOffice, Word, Latex, ...) pour réaliser ce cahier qui devra être soumis au format PDF.
+
+Les questions sont précédées d'un <img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 />
 
 Dans la suite, lorsqu'il sera question de :
 
