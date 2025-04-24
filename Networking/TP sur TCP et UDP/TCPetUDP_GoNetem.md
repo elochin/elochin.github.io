@@ -195,26 +195,25 @@ eth0:10.0.0.2/24                                                             eth
 Rappel : n'oubliez pas de faire un `save` dans la console GoNetem pour sauvegarder vos configurations IP.
 
 Le fichier de la topologie est modifiable en tapant `edit` dans la console. L'éditeur utilisé est `vim` donc taper `i` pour passer en mode insertion puis `[ESC]:wq` pour quitter et sauvegarder vos modifications.
-Les modifications à effectuer dans ce fichier sont les suivantes (en gras) :
+Les modifications à effectuer dans ce fichier sont les suivantes :
 
 ```bash
 links:
-- {peer1: PC1.0, __peer2: SW1.0__}
-- {peer1: PC2.0, __peer2: SW2.0__}
-__- {peer1: PC3.0, peer2: SW1.1}__
-__- {peer1: PC4.0, peer2: SW2.1}__
-__- {peer1: R1.0, peer2: SW1.2}__
-__- {peer1: R1.1, peer2: SW2.2}__
-
+- {peer1: PC1.0, __peer2: SW1.0}
+- {peer1: PC2.0, __peer2: SW2.0}
+- {peer1: PC3.0, peer2: SW1.1}
+- {peer1: PC4.0, peer2: SW2.1}
+- {peer1: R1.0, peer2: SW1.2}
+- {peer1: R1.1, peer2: SW2.2}
 
 nodes:
   R1: {type: docker.host}
   PC1: {type: docker.host}
   PC2: {type: docker.host}
-  __PC3: {type: docker.host}__
-  __PC4: {type: docker.host}__
-  __SW1: {type: ovs}__
-  __SW2: {type: ovs}__
+  PC3: {type: docker.host}
+  PC4: {type: docker.host}
+  SW1: {type: ovs}
+  SW2: {type: ovs}
 ```
 
 Suite à l'ajout des deux switches, Ajoutez deux machines PC3 en `10.0.0.2/24` et PC4 en `10.1.1.2/24` et ajoutez les routes par défaut correspondantes. Ouvrez une console sur R1 et tapez la commande suivante : `tc qdisc add dev eth1 root netem rate 10mbit delay 10ms limit 10`. N'oubliez pas si vous n'avez pas supprimer la précédente configurations avec `tc qdisc del dev eth1 root`, vous devez utiliser `tc qdisc change ...`.
