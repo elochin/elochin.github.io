@@ -158,10 +158,11 @@ Afin d'illustrer le principe de retransmission de TCP, nous allons introduire de
 NetEm est une amélioration des fonctionnalités de contrôle du trafic Linux (voir `man tc` et man `netem` pour info) qui permet d'ajouter du délai, des pertes de paquets, des duplications, du ré-ordonnancement et plus encore aux paquets sortant d'une interface réseau donnée. NetEm se base sur les fonctionnalités existantes de qualité de service (QoS) et des services différenciés (DiffServ) inhérentes au noyau Linux.
 
 Ouvrez une console sur R1. Saisissez la commande suivante : `tc qdisc add dev eth1 root netem delay 100ms loss 5%` qui permet d'ajouter un délai de traversée de 100ms et un taux de perte de 1% en sortie du routeur R1 (c'est à dire vers PC2). Ces 5% suivent une loi de Bernoulli, la distribution des pertes est donc uniforme, il n'y a pas de rafales de pertes avec ce modèle (pertes en séquence). Pour vérifier le délai mis en oeuvre et les pertes, faites plusieurs `ping -c 100 -i 0.01 10.1.1.1` depuis PC1.
+Relancez votre trafic TCP avec l'option `-d et -n 100` afin d'augmenter le nombre de transferts côté client et capturez l'ensemble des paquets. Identifiez les retransmissions des paquets perdus (code couleur Wireshark rouge sur fond noir). 
 
 <img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> 
 
-Relancez votre trafic TCP avec l'option `-d et -n 100` afin d'augmenter le nombre de transferts côté client et capturez l'ensemble des paquets. Identifiez les retransmissions des paquets perdus. Comment les paquets perdus sont-ils récupérés ?
+Comment les paquets perdus sont-ils récupérés ?
 
 Dans le cas où vous n'observriez pas de paquets perdus (tout dépend du tirage aléatoire) avec `-n 100`, vous pouvez augmenter cette valeur afin de travailler avec un échantillon statistique plus grand ou changez la valeur du taux de perte. Pour cela, ne pas faire  `tc qdisc add ...` mais `tc qdisc change ...` avec les nouvelles valeurs. Enfin pour supprimer NetEm : `tc qdisc del dev eth1 root`.
 
