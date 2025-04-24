@@ -216,6 +216,8 @@ nodes:
   SW2: {type: ovs}
 ```
 
+Dans la console GoNetem, faire toujours un `check` avant de sauvegarder vos modifications. Vérifiez que vous obtenez bien le message "Network is OK". Ensuite faire un `save` pour sauvegarder votre configuration. Enfin `reload` pour charger votre nouvelle config.
+
 Suite à l'ajout des deux switches, Ajoutez deux machines PC3 en `10.0.0.2/24` et PC4 en `10.1.1.2/24` et ajoutez les routes par défaut correspondantes. Ouvrez une console sur R1 et tapez la commande suivante : `tc qdisc add dev eth1 root netem rate 10mbit delay 10ms limit 10`. N'oubliez pas si vous n'avez pas supprimer la précédente configurations avec `tc qdisc del dev eth1 root`, vous devez utiliser `tc qdisc change ...`.
 
 Nous allons illustrer le principe de partage équitable de la capacité d'un lien partagé par deux flots TCP. Voici les commandes à lancer :
