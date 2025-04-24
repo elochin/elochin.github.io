@@ -123,6 +123,8 @@ Dans le terminal GoNetem, lancez une capture sur l'interface de PC1 en tapant `c
 Puis lancez sur PC2 un serveur tsock sur le port 10000 : `tsock -s 10000`.
 Enfin depuis PC1, lancez un client en tapant `tsock -c 10.1.1.1 10000`. En vous aidant de la page [*Wikipedia Transmission Control Protocol*](https://fr.wikipedia.org/wiki/Transmission_Control_Protocol), et notamment en consultant la signification des drapeaux/indicateurs ou *flags* TCP et en dessinant des diagrammes de séquences :
 
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 />
+
 1. Identifiez la procédure d'établissement de connexion TCP autrement appelée *three-way handshake*. Reproduisez cette phase avec les *flags* TCP correspondants sur votre cahier de laboratoire;
 1. Identifiez la procédure de fermeture de connexion TCP. Reproduisez cette phase avec les *flags* correspondants sur votre cahier de laboratoire. Pourquoi observez-vous deux *flags* FIN ?
 1. Lancez uniquement le client sans lancer le serveur, qu'observez-vous durant la capture ? Quelles sont les *flags* activés ?
@@ -159,7 +161,7 @@ Tout d'abord nous allons limiter la capacité du lien de sortie grâce à TC et 
 
 Une fois fait, ouvrez deux consoles PC1 et une console PC2. Dans la première faites un ping vers PC2 : `ping 10.1.1.1` et laissez le tourner. Noter la valeur du RTT de celui-ci. Dans la console PC2, lancez un serveur iPerf3 : `iperf3 -s`. Enfin dans la seconde console PC1, lancer une génération de trafic UDP en tapant : `iperf3 -c 10.1.1.1 -u -b 2M`. Vous observerez une génération de débit de 2Mb/s depuis PC1 et une réception de ~1Mb/s coté PC2 à cause de la limitation sur R1.
 
-Que remarquez-vous concernant le débit du ping ? Comment expliquez-vous cette variation ?
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 /> Que remarquez-vous concernant le délai du ping ? Comment expliquez-vous cette variation ?
 
 ## TCP et l'équité
 
@@ -175,6 +177,8 @@ Suite à l'ajout des deux switches, Ajoutez deux machines PC3 en `10.0.0.2/24` e
 
 Nous allons illustrer le principe de partage équitable de la capacité d'un lien partagé par deux flots TCP. Voici les commandes à lancer :
 
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 />
+
 1. sur PC2 et PC4 : `iperf3 -s`
 1. sur PC1 lancez `iperf3 -c 10.1.1.1 -t 1000`. Attendez que le débit se stabilise à 10Mb/s
 1. sur PC3 `iperf3 -c 10.1.1.2 -t 1000`. Quel débit est obtenu par les deux flots ?
@@ -184,6 +188,8 @@ Nous allons illustrer le principe de partage équitable de la capacité d'un lie
 ## TCP versus UDP
 
 Toujours en utilisant la même topologie précédente, nous allons illustrer l’interaction entre TCP et UDP. Voici les commandes à lancer :
+
+<img src="https://www.pinclipart.com/picdir/big/7-75450_lab-clipart-19-lab-clipart-royalty-free-huge.png" width=30 />
 
 1. sur PC2 et PC4 : `iperf3 -s`
 1. sur PC1 lancez `iperf3 -c 10.1.1.1 -t 1000`. Attendez que le débit se stabilise à 10Mb/s
