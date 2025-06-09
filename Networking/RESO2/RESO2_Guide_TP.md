@@ -54,7 +54,7 @@ Cette partie liste toutes les règles à respecter pour la réalisation de cette
 
 #### Nom des routeurs
 
-Le nom des routeurs devra suivre la nomenclature suivante : `<SIGLE_SITE>_<ID_ROUTEUR>`où : 
+Le nom des routeurs devra suivre la nomenclature suivante `<SIGLE_SITE>_<ID_ROUTEUR>` où : 
 
 * `<SIGLE_SITE>` est un sigle de 3 lettres identifiant le site simulé :
   * **CES** pour le CESNAC
@@ -70,6 +70,7 @@ Le nom des routeurs devra suivre la nomenclature suivante : `<SIGLE_SITE>_<ID_R
 #### Utilisation des cartes FastEthernet / GigaEthernet {#utilisation-des-cartes-fastethernet-gigaethernet}
 
 Comme pour RENAR-IP, les deux règles suivantes doivent être respectées :
+
 1. les cartes FastEthernet ne sont utilisées que pour le raccordement des réseaux usagers;
 1. les cartes GigaEthernet ne sont utilisées que pour les connexions inter-routeur.
 
@@ -119,6 +120,7 @@ Chaque baie dispose d'un switch ALCATEL OS6250 qui sera utilisé :
 #### Disposition du switch
 
 La figure suivante présente la disposition des VLAN sur le switch :
+
 * 2 ports sont dédiés pour interconnexion inter-baie (voir partie suivante pour plus de détail);
 * 3 VLAN sont disponibles pour créer des réseaux usager;
 * Le dernier VLAN sert pour l'administration des équipements réseaux (switch et routeur).
@@ -142,6 +144,7 @@ La salle et les baies ont été préconfigurés pour permettre des interconnexio
 ##### Connexions directes
 
 Comme vous pouvez le voir sur le schéma d'architecture générale, certains sites nécessitent 3 interconnexions avec les autres sites alors que le switch ne permet que 2 interconnexions. C'est pour cela que **2 connexions directes** (i.e., en utilisant un câble Ethernet lo,g) doivent être mise en place :
+
 * entre **la baie 1 et la baie 3**;
 * entre **la baie 2 et la baie 4**.
 
@@ -150,8 +153,7 @@ Comme vous pouvez le voir sur le schéma d'architecture générale, certains sit
 Lorsque vous aurez besoin de faire des captures de trafic avec wireshark, des ports du switch ont été configurés en mode mirroring. Ils sont présentés dans la figure suivante.
 
 ![](Pictures/10000001000002C500000105A2AF3AA9.png "fig:"){width="15cm" height="5.519cm"}
-
-<p align="center">Configuration du mirroring sur les switchs 6250</p>
+<p align="center">                                Configuration du mirroring sur les switchs 6250</p>
 
 ## Configuration des routeurs JUNIPER
 
@@ -245,12 +247,14 @@ rollback
 #### Connexion aux routeurs
 
 La connexion au routeur se fera au travers du protocole `telnet`.  Chaque routeur de la salle dispose d'une interface dédiée à pour son administration. Cette interface est déjà configurée et raccordé au réseau d'administration de la salle (voir l'encart suivante pour connaître l'adresse IP à utiliser). Les identifiants pour la connexion sont :
+
 * nom d'utilisateur : `juniper`;
 * mot de passe : `Juniper`.
 
 #### Adresse IP pour l'administration des routeurs
 
 L'adresse IP à utiliser pour se connecter au routeur est : `192.168.19.1<NUM_baie><ID_routeur>` avec :
+
 * `<NUM_baie>` étant le numéro de baie;
 * `<ID_routeur>` valant 2 pour le M7i et 3 pour le M10i.
 
@@ -259,6 +263,7 @@ Par exemple, le routeur M7i de la baie 3 est accessible à l'adresse `192.168.19
 #### Nommage des interfaces
 
 Sur les routeurs JUNIPER de la salle G19 :
+
 * l'interface de Management se nomme `fxp0`;
 * les interfaces Gigabit sont nommées `ge-0/0/X` avec `X` l'identifiant du port (écrit sur la carte);
 * sur les M7i, les interfaces FastEthernet sont nommées `fe-1/3/X` avec `X` l'identifiant du port (écrit sur la carte);

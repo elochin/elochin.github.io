@@ -63,6 +63,7 @@ set protocols bgp group internal export BGP_EXPORT
 ### Commandes de configuration
 
 La configuration de BGP se fait en plusieurs étapes :
+
 1. définition de l'AS du routeur;
 1. définition d'une instance BGP de type interne;
 1. déclaration des voisins;
@@ -87,6 +88,7 @@ set protocols bgp group internal family <famille_adresse> <type_adresse>
 ```
 
 Par exemple, des familles d'adresses valides sont :
+
 * `inet` : adresse IPv4 classique;
 * `inet6` : adresse IPv6 classique;
 * `inet-vpn` : adresse IPv4 étendue pour les L3VPN;

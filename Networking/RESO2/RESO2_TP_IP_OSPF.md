@@ -3,6 +3,7 @@
 ## Objectifs
 
 Les objectifs de ce TP sont :
+
 *  de revoir les principes de routage IP et la mise en œuvre du protocole OSPF;
 *  de prendre en main la configuration des routeurs JUNIPER.
 

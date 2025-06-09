@@ -2,7 +2,7 @@
 
 ## Objectifs
 
-L'objectif de ce TP est de mettre en œuvre le protocole BFD afin d'améliorer la convergence du protocole OSPF.
+L'objectif de ce TP est de mettre en oeuvre le protocole BFD afin d'améliorer la convergence du protocole OSPF.
 
 ## Configuration
 
@@ -15,6 +15,7 @@ Les commandes utiles pour configurer BFD sont dans la section annexe de ce TP.
 **Travail demandé**
 
 A l'aide de Wireshark, capturez le trafic sur un lien inter-site.
+
 * Repérer les paquets BFD;
 * Retrouver les paramètres que vous avez configurez dans les paquets BFD.
 * Quel intervalle sépare deux paquets BFD émis par le même routeur ?

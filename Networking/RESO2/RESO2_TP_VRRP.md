@@ -5,6 +5,7 @@
 **Travail demandé**
 
 Pour chaque VRF (ATM et GESTION), Configurez VRRP sur les interfaces de votre routeur (voir les commandes de la section Annexe) :
+
 * l'adresse IP virtuelle sera `<X.X.X.251>`;
 * l'identifiant du groupe VRRP sera :
 	* 100 pour la VRF ATM;
@@ -42,9 +43,9 @@ La configuration de VRRP se fait au niveau des interfaces.
 
 ```
 set interfaces <interface> unit 0 family inet address <X.X.X.X/M> vrrp-group <ID> virtual-adress <@IP_virtuelle>
-set interfaces <interface> unit 0 family inet address > <X.X.X.X/M> vrrp-group <ID> fast-interval <temps en ms>
+set interfaces <interface> unit 0 family inet address <X.X.X.X/M> vrrp-group <ID> fast-interval <temps en ms>
 # activation de la preemption
-set interfaces <interface> unit 0 family inet address > <X.X.X.X/M> vrrp-group <ID> preempt hold-time <temps>
+set interfaces <interface> unit 0 family inet address <X.X.X.X/M> vrrp-group <ID> preempt hold-time <temps>
 ```
 Pour autoriser le ping sur l'IP virtuelle, ajouter :
 
