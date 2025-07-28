@@ -92,14 +92,14 @@ La configuration des LSP sur un routeur JUNIPER se compose de deux étapes décr
 
 #### Configuration de RSVP-TE
 
-La configuration de rsvp-te se fait en plusieurs étapes :
+La configuration de RSVP-TE se fait en plusieurs étapes :
 
-* Activation de mpls sur les interfaces
+* Activation de MPLS sur les interfaces
 * Activation de l'extension TE sur OSPF
 * Activation de RSVP sur les interfaces concernées
 
 ``` 
-# activation de mpls sur une interface
+# activation de MPLS sur une interface
 set interfaces <nom_int> unit 0 family mpls
 set protocols mpls interface <nom_int>.0
 # activation de l'extension TE
