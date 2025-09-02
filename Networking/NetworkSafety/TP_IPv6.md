@@ -218,7 +218,7 @@ Lister les routes IPv6
 
 ### Outils IPv6
 
-Faire un ping (l'option `-c <val>` permet de limiter le nombre de ping à la valeur `<val>`: 
+Faire un ping. A noter que l'option `-c <val>` permet de limiter le nombre de ping à la valeur `<val>`: 
 ```
 # ping6 <adresseipv6>
 ```
