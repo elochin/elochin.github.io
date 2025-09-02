@@ -27,9 +27,9 @@ Le réseau à mettre en œuvre est composé de 3 sous-réseaux :
 Pour définir l'adressage de ces sous-réseaux, vous disposez du préfixe suivant : FC00:1000::/32. Dis autrement, toutes les adresses IPv6 sur ce réseau devront commencer par FC00:1000.
 L'architecture à mettre en œuvre lors de ce TP est la suivante :
 ```
-+---------------+     +----------------+       +----------------+       +-------------+
-| host#1 (eth0) |-----|(eth0) R1 (eth1)|-------|(eth1) R2 (eth0)|-------|(eth0) host#2|
-+---------------+     +----------------+       +----------------+       +-------------+
++---------------+       +----------------+       +----------------+       +-------------+
+| host#1 (eth0) |-------|(eth0) R1 (eth1)|-------|(eth1) R2 (eth0)|-------|(eth0) host#2|
++---------------+       +----------------+       +----------------+       +-------------+
 ```
 
 # Chargement du TP
