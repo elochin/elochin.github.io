@@ -28,7 +28,9 @@ Pour définir l'adressage de ces sous-réseaux, vous disposez du préfixe suivan
 L'architecture à mettre en œuvre lors de ce TP est la suivante :
 
 +---------------+     +----------------+       +----------------+       +-------------+
+
 | host#1 (eth0) |-----|(eth0) R1 (eth1)|-------|(eth1) R2 (eth0)|-------|(eth0) host#2|
+
 +---------------+     +----------------+       +----------------+       +-------------+
 
 # Chargement du TP
