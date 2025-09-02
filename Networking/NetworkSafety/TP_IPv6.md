@@ -42,7 +42,7 @@ Afin de pouvoir débuter le TP:
 2. lancer un terminal dans la machine virtuelle;
 3. exécuter la commande suivante :
 ```
-gonetem-console open /home/eleve/Networks/TP_IPv6.gnet
+# gonetem-console open /home/eleve/Networks/TP_IPv6.gnet
 ```
 
 Attendez ensuite quelques instants que tous les routeurs et les machines démarrent. Lorsque ce sera le cas, le prompt suivant apparaîtra : `[TP_IPv6]`
@@ -130,8 +130,8 @@ wireshark sur l'interface 0 de R1, répondez aux questions suivantes :
 2. Que se passe t'il lors de l'activation de l'interface eth0 de host1 ? Réalisez un diagramme séquentiel des échanges et expliquez le rôle des messages NDP
 envoyés ? Pour forcer l'activation et l'auto-configuration de eth0, vous pouvez utiliser les commandes suivantes :
 ```
-ip link set eth0 down
-ip link set eth0 up
+# ip link set eth0 down
+# ip link set eth0 up
 ```
 3. Visualisez une résolution d'adresse MAC effectuée à l'aide du protocole NDP (par exemple en envoyant des pings depuis host1 sur une interface d'un routeur). Vers quelle adresse est envoyée le “neighbor solicitation” ? Comme pour la question précédente, réalisez un diagramme des échanges.
 
@@ -232,5 +232,5 @@ Consulter la table des voisins (équivalent du cache ARP) :
 ```
 Vider cette table :
 ```
-ip -6 neigh flush any
+# ip -6 neigh flush any
 ```
