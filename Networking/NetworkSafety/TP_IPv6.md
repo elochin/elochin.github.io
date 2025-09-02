@@ -7,7 +7,7 @@ Merci de prendre connaissance de vos droits ici : [CC BY-NC-SA 3.0 FR](https://c
 # Objectifs du TP
 * Savoir mettre en place un plan d'adressage IPv6
 * Etudier le fonctionnement du protocole NDP (Neighbor Discovery Protocol), notamment pour :
-* 
+
 ** la résolution d'adresse physique (l'équivalent du protocole ARP en IPv4);
 ** la configuration automatique;
 ** détection de duplication d'adresse.
