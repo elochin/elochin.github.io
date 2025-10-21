@@ -185,7 +185,7 @@ C'est pourquoi sur R2 192.168.1.0/24 a un coût cumulé de 10+200 = 210.
 
 **Cinquième étape - ajout d'une adresse de loopback**
 
-Nous allons configurer une adresse de loopback sur R1 et R2 pour améliorer la lecture de la commande `ip ospf database`. Nous utiliserons `192.168.100.1/32` pour R1 et `192.168.100.2/32` pour R2. Cette adresse de loopback deviendra le *router ID* de chaque routeur. Dans le cas où celle-ci ne serait pas prise en compte, redémarrer le routeur avec la commande `restart` depuis la console Gonetem.
+Nous allons configurer une adresse de loopback sur R1 et R2 pour améliorer la lecture de la commande `ip ospf database`. Nous utiliserons `192.168.100.1/32` pour R1 et `192.168.100.2/32` pour R2. Cette adresse de loopback deviendra le *router ID* de chaque routeur. Dans le cas où celle-ci ne serait pas prise en compte, faire un `save` pour ne pas perdre votre configuration puis redémarrer le routeur avec la commande `restart` depuis la console Gonetem.
 
 Exemple pour R1 :
 ```bash
