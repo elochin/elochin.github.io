@@ -61,7 +61,7 @@ Configurez vos routeurs de façon à ce qu'ils connaissent leurs voisins et qu'i
 
 ### 3.2 Vérification de la configuration BGP
 
-Afin de vérifier que la configuration est correcte, vous utiliserez les commandes `show ip route`, `show ip bgp`, `show ip bgp neighbors` et `show ip bgp <préfixe CIDR>`.  Lisez la page très bien faite du site CISCO [Troubleshooting When BGP Routes Are Not Advertised](https://www.cisco.com/c/en/us/support/docs/ip/border-gateway-protocol-bgp/19345-bgp-noad.html) qui vous guide pas à pas dans plusieurs processus de résolution de problèmes.
+Afin de vérifier que la configuration est correcte, vous utiliserez les commandes `show ip route`, `show ip bgp summary`, `show ip bgp neighbors` et `show ip bgp <préfixe CIDR>`.  Lisez la page très bien faite du site CISCO [Troubleshooting When BGP Routes Are Not Advertised](https://www.cisco.com/c/en/us/support/docs/ip/border-gateway-protocol-bgp/19345-bgp-noad.html) qui vous guide pas à pas dans plusieurs processus de résolution de problèmes.
 
 Ensuite répondrez ensuite aux questions suivantes :
 
