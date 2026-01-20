@@ -17,7 +17,7 @@ Ce TP a pour but d'illustrer le fonctionnement de BGP dans un cas simple mais n�
 
 Chaque binôme administrera deux AS, l'un sera un AS de transit offrant une connectivité à l'autre AS, qui sera donc un AS souche. La figure ci-dessous présente la topologie du réseau dont vous serez les administrateurs. Les deux AS sont délimités par les pointillés. La prise "LAN de la salle" représentée à gauche de la figure symbolise la liaison entre l'AS de transit et un point de peering. Dans les faits, cette prise sera reliée à un VLAN du réseau réel de la salle et vous permettra de vous interconnecter avec les AS des autres binômes.
 
-|  ![Topologie du réseau.](topoBGP.png) |
+|  ![Topologie du réseau.](topoBGP_v1.png) |
 |:--:|
 | *Fig. 1 Topologie du réseau.* |
 

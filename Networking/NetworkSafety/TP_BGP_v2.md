@@ -17,7 +17,7 @@ Ce TP a pour but d'illustrer le fonctionnement de BGP dans un cas simple mais n�
 
 La Topologie de travail est la suivante :
 
- ![Topologie du réseau.](TOPO_4-1.png) 
+ ![Topologie du réseau.](topoBGP1_v2.png) 
 
 | *Fig. 1 Topologie du réseau.* |
 
@@ -72,7 +72,7 @@ no bgp network import-check
 ```
 N'hésitez pas à relancer le démon BGP après chaque changement de config par `clear bgp *` ou `do clear bgp *` en mode config.
 
- ![Topologie du réseau2.](TOPO_4-11.png)
+ ![Topologie du réseau2.](topoBGP2_v2.png)
 
 
 Configurez vos routeurs de façon à ce qu'ils connaissent leurs voisins BGP (surlignage jaune sur le schéma) et qu'ils annoncent leur réseau (le /16 pour l’AS de transit et le /24 pour l’AS souche). Chaque routeur du réseau de transit sera voisin d’un ou plusieurs autres routeurs BGP en respectant le schéma de la TOPOLOGIE.
@@ -111,7 +111,7 @@ Vérifiez à nouveau la configuration de BGP sur tous les routeurs. Le problème
 
 ### 3.4 Optimisation du routage: BGP Backdoor Routes
 
- ![Topologie du réseau2.](TOPO_4-2.png) 
+ ![Topologie du réseau2.](topoBGP3_v2.png) 
 
 Configurez OSPF sur les routeurs R4 et R5 de manière à partager leur LAN respectif le long de l'adjacence en violet (voir schéma de la topo).
 

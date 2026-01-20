@@ -10,7 +10,7 @@ Avant de commencer le TP et de façon similaire au TP OSPF, nous allons apprendr
 
 La configuration IP ainsi que les adresses de loopback pour chaque routeur a été déjà effectuée en 27.0.0.x/32 ou x est le numéro du routeur. Ainsi vous pouvez vous concentrer sur la configuration du routage uniquement. Le schéma de cette topologie vous est présenté ci-dessous :
 
-| ![Topologie du réseau.](topoBGPsimple.png) |
+| ![Topologie du réseau.](topoBGPsimple_v1.png) |
 | :----------------------------------------: |
 |       *Fig. 1 Topologie du réseau.*        |
 
