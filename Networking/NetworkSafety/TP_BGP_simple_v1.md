@@ -6,11 +6,11 @@ Merci de prendre connaissance de vos droits ici : [CC BY-NC-SA 3.0 FR](https://c
 
 ## Premiers pas avec BGP
 
-Avant de commencer le TP et de façon similaire au TP OSPF, nous allons apprendre à configurer BGP sur une topologie très simple comme celle qui vous a été présentée en cours. Cette topologie est disponible [ici](topo_bgp_simple.pnet). Pour la lancer, dans un terminal taper `pynetem-emulator bgp_topo_simple.pnet`.
+Avant de commencer le TP et de façon similaire au TP OSPF, nous allons apprendre à configurer BGP sur une topologie très simple comme celle qui vous a été présentée en cours. Cette topologie est disponible [ici](gnet/topo_bgp_simple.gnet). Pour la lancer, dans un terminal taper `pynetem-emulator bgp_topo_simple.pnet`.
 
 La configuration IP ainsi que les adresses de loopback pour chaque routeur a été déjà effectuée en 27.0.0.x/32 ou x est le numéro du routeur. Ainsi vous pouvez vous concentrer sur la configuration du routage uniquement. Le schéma de cette topologie vous est présenté ci-dessous :
 
-| ![Topologie du réseau.](topoBGPsimple_v1.png) |
+| ![Topologie du réseau.](figs/topoBGPsimple_v1.png) |
 | :----------------------------------------: |
 |       *Fig. 1 Topologie du réseau.*        |
 

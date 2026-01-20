@@ -23,7 +23,7 @@ Le besoin est le suivant : interconnecter 2 réseaux par un routeur, en mettant 
 Avant toute chose, il faut définir la redondance et décider comment la mettre en place. 
 Comme il y a 2 accès à redonder, nous utiliserons une redondance de type HSRP pour l'accroche du LAN 0 et une redondance de type VRRP pour l'accroche du LAN 1.
 
-<img src= "topo_VRRP_HSRP.png" alt="Topologie" width="800"/>
+<img src= "figs/topo_VRRP_HSRP.png" alt="Topologie" width="800"/>
 
 ## 2. Mise en place
 

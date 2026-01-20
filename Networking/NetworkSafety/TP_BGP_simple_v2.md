@@ -1,10 +1,10 @@
 ## Premiers pas avec BGP
 
-Avant de commencer le TP et de façon similaire au TP OSPF, nous allons apprendre à configurer BGP sur une topologie très simple comme celle qui vous a été présentée en cours. Cette topologie est disponible [ici](bgp_topo_simple_v2.gnet). Pour la lancer, dans un terminal taper `gonetem-emulator bgp_topo_simple.gnet`.
+Avant de commencer le TP et de façon similaire au TP OSPF, nous allons apprendre à configurer BGP sur une topologie très simple comme celle qui vous a été présentée en cours. Cette topologie est disponible [ici](gnet/bgp_topo_simple_v2.gnet). Pour la lancer, dans un terminal taper `gonetem-emulator bgp_topo_simple.gnet`.
 
 La configuration IP ayant déjà été effectuée, vous pouvez vous concentrer sur la configuration du routage uniquement. Le schéma de cette topologie vous est présenté ci-dessous :
 
-| ![Topologie du réseau.](topoBGPsimple_v2.png) |
+| ![Topologie du réseau.](figs/topoBGPsimple_v2.png) |
 | :----------------------------------------: |
 |       *Fig. 1 Topologie du réseau.*        |
 

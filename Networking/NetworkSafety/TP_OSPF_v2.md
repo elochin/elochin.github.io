@@ -32,7 +32,7 @@ Avant de commencer le TP nous allons apprendre à configurer OSPF sur une topolo
 
 **Première étape - découverte de la topologie utilisée**
 
-La topologie utilisée pour la première partie de ce TP est disponible [ici](topo_simple.gnet). Pour la lancer, dans un terminal taper `gonetem-console open topo_simple.gnet`.
+La topologie utilisée pour la première partie de ce TP est disponible [ici](gnet/topo_simple.gnet). Pour la lancer, dans un terminal taper `gonetem-console open topo_simple.gnet`.
 
 Celle-ci est déjà préconfigurée avec l'adressage suivant :
 
@@ -51,22 +51,24 @@ Une fois l'adressage réalisé, vous noterez que les tables de routage de R1 et 
 
 <font color=blue>**Question A** - quelle route manque-t-il sur chaque routeur pour que les deux PC puissent se joindre ?</font>
 
-Ces routes manquantes seront instanciées par le protocole OSPF que vous allez déployer sur ces mêmes routeurs. Pour cela, réaliser les opérations ci-dessous. Tout d'abord pour rentrer en mode configuration OSPF :
+Ces routes manquantes seront instanciées par le protocole OSPF que vous allez déployer sur ces mêmes routeurs. Pour cela, réaliser les opérations ci-dessous. Tout d'abord, nous allons configurer une adresse de loopback sur les routeurs R1 et R2. Cette adresse de loopback permettra notamment d'améliorer la lecture de la commande `ip ospf database` que nous verrons par la suite. Nous utiliserons `192.168.100.1/32` pour R1 et `192.168.100.2/32` pour R2. Cette adresse de loopback deviendra le *router ID* de chaque routeur. Dans le cas où celle-ci ne serait pas prise en compte, faire un `save` pour ne pas perdre votre configuration puis redémarrer le routeur avec la commande `restart` depuis la console Gonetem. Par exemple sur R1, la mise en place d'une adresse de loopback se fait comme suit :
+
+```bash
+R1(config)# int lo
+R1(config-if)# ip address 192.168.100.1/32
+```
+L'identifiant du routeur (le *router ID*) est l’adresse IP la plus élevée ou, si configurée, la plus élevée des adresses de *loopback*. Cet identifiant est utile pour mieux identifier les routeurs au déboguage, par exemple, lors d'un `show ip ospf neighbor`. Pour éviter tout problème et bien utiliser l'adresse de *loopback*, en mode configuration OSPF pour R1, saisir :
 ```bash
 R1(config)# router ospf
+R1(config-router)# ospf router-id 192.168.100.1
 ```
-
-Une fois cette commande saisie, un processus OSPF est lancé sur le routeur mais aucune annonce n'est encore effectuée. En effet, il faut spécifiquement déclarer les interfaces qui vont entrer en jeu. Pour cela, nous allons utiliser la commande `network` qui prendra en argument l'adresse du réseau et son aire (cf. cours). Notez que sur CISCO la notation diffère un peu et que le *wildcard mask* (inverse du *netmask*) est utilisé en lieu et place de la notation CIDR `A.B.C.D/M` comme cela est le cas avec le router FRR sous Gonetem. 
-
-Pour les interfaces du router R1 cela donne :
+Une fois cette commande saisie, un processus OSPF est lancé sur le routeur mais aucune annonce n'est encore effectuée. En effet, il faut spécifiquement déclarer les interfaces qui vont entrer en jeu. Pour cela, il faut déclarer chacune des interfaces qui participeront au processus OSPF de la façon suivante, par exemple pour l'interface eth0 du router R1 cela donne :
 
 ```bash
-R1(config-router)# network 192.168.1.0/24 area 0
-R1(config-router)# network 10.0.0.0/8 area 0
+R1(config)# int eth0
+R1(config-if)# ip ospf area 0
 ```
-L'identifiant du routeur (le *router ID*) est l’adresse IP la plus élevée ou, si configurée, la plus élevée des adresses de *loopback*. Cet identifiant est utile pour mieux identifier les routeurs au déboguage, par exemple, lors d'un `show ip ospf neighbor`. Pour cela, nous utiliserons par la suite une adresse de *loopback* pour chaque routeur qui fera office de *router ID*.
-
-Ici, nous déclarerons chaque routeur dans une seule aire : la zéro. Réaliser maintenant les opérations similaires sur R2 puis effectuer un `show ip ospf route` pour vérifier la bonne déclaration des routes dans chaque table. Notez les informations qui y sont listées, notamment la valeur entre crochets qui correspond à une métrique de distance. Le drapeau `N` signifie que ce sont des routes de réseaux (*Network*).
+Faire de même avec eth1 et bien évidemment avec lo car l'adresse de *loopback* participe au processus OSPF. Ici, nous déclarerons chaque routeur dans une seule aire : la zéro. Réaliser maintenant les opérations similaires sur R2 puis effectuer un `show ip ospf route` pour vérifier la bonne déclaration des routes dans chaque table. Notez les informations qui y sont listées, notamment la valeur entre crochets qui correspond à une métrique de distance. Le drapeau `N` signifie que ce sont des routes de réseaux (*Network*).
 
 <font color=blue>**Question B** - comment expliqueriez-vous la valeur de métrique choisie ?</font>
 
@@ -147,8 +149,7 @@ La configuration OSPF de R1 devient :
 ```bash
 !
 router ospf
- network 10.0.0.0/8 area 0
- network 192.168.1.0/24 area 0
+ ospf router-id 1.1.1.1
  default-information originate
 !
 ```
@@ -183,23 +184,9 @@ Pour mémoire, vous voyez le coût de chaque route entre crochets. OSPF permet d
 ```
 C'est pourquoi sur R2 192.168.1.0/24 a un coût cumulé de 10+200 = 210.
 
-**Cinquième étape - ajout d'une adresse de loopback**
+**Cinquième étape - consultation de la base de donnée OSPF**
 
-Nous allons configurer une adresse de loopback sur R1 et R2 pour améliorer la lecture de la commande `ip ospf database`. Nous utiliserons `192.168.100.1/32` pour R1 et `192.168.100.2/32` pour R2. Cette adresse de loopback deviendra le *router ID* de chaque routeur. Dans le cas où celle-ci ne serait pas prise en compte, faire un `save` pour ne pas perdre votre configuration puis redémarrer le routeur avec la commande `restart` depuis la console Gonetem.
-
-Exemple pour R1 :
-```bash
-R1(config)# int lo
-R1(config-if)# ip address 192.168.100.1/32
-```
-
-cette adresse doit être également diffusée par OSPF aussi :
-
-```bash
-R1(config-router)# network 192.168.100.1/32 area 0
-```
-
-Redémarrez R1 et R2 pour que ces adresses soient prises en compte et faites un `show ip ospf database` sur R1. Vous obtenez :
+Si vous aites un `show ip ospf database` sur R1, vous obtenez :
 
 ```bash
 R1# sh ip ospf database
@@ -239,7 +226,7 @@ Suite à cette première partie d'introduction, je vous propose de mettre en oeu
 
 ### Topologie
 
-La topologie du réseau utilisé dans ce TP est décrite sur la Fig. 1 et est disponible [ici](ospf.gnet).
+La topologie du réseau utilisé dans ce TP est décrite sur la Fig. 1 et est disponible [ici](gnet/ospf.gnet).
 
 *Note : si vous souhaitez lancer cette topologie depuis vos **machines personnelles**, il vous faudra tout d'abord créer une interface virtuelle dans le terminal de la machine avant de lancer Gonetem. Pour cela faire :*
 
@@ -250,7 +237,7 @@ eleve@gonetem:~$ gonetem-console open ospf-bridge.gnet
 ```
 
 
-|  ![Topologie du réseau.](topoOSPF.png) |
+|  ![Topologie du réseau.](figs/topoOSPF.png) |
 |:--:|
 | *Fig. 1 Topologie du réseau.* |
 
@@ -268,9 +255,9 @@ R1(config)# interface lo
 R1(config-if)# ip address a.b.c.d/32
 ```
 
-Enfin, afin que chaque routeur puisse se pinguer sur leurs adresses de loopback, pensez à déclarer ces adresses dans votre configuration de router :
+Enfin, afin que chaque routeur puisse se pinguer sur leurs adresses de loopback, pensez à déclarer les interfaces qui participent au processus OSPF :
 ```bash
-R1(config-router)# network a.b.c.d/32 area 0
+R1(config-if)# ip ospf area 0
 ```
 N'hésitez pas à vous aider d'un calculateur d'adresses IP comme par exemple [CIDR calculator](http://www.subnet-calculator.com/cidr.php).
 
@@ -357,14 +344,15 @@ Pour rappel, les commandes les plus utiles pour ce TP sont :
 * `show ip ospf route` qui vous donne le contenu de la FIB issue d'OSPF;
 * `show ip ospf neighbor` qui vous donne des informations sur les voisins OSPF;
 * `show ip ospf interface <iface>` qui vous donne des informations la configuration OSPF de l'interface;
-* `show ip route` qui vous donne le contenu de la table d’acheminement (FIB).
+* `show ip route` qui vous donne le contenu de la table d’acheminement (FIB);
+* `clear ip process ospf` commande qui vous est parfois conseillée après une saisie, et qui permet de relancer le processus OSPF sur un routeur. Utile lors de modifications de votre configuration.
 
 #### Commandes du menu `router ospf`
 
 Ce menu est un sous-menu du menu `configure terminal`.
 
 * `neighbor <neighbor_address>` permet de déclarer un routeur OSPF voisin sur une liaison non broadcast. Attention à bien utiliser l'adresse du voisin correspondant à l'interface du lien considéré et pas son identifiant de routeur;
-* `network <net_address> area <area_id>` permet d'activer le routage OSPF sur ce réseau en le liant à l'aire donnée;
+* `ip ospf area <area_id>` permet d'activer le routage OSPF sur une interface donnée en la liant à l'aire donnée;
 * `passive-interface <nom_iface>` permet de rendre muette une interface (le réseau attaché peut être annoncé mais l'interface n'émettra pas de paquets OSPF);
 * `redistribute connected` indique à OSPF de redistribuer les routes directes (directly connected) de ce routeur;
 * `redistribute kernel` indique à OSPF de redistribuer les routes configurées par l'administrateur dans le noyau;
