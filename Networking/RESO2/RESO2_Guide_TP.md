@@ -241,6 +241,7 @@ qui active la nouvelle configuration si elle est correcte et renvoie une erreur 
 ```
 rollback
 ```
+Avant de faire un `commit` vous pouvez faire un `show | compare` pour vérifier ce que vous allez envoyer avec le `commit`. Vous verrez alors apparaitre des `+` devant les ajouts (avec `set`) et des `-` devant les suppressions (avec `delete`). Vous pouvez également faire un `commit check` pour vérifier sa cohérence avec le `commit`.
 
 ### Connexion et configuration
 
