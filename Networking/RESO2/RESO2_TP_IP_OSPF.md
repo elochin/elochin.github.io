@@ -60,7 +60,7 @@ Sous JUNIPER, les boucles locales (i.e., loopback) se nomment `lo<X>`.
 
 Utiliser `show interface terse` pour vérifier la cohérence de votre adressage IP.
 
-#### Configuration d'OSPF
+### Configuration d'OSPF
 
 La configuration d'OSPF se fait en entrant dans le bloc protocols/ospf :
 
@@ -74,7 +74,7 @@ set area <numero_aire> interface <nom_interface> passive
 commit
 ```
 
-### Commandes de vérification
+#### Commandes de vérification
 
 Pour voir l'état d'OSPF :
 
