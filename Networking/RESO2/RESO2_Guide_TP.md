@@ -17,7 +17,7 @@ Cette partie présente l'architecture générale qui sera mise en oeuvre pour to
 
 L'architecture à mettre en oeuvre est présentée dans la figure ci-dessous.
 
-![](Pictures/10000001000002CD000002D7DD0F77DB.png "fig:"){width="15cm" height="15.21cm"}
+![](Pictures/10000001000002CD000002D7DD0F77DB.png "fig:"){width="15cm" height="15cm"}
 
 Il s'agit d'une image réduite du réseau RENAR IP. Les sites suivants seront représentés :
 
