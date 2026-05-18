@@ -56,25 +56,9 @@ commit
 ```
 Sous JUNIPER, les boucles locales (i.e., loopback) se nomment `lo<X>`.
 
-### Commandes de vérification
+#### Commandes de vérification
 
-Pour voir l'état des tables de routage, la commande : 
-
-```
-show route
-```
-permet de voir toutes les tables de routage actives. Tandis que la commande :  
-
-```
-show route table <nom_table>
-```
-permet de voir une table de routage spécifique. Les tables de routage intéressantes sur les routeurs JUNIPER sont :
-
-* `inet.0` : table de routage IP globale, cette table contient également les labels à ajouter pour joindre une destination au travers d'un LSP;
-* `inet.3` : table de routage IP spécifique au LSP qui permet à BGP de savoir si un nex-hop est atteignable au travers d'un LSP (pour la mise en oeuvre des VPN IP);
-* `bgp.<family>.0` : Local-RIB BGP pour la famille d'addresse `<family>`. Dans notre cas, c'est la famille L3VPN qui nous intéressera;
-* `<vrf>.inet.0` : table de routage de la vrf `<vrf>`;
-* `mpls.0` : Label Information Base (LIB), table de routage des labels.
+Utiliser `show interface terse` pour vérifier la cohérence de votre adressage IP.
 
 #### Configuration d'OSPF
 
@@ -100,3 +84,22 @@ show ospf interface
 # montre l'état des voisins OSPF
 show ospf neighbor
 ```
+
+Pour voir l'état des tables de routage, la commande : 
+
+```
+show route
+```
+permet de voir toutes les tables de routage actives. Tandis que la commande :  
+
+```
+show route table <nom_table>
+```
+permet de voir une table de routage spécifique. Les tables de routage intéressantes sur les routeurs JUNIPER sont :
+
+* `inet.0` : table de routage IP globale, cette table contient également les labels à ajouter pour joindre une destination au travers d'un LSP;
+* `inet.3` : table de routage IP spécifique au LSP qui permet à BGP de savoir si un nex-hop est atteignable au travers d'un LSP (pour la mise en oeuvre des VPN IP);
+* `bgp.<family>.0` : Local-RIB BGP pour la famille d'addresse `<family>`. Dans notre cas, c'est la famille L3VPN qui nous intéressera;
+* `<vrf>.inet.0` : table de routage de la vrf `<vrf>`;
+* `mpls.0` : Label Information Base (LIB), table de routage des labels.
+
