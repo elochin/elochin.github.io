@@ -139,6 +139,16 @@ show rsvp neighbor
 # Etat des LSP
 show mpls lsp
 ```
+Pour capturer le trafic MPLS :
+
+```
+# Capture simple
+monitor traffic interface ge-0/0/0 match "mpls"
+# Capture en mode verbose
+monitor traffic interface ge-0/0/0 match "mpls" extensive
+# Capture avec filtrage spécifique
+monitor traffic interface ge-0/0/0 match "mpls and mpls label <ID lable>" extensive
+```
 
 ### Configuration des VRF
 
