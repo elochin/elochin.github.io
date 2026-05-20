@@ -118,8 +118,7 @@ Cette déclaration se fait en trois étapes.
 
 ``` 
 # configuration du LSP
-set protocols mpls label-switched-path <NOM> from <IP_source>
-set protocols mpls label-switched-path <NOM> to <IP_destination>
+set protocols mpls label-switched-path <NOM> from <IP_source> to <IP_destination>
 # activation du fast-reroute local
 set protocols mpls label-switched-path <NOM> node-link-protection
 ```
