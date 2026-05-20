@@ -103,4 +103,10 @@ Pour voir l'état BGP :
 ```
 # etat de la connexion avec les voisins
 show bgp neighbor
+Pour capturer le trafic BGP :
+```
+# Capture simple
+monitor traffic interface ge-0/0/0 matching "ip port 179"
+# Capture en mode verbose
+monitor traffic interface ge-0/0/0 matching "ip port 179" extensive
 ```
