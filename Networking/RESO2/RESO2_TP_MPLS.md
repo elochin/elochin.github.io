@@ -86,6 +86,13 @@ Choisissez un site distant et envoyé des pings au travers d'un des VPN. A l'aid
 
 ## Annexe des commandes utiles
 
+### Configuration de BGP pour le VPN IPv4 unicast
+
+Pour configurer BGP afin de prendre en charge la signalisation des routes VPN IPv4 unicast (appelées aussi inet-vpn unicast) au sein d'un groupe BGP nommé "internal" saisir :
+```
+set protocols bgp group internal family inet-vpn unicast
+```
+
 ### Configuration des LSP (Label Switched Path)
 
 La configuration des LSP sur un routeur JUNIPER se compose de deux étapes décrites suivantes : la configuration de RSVP-TE et la déclaration des LSP.
