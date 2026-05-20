@@ -103,6 +103,7 @@ Pour voir l'état BGP :
 ```
 # etat de la connexion avec les voisins
 show bgp neighbor
+```
 Pour capturer le trafic BGP :
 ```
 # Capture simple
