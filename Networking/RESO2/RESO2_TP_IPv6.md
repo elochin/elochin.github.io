@@ -7,7 +7,7 @@
 Sur la VRF ATM, activez le protocole IPv6. Pour cela il suffit simplement d'ajouter une adresse IPv6 sur l'interface raccordée à la VRF avec la commande.
 
 ```
-set interfaces <nom_int> unit 0 family inet6 address > <ipv6_adresse>/64
+set interfaces <nom_interface> unit 0 family inet6 address <X:X:X:X:X:X:X:X/M>
 ```
 
 L'adresse ajoutée sera : `100:<ID_SITE>::X/64` avec `X` valant :
