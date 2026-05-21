@@ -53,15 +53,15 @@ Configurez une adresse IPv6 manuellement sur votre PC afin de pouvoir vous conne
 
 ```
 # Ajouter une adresse IPv6 sur une interface
-sudo ip -6 addr add <adresseipv6>/<longueurdupréfixe> dev <interface>
+sudo ip -6 addr add <adresse IPv6>/<longueur du préfixe> dev <interface>
 # Supprimer une adresse IPv6 d'une interface
-sudo ip -6 addr del <adresseipv6ipv6address>/<longueurdupréfixe> dev <interface>
+sudo ip -6 addr del <adresse IPv6>/<longueur du préfixe> dev <interface>
 # Voir les adresses IPv6 configurer sur une interface
 sudo ip -6 addr show dev <interface>
 # Ajouter une route IPv6
-sudo ip -6 route add <réseauipv6>/<longueurdupréfixe> via <adresseipv6> dev <interface>
+sudo ip -6 route add <réseau IPv6>/<longueur du préfixe> via <adresse IPv6> dev <interface>
 # Supprimer une route IPv6
-ip -6 route del <réseauipv6>/<longueurdupréfixe> via <ipv6address> dev <interface>
+ip -6 route del <réseau IPv6>/<longueur du préfixe> via <adresse IPv6> dev <interface>
 # Lister les routes IPv6
 sudo ip -6 route show [dev <périphérique>]
 ```
