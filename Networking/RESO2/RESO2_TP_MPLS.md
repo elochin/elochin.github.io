@@ -170,10 +170,10 @@ set routing-instances <nom_vrf> interface <nom_interface>.0
 set routing-instances <nom_vrf> route-distinguisher> <rt_distiguinger>
 # commande nécessaire spécifique aux routeurs JUNIPER
 set routing-instances <nom_vrf> vrf-table-label
-set routing-instances <nom_vrf> vrf-target <rt_id>
+set routing-instances <nom_vrf> vrf-target target:<vrf_target>
 ```
 
-La commande `vrf-target` permet de définir les règles d'importation et d'exportation des routes suivant la valeur du route-target. Dans notre cas, toutes les routes de la VRF sont exportées avec une valeur de route-target égale à `<rt_id>`. De même, toutes les routes ayant un route-target égale à `<rt_id>` sont importées dans la VRF. Le `<rt_id>` est de la forme `target :<numéro_as>:X` ou `X` est un entier quelconque.
+Rappel : la commande vrf-target permet de définir les règles d'importation et d'exportation des routes suivant la valeur . Dans notre cas, toutes les routes de la VRF sont exportées avec une valeur de route-target égale à <vrf_target>. De même, toutes les routes ayant un route-target égale à <vrf_target> sont importées dans la VRF.
 
 #### Vérifications  
 
