@@ -103,6 +103,10 @@ Pour voir l'état BGP :
 ```
 # etat de la connexion avec les voisins
 show bgp neighbor
+# afficher la liste des routes que le routeur annonce (advertise) à un voisin BGP 
+show route advertising-protocol bgp <IP_VOISIN>
+# afficher la liste des routes que le routeur reçoit d'un voisin BGP 
+show route receive-protocol bgp <IP_VOISIN>
 ```
 Pour capturer le trafic BGP :
 ```
