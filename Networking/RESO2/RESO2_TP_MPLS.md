@@ -173,7 +173,7 @@ set routing-instances <nom_vrf> vrf-table-label
 set routing-instances <nom_vrf> vrf-target target:<vrf_target>
 ```
 
-Rappel : la commande vrf-target permet de définir les règles d'importation et d'exportation des routes suivant la valeur . Dans notre cas, toutes les routes de la VRF sont exportées avec une valeur de route-target égale à <vrf_target>. De même, toutes les routes ayant un route-target égale à <vrf_target> sont importées dans la VRF.
+Rappel : la commande `vrf-target` permet de définir les règles d'importation et d'exportation des routes suivant la valeur . Dans notre cas, toutes les routes de la VRF sont exportées avec une valeur de route-target égale à `<vrf_target>`. De même, toutes les routes ayant un route-target égale à `<vrf_target>` sont importées dans la VRF.
 
 #### Vérifications  
 
