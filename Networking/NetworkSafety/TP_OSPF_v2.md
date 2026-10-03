@@ -47,7 +47,7 @@ Les routes par défaut sont également instanciées. Vérifiez-le avec la comman
 
 **Deuxième étape - mise en place du routage**
 
-Une fois l'adressage réalisé, vous noterez que les tables de routage de R1 et R2 ne sont pas complètes. Vous pouvez le vérifier en tapant sur chaque routeur `show ip route`.
+Une fois l'adressage réalisée, vous noterez que les tables de routage de R1 et R2 ne sont pas complètes. Vous pouvez le vérifier en tapant sur chaque routeur `show ip route`.
 
 <font color=blue>**Question A** - quelle route manque-t-il sur chaque routeur pour que les deux PC puissent se joindre ?</font>
 
@@ -74,7 +74,7 @@ Faire de même avec eth1 et bien évidemment avec lo car l'adresse de *loopback*
 
 Il est possible de changer cette valeur de métrique avec `ip ospf cost <val>` sur l'interface concernée. Cette valeur sera utilisé par l'algorithme SPF (*Shortest Path First*) pour recalculer le graphe en fonction.
 
-Il est également possible de consulter les routes via `show ip route` qui retourne alors toute la table d'acheminement (FIB). Nous obtenons via cette commande deux valeurs entre crochets. La seconde est celle de la métrique également retournée par `show ip ospf route` tandis que la première est une distance administrative (*Administrative Distance : AD*) ou route de préférence. C'est une valeur arbitraire permettant de classer les routes obtenues (par divers protocoles de routage) où une faible valeur indique une route préférée. Chaque constructeur utilise ses propres valeurs avec 110 pour OSPF (comme vous pouvez le voir), 120 pour RIP, 20 pour BGP, ... Consultez la page [CISCO show_ip_route](https://www.cisco.com/E-Learning/bulk/public/tac/cim/cib/using_cisco_ios_software/cmdrefs/show_ip_route.htm) pour plus de détails.
+Il est également possible de consulter les routes via `show ip route` qui retourne alors toute la table de routage (RIB). Nous obtenons via cette commande deux valeurs entre crochets. La seconde est celle de la métrique également retournée par `show ip ospf route` tandis que la première est une distance administrative (*Administrative Distance : AD*) ou route de préférence. C'est une valeur arbitraire permettant de classer les routes obtenues (par divers protocoles de routage) où une faible valeur indique une route préférée. Chaque constructeur utilise ses propres valeurs avec 110 pour OSPF (comme vous pouvez le voir), 120 pour RIP, 20 pour BGP, ... Consultez la page [CISCO show_ip_route](https://www.cisco.com/E-Learning/bulk/public/tac/cim/cib/using_cisco_ios_software/cmdrefs/show_ip_route.htm) pour plus de détails.
 
 Il est préférable de ne pas diffuser les annonces OSPF sur les réseaux d'extrémités (i.e. vers PC1 et PC2). L'option `ip ospf passive` permet de rendre muette une interface, ainsi le réseau attaché sera toujours annoncé mais l’interface n’émettra pas de paquets OSPF. 
 
@@ -121,10 +121,10 @@ Neighbor ID        Pri State          Dead Time  Address      Interface        (
 
 Les quatre autres commandes qui vous seront utiles pour vérifier le bon fonctionnement de votre configuration sont :
 
-* `show ip ospf database` qui vous donne le contenu de la RIB d'OSPF;
+* `show ip ospf database` qui vous donne le contenu de la LSBD d'OSPF;
 * `show ip ospf interface <iface>` qui vous donne des information la configuration OSPF de l'interface;
-* `show ip ospf route ` qui vous donne le contenu de la FIB issue d'OSPF;
-* `show ip route` qui vous donne le contenu de la table d'acheminement (FIB).
+* `show ip ospf route ` qui vous donne le contenu de la RIB issue d'OSPF;
+* `show ip route` qui vous donne le contenu de la table de routage (RIB).
 
 Ces deux dernières commandes ayant été déjà été abordées ci-dessus en seconde partie.
 
@@ -226,7 +226,7 @@ Suite à cette première partie d'introduction, je vous propose de mettre en oeu
 
 ### Topologie
 
-La topologie du réseau utilisé dans ce TP est décrite sur la Fig. 1 et est disponible [ici](gnet/ospf.gnet).
+La topologie du réseau utilisé dans ce TP est décrite sur la Fig. 1 et est disponible [ici](gnet/ospf_bridge.gnet).
 
 *Note : si vous souhaitez lancer cette topologie depuis vos **machines personnelles**, il vous faudra tout d'abord créer une interface virtuelle dans le terminal de la machine avant de lancer Gonetem. Pour cela faire :*
 
@@ -235,9 +235,8 @@ La topologie du réseau utilisé dans ce TP est décrite sur la Fig. 1 et est di
 eleve@gonetem:~$ sudo ip tuntap add mode tap virtual
 eleve@gonetem:~$ gonetem-console open ospf-bridge.gnet
 ```
-
-
-|  ![Topologie du réseau.](figs/topoOSPF.png) |
+<img src="figs/topoOSPF.png" width=600 />
+| ! [Topologie du réseau.](figs/topoOSPF.png) |
 |:--:|
 | *Fig. 1 Topologie du réseau.* |
 
@@ -340,11 +339,11 @@ Pou sauvegarder la configuration actuelle de votre routeur, n'oubliez pas de fai
 
 Pour rappel, les commandes les plus utiles pour ce TP sont :
 
-* `show ip ospf database` qui vous donne le contenu de la RIB d'OSPF;
-* `show ip ospf route` qui vous donne le contenu de la FIB issue d'OSPF;
+* `show ip ospf database` qui vous donne le contenu de la LSBD d'OSPF;
+* `show ip ospf route` qui vous donne le contenu de la RIB issue d'OSPF;
 * `show ip ospf neighbor` qui vous donne des informations sur les voisins OSPF;
 * `show ip ospf interface <iface>` qui vous donne des informations la configuration OSPF de l'interface;
-* `show ip route` qui vous donne le contenu de la table d’acheminement (FIB);
+* `show ip route` qui vous donne le contenu de la table de routage (RIB);
 * `clear ip process ospf` commande qui vous est parfois conseillée après une saisie, et qui permet de relancer le processus OSPF sur un routeur. Utile lors de modifications de votre configuration.
 
 #### Commandes du menu `router ospf`
@@ -390,4 +389,5 @@ OSPF debugging status:
   OSPF packet Link State Acknowledgment debugging is on
 ```
 afin que celui-ci soit bien activé. Enfin, n'oubliez pas de faire un `save` dans la console Gonetem si vous souhaitez conserver cette configuration. Il vous suffit de lancer un `shell R1` depuis la console Gonetem et de consulter le fichier de log via, par exemple, `tail -f /var/log/frr/ospfd.log`.
+
 
