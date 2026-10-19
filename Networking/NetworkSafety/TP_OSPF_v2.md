@@ -32,7 +32,7 @@ Avant de commencer le TP nous allons apprendre à configurer OSPF sur une topolo
 
 **Première étape - découverte de la topologie utilisée**
 
-La topologie utilisée pour la première partie de ce TP est disponible [ici](gnet/topo_simple.gnet). Pour la lancer, dans un terminal taper `gonetem-console open topo_simple.gnet`.
+La topologie utilisée pour la première partie de ce TP est disponible [ici](https://e-campus.enac.fr/moodle/pluginfile.php/367589/mod_resource/content/1/topo_simple.gnet). Pour la lancer, dans un terminal taper `gonetem-console open topo_simple.gnet`.
 
 Celle-ci est déjà préconfigurée avec l'adressage suivant :
 
@@ -57,12 +57,22 @@ Ces routes manquantes seront instanciées par le protocole OSPF que vous allez d
 R1(config)# int lo
 R1(config-if)# ip address 192.168.100.1/32
 ```
-L'identifiant du routeur (le *router ID*) est l’adresse IP la plus élevée ou, si configurée, la plus élevée des adresses de *loopback*. Cet identifiant est utile pour mieux identifier les routeurs au déboguage, par exemple, lors d'un `show ip ospf neighbor`. Pour éviter tout problème et bien utiliser l'adresse de *loopback*, en mode configuration OSPF pour R1, saisir :
+L'identifiant du routeur (le *router ID*) est l’adresse IP la plus élevée ou, si configurée, la plus élevée des adresses de *loopback*.
+
+Pour mettre en oeuvre le protocole OSPF, saisir la commande suivante :
 ```bash
 R1(config)# router ospf
-R1(config-router)# ospf router-id 192.168.100.1
+R1(config-router)# exit
 ```
-Une fois cette commande saisie, un processus OSPF est lancé sur le routeur mais aucune annonce n'est encore effectuée. En effet, il faut spécifiquement déclarer les interfaces qui vont entrer en jeu. Pour cela, il faut déclarer chacune des interfaces qui participeront au processus OSPF de la façon suivante, par exemple pour l'interface eth0 du router R1 cela donne :
+
+Pour valider que le processus OSPF est correctement lancé, saisir la commande :
+
+```bash
+R1# show ip ospf
+```
+* Quelle est la valeur du paramètre *router ID* ? pourquoi ?
+
+Un processus OSPF est lancé sur le routeur mais aucune annonce n'est encore effectuée. En effet, il faut spécifiquement déclarer les interfaces qui vont entrer en jeu. Pour cela, il faut déclarer chacune des interfaces qui participeront au processus OSPF de la façon suivante, par exemple pour l'interface eth0 du router R1 cela donne :
 
 ```bash
 R1(config)# int eth0
@@ -81,7 +91,7 @@ Il est préférable de ne pas diffuser les annonces OSPF sur les réseaux d'extr
 Par exemple la commande suivante sur R1 :
 
 ```bash
-R1(config-router)# interface eth0
+R1(config)# interface eth0
 R1(config-if) # ip ospf passive
 ```
 permet de stopper les annonces OSPF vers PC1. Notez que la commande `show ip ospf interface eth0` vous permettra de vérifier la mise en oeuvre de cette option :
@@ -117,12 +127,12 @@ Neighbor ID        Pri State          Dead Time  Address      Interface        (
 
 `Address` adresse IP de connexion directe avec le voisin.
 
-`Interface` interface du routeur (et IP) vers lequel la connection est réalisée.
+`Interface` interface du routeur (et IP) vers lequel la connexion est réalisée.
 
 Les quatre autres commandes qui vous seront utiles pour vérifier le bon fonctionnement de votre configuration sont :
 
 * `show ip ospf database` qui vous donne le contenu de la LSBD d'OSPF;
-* `show ip ospf interface <iface>` qui vous donne des information la configuration OSPF de l'interface;
+* `show ip ospf interface <iface>` qui vous donne des informations sur la configuration OSPF de l'interface;
 * `show ip ospf route ` qui vous donne le contenu de la RIB issue d'OSPF;
 * `show ip route` qui vous donne le contenu de la table de routage (RIB).
 
@@ -149,7 +159,6 @@ La configuration OSPF de R1 devient :
 ```bash
 !
 router ospf
- ospf router-id 1.1.1.1
  default-information originate
 !
 ```
@@ -214,7 +223,7 @@ Je peux lire avec cette commande que :
 
 * R1 a pour *router ID* 192.168.100.1
 * Deux routeurs dont R1 sont dans l'aire 0
-* Chaque routeur à 3 liens (colone Link de Router Link States). En effet, l'adresse de loopback est comptabilisée comme un lien
+* Chaque routeur à 3 liens (colonne Link de Router Link States). En effet, l'adresse de loopback est comptabilisée comme un lien
 * Le Network LSA m’informe qu’il y a un DR dans l’aire 0 pour le segment 10.0.0.2 et que ce DR est R2 (section Net Link States (Area 0.0.0.0))
 * Enfin, il y a un LSA pour la route par défaut (AS External Link States)
 
@@ -226,7 +235,7 @@ Suite à cette première partie d'introduction, je vous propose de mettre en oeu
 
 ### Topologie
 
-La topologie du réseau utilisé dans ce TP est décrite sur la Fig. 1 et est disponible [ici](gnet/ospf_bridge.gnet).
+La topologie du réseau utilisé dans ce TP est décrite sur la Fig. 1 et est disponible [ici](https://e-campus.enac.fr/moodle/pluginfile.php/251508/mod_resource/content/1/ospf_bridge.gnet).
 
 *Note : si vous souhaitez lancer cette topologie depuis vos **machines personnelles**, il vous faudra tout d'abord créer une interface virtuelle dans le terminal de la machine avant de lancer Gonetem. Pour cela faire :*
 
@@ -235,8 +244,8 @@ La topologie du réseau utilisé dans ce TP est décrite sur la Fig. 1 et est di
 eleve@gonetem:~$ sudo ip tuntap add mode tap virtual
 eleve@gonetem:~$ gonetem-console open ospf-bridge.gnet
 ```
-<img src="figs/topoOSPF.png" width=600 />
-| ! [Topologie du réseau.](figs/topoOSPF.png) |
+<img src="https://e-campus.enac.fr/moodle/pluginfile.php/207832/mod_resource/content/2/topoOSPF.png" width=600 />
+| ! [Topologie du réseau.](https://e-campus.enac.fr/moodle/pluginfile.php/207832/mod_resource/content/2/topoOSPF.png) |
 |:--:|
 | *Fig. 1 Topologie du réseau.* |
 
@@ -277,9 +286,9 @@ Configurez tous les routeurs OSPF et LAN. Pensez à désactiver l'émission de m
 Dans cet ordre précis :
 
 1. Connectez-vous sur R3 et faites un `shutdown` sur l'interface se connectant à R1 (`int eth3`)
-2. Dans la console Gonetem redémarrez R1 via `restart R1`
-3. Lancez immédiatement après le redémarrage une capture sur R1 toujours dans la console Gonetem avec la commande `capture R1.0`
-4. Faites un `shutdown` puis juste après un `no shutdown` depuis l'interface connectée à R3 tout en poursuivant la capture
+2. Connectez-vous sur R1 et faites un `clear ip ospf process`
+3. Lancez immédiatement une capture sur R1 dans la console Gonetem avec la commande `capture R1.0`
+4. Faites un `no shutdown` sur R3 depuis l'interface connectée à R3 (`int eth3`) tout en poursuivant la capture
 
 <font color=blue>**Etape 2** - On s'intéresse aux messages Hello, complétez le texte ci-dessous :</font>
 
@@ -344,7 +353,7 @@ Pour rappel, les commandes les plus utiles pour ce TP sont :
 * `show ip ospf neighbor` qui vous donne des informations sur les voisins OSPF;
 * `show ip ospf interface <iface>` qui vous donne des informations la configuration OSPF de l'interface;
 * `show ip route` qui vous donne le contenu de la table de routage (RIB);
-* `clear ip process ospf` commande qui vous est parfois conseillée après une saisie, et qui permet de relancer le processus OSPF sur un routeur. Utile lors de modifications de votre configuration.
+* `clear ip ospf process` commande qui vous est parfois conseillée après une saisie, et qui permet de relancer le processus OSPF sur un routeur. Utile lors de modifications de votre configuration.
 
 #### Commandes du menu `router ospf`
 
@@ -352,7 +361,6 @@ Ce menu est un sous-menu du menu `configure terminal`.
 
 * `neighbor <neighbor_address>` permet de déclarer un routeur OSPF voisin sur une liaison non broadcast. Attention à bien utiliser l'adresse du voisin correspondant à l'interface du lien considéré et pas son identifiant de routeur;
 * `ip ospf area <area_id>` permet d'activer le routage OSPF sur une interface donnée en la liant à l'aire donnée;
-* `passive-interface <nom_iface>` permet de rendre muette une interface (le réseau attaché peut être annoncé mais l'interface n'émettra pas de paquets OSPF);
 * `redistribute connected` indique à OSPF de redistribuer les routes directes (directly connected) de ce routeur;
 * `redistribute kernel` indique à OSPF de redistribuer les routes configurées par l'administrateur dans le noyau;
 * `redistribute static` indique à OSPF de redistribuer les routes configurées statiquement;
