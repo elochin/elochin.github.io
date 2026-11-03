@@ -162,7 +162,7 @@ Renseignez maintenant la table de routage de R1:
 
 ### 3.5 Optimisation du routage: BGP Backdoor Routes
 
- ![Topologie du réseau2.](https://e-campus.enac.fr/moodle/pluginfile.php/413115/mod_folder/content/0/TOPO%206-3.png) 
+ ![Topologie du réseau2.](figs/topoBGP3_v3.png)
 
 Configurez OSPF sur les routeurs R4 et R5 de manière à partager leur LAN respectif le long de l'adjacence en violet (voir schéma de la topo).
 
