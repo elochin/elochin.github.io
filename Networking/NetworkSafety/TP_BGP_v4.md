@@ -119,7 +119,7 @@ no bgp network import-check
 ```
 N'hésitez pas à relancer le démon BGP après chaque changement de config par `clear bgp *` ou `do clear bgp *` en mode config.
 
- ![Topologie du réseau2.](https://e-campus.enac.fr/moodle/pluginfile.php/413115/mod_folder/content/0/TOPO%206-2.png)
+  ![Topologie du réseau2.](figs/topoBGP2_v3.png)
 
 
 Configurez vos routeurs de façon à ce qu'ils connaissent leurs voisins BGP (surlignage jaune sur le schéma) et qu'ils annoncent leur réseau (le /16 pour l’AS de transit et le /24 pour l’AS souche). Chaque routeur du réseau de transit sera voisin d’un ou plusieurs autres routeurs BGP en respectant le schéma de la TOPOLOGIE.
